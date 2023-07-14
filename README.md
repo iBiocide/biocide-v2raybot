@@ -18,14 +18,14 @@
 
 </p>
 
-<h1 align="center"/>Welcome to BioCide</h1>
+<h1 align="center"/>Welcome to Biocide</h1>
 
 <p align="center">
 Easy to sell with <a href="https://github.com/ibiocide/biocide-v2raybot">biocide-v2raybot</a> easy install with few clicks
 </p>
 
 <p align="center">
-wizwiz is a powerful and professional robot that supports several types of panels and is the best option for sale, supports most protocols and has easy installation. This robot is optimized for the dear people of Iran. It is a great alternative to selling so that you can get to work.
+biocide is a powerful and professional robot that supports several types of panels and is the best option for sale, supports most protocols and has easy installation. This robot is optimized for the dear people of Iran. It is a great alternative to selling so that you can get to work.
 </p>
 
 
