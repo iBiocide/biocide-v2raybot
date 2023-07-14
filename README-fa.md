@@ -194,10 +194,10 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 
 # حمایت
 
-- Sepe Bank: `5892101222351344`
-- Tron (TRX): `TY8j7of18gbMtneB8bbL7SZk5gcntQEemG`
-- Bitcoin: `bc1qcnkjnqvs7kyxvlfrns8t4ely7x85dhvz5gqge4`
-- Dogecoin: `DMyGMghEh4W55P3VeVHntCN3vYAFtshvVH`
+- USDT (USDT-Tron): `TL5wd4r6gabsuW9HfcoAmgLBPXVTW8RfbE`
+- Tron (TRX): `TL5wd4r6gabsuW9HfcoAmgLBPXVTW8RfbE`
+- Bitcoin: `bc1qqlevnm4tlwyaermj5ldqlm730x7a9ytgd98hw8`
+- Dogecoin: `DFUNC9hQ3cgSMScD17UV6fFZ5pMDJMzsXR`
 
 
 
@@ -260,8 +260,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 حتما به گروه و کانال بپیوندید و از ما حمایت کنید
 
 ## Contact Developer
-💎 Group: https://t.me/ibiocide
-💎 Channel: https://t.me/wizwizch
+💎 Telegram: https://t.me/ibiocide
 
 <br>
 <br>
