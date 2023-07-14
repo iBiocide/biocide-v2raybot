@@ -18,7 +18,7 @@
 
 </p>
 
-<h1 align="center"/>ویزویز</h1>
+<h1 align="center"/>بایوساید</h1>
 
 <p align="center">
 فروش آسان با <a href="https://github.com/ibiocide/biocide-v2raybot">بایوساید</a> نصب فقط با یک دستور
