@@ -18,7 +18,7 @@
 
 </p>
 
-<h1 align="center"/>Welcome to wizwiz</h1>
+<h1 align="center"/>Welcome to BioCide</h1>
 
 <p align="center">
 Easy to sell with <a href="https://github.com/ibiocide/biocide-v2raybot">biocide-v2raybot</a> easy install with few clicks
