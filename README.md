@@ -42,7 +42,7 @@ wizwiz is a powerful and professional robot that supports several types of panel
 <br>
 <br>
     <a align="center">
-        <img src="https://github.com/ibiocide/biocide-v2raybot/assets/27927279/f6635ea5-ab26-4c64-a7b8-952203f79763" />
+        <img src="[https://github.com/ibiocide/biocide-v2raybot/assets/27927279/f6635ea5-ab26-4c64-a7b8-952203f79763](https://user-images.githubusercontent.com/27927279/246836890-f6635ea5-ab26-4c64-a7b8-952203f79763.png)" />
     </a>     
 <br>
 <br>
@@ -115,11 +115,10 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 
 
 # Donation
-
-- Sepe Bank: `5892101222351344`
-- Tron (TRX): `TY8j7of18gbMtneB8bbL7SZk5gcntQEemG`
-- Bitcoin: `bc1qcnkjnqvs7kyxvlfrns8t4ely7x85dhvz5gqge4`
-- Dogecoin: `DMyGMghEh4W55P3VeVHntCN3vYAFtshvVH`
+- USDT (USDT-Tron): `TL5wd4r6gabsuW9HfcoAmgLBPXVTW8RfbE`
+- Tron (TRX): `TL5wd4r6gabsuW9HfcoAmgLBPXVTW8RfbE`
+- Bitcoin: `bc1qqlevnm4tlwyaermj5ldqlm730x7a9ytgd98hw8`
+- Dogecoin: `DFUNC9hQ3cgSMScD17UV6fFZ5pMDJMzsXR`
 
 <br>
 <hr>
@@ -177,8 +176,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 Be sure to join the group and channel and support us
 
 ## Contact Developer
-💎 Group: https://t.me/ibiocide
-💎 Channel: https://t.me/wizwizch
+💎 Contact: https://t.me/ibiocide
 
 <br>
 <br>
