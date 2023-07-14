@@ -8,11 +8,11 @@
 </p> 
 
 <p align="center">
-	<a href="./README.md">
+	<a href="./README-en.md">
 	English
 	</a>
 	/
-	<a href="./README-fa.md">
+	<a href="./README.md">
 	فارسی
 	</a>
 
@@ -66,12 +66,12 @@ bash <(curl -s https://raw.githubusercontent.com/ibiocide/biocide-v2raybot/main/
 - Enter token
 - Enter Numerical ID of admin from @userinfobot
 - Re-enter "sub.domain.com" or "domain.com" without https
-- Very good, the installation message ( ✅ The wizwiz bot has been successfully installed! ) is sent to the bot
+- Very good, the installation message ( ✅ The biocide bot has been successfully installed! ) is sent to the bot
 
 <br>
 <br>
 
-## Update bot - Update panel - backup - remove wizwiz
+## Update bot - Update panel - backup - remove biocide
 
 - With every update and backup, a notification is sent to the manager robot
 ```
