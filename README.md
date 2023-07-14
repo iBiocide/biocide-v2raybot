@@ -42,7 +42,7 @@
 <br>
 <br>
     <a align="center">
-        <img src="https://github.com/ibiocide/biocide-v2raybot/assets/27927279/f6635ea5-ab26-4c64-a7b8-952203f79763" />
+        <img src="https://user-images.githubusercontent.com/27927279/246836890-f6635ea5-ab26-4c64-a7b8-952203f79763.png" />
     </a>     
 <br>
 <br>
