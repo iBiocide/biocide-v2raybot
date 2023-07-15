@@ -43,7 +43,7 @@ $botUrl = $fileAddress . "bot.php";
         file_get_contents($fileAddress. "createDB.php");
         $response = json_decode(file_get_contents("https://api.telegram.org/bot" . $botToken . "/setWebhook?url=" . $botUrl));
         if($response->ok){
-            file_get_contents("https://api.telegram.org/bot" . $botToken . "/sendMessage?chat_id=" . $adminId . "&text=✅| ربات ویزیز با موفقیت نصب شد");
+            file_get_contents("https://api.telegram.org/bot" . $botToken . "/sendMessage?chat_id=" . $adminId . "&text=✅| ربات بایوساید با موفقیت نصب شد");
             form("ربات با موفقیت نصب شد", false);
         }
     }elseif(isset($_REQUEST['install'])){
@@ -96,7 +96,7 @@ function showForm($type){
             f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-MSN6P6G');</script>
           <meta charset="utf-8"><meta name="viewport" content="width=device-width">
-    		<title><?php if($type=="unknown") echo "نصب و آپدیت خودکار ویزویز";
+    		<title><?php if($type=="unknown") echo "نصب و آپدیت خودکار بایوساید";
     		elseif ($type=="install") echo "نصب ربات";
     		elseif ($type=="update") echo "آپدیت ربات";
     		?></title>
@@ -176,7 +176,7 @@ function showForm($type){
                                 }
                                 elseif($type=="install"){ ?>
                                 
-                                <h1>نصب ربات ویزویز</h1>
+                                <h1>نصب ربات بایوساید</h1>
                                     <div class="container">
                                         <form id="contact" action="install.php?webhook" method="post">
                                     <h3>لطفا اطلاعات خواسته شده را وارد کنید</h3>
@@ -224,7 +224,7 @@ function form($msg, $error = true){
           })(window,document,'script','dataLayer','GTM-MSN6P6G');
           </script>
           <meta charset="utf-8"><meta name="viewport" content="width=device-width">
-            <title>نصب ربات ویزویز</title>
+            <title>نصب ربات بایوساید</title>
             <meta name="next-head-count" content="4">
         </head>
         <style>

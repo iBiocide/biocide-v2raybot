@@ -100,11 +100,11 @@ do
 			    echo "Folder created successfully!"
 			    sudo mkdir /root/updatebiocide
    			    sleep 1
-			    touch /root/updatebiocide/wizup.txt
-			    sudo chmod -R 777 /root/updatebiocide/wizup.txt
+			    touch /root/updatebiocide/bioup.txt
+			    sudo chmod -R 777 /root/updatebiocide/bioup.txt
 			    sleep 1
 			    ASAS="$"
-			    echo "${ASAS}path = '${RANDOM_NUMBER}';" >> /root/updatebiocide/wizup.txt
+			    echo "${ASAS}path = '${RANDOM_NUMBER}';" >> /root/updatebiocide/bioup.txt
 			else
 			    echo "Folder already exists."
 			fi
@@ -120,7 +120,7 @@ do
 			 destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
 
 			 if [ -z "$destination_dir" ]; then
-			   echo "Error: Could not find directory containing 'wiz' in '/var/www/html'"
+			   echo "Error: Could not find directory containing 'bio' in '/var/www/html'"
 			   exit 1
 			 fi
 
@@ -174,7 +174,7 @@ do
 			
 # 			DOMAIN_NAME="$domainname"
 			
-# 			PATHS=$(cat /root/updatebiocide/wizup.txt | grep '$path' | cut -d"'" -f2)
+# 			PATHS=$(cat /root/updatebiocide/bioup.txt | grep '$path' | cut -d"'" -f2)
 # 			PATHS=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
 # 			(crontab -l | grep -v "backupnutif.php") | crontab -
 			
@@ -188,7 +188,7 @@ do
 
 			
 # 			PATHS2=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
-# 			PATHS3=$(cat /root/updatebiocide/wizup.txt | grep '$path' | cut -d"'" -f2)
+# 			PATHS3=$(cat /root/updatebiocide/bioup.txt | grep '$path' | cut -d"'" -f2)
 # 			if [ -d "/root/confbiocide/dbrootbiocide.txt" ]; then
 #                             echo -e "\e[92mPanel: \e[31mhttps://${DOMAIN_NAME}/biocidepanel${PATHS}\033[0m\n"
 # 			    (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -

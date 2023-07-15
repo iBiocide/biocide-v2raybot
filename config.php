@@ -663,7 +663,7 @@ function getBotSettingKeys(){
 
     $changeProtocole = $botState['changeProtocolState']=="on"?"روشن ✅":"خاموش ❌";
     $renewAccount = $botState['renewAccountState']=="on"?"روشن ✅":"خاموش ❌";
-    $plandelkhahwiz = $botState['plandelkhahState']=="on"?"روشن ✅":"خاموش ❌";
+    $plandelkhahbio = $botState['plandelkhahState']=="on"?"روشن ✅":"خاموش ❌";
     $switchLocation = $botState['switchLocationState']=="on"?"روشن ✅":"خاموش ❌";
     $increaseTime = $botState['increaseTimeState']=="on"?"روشن ✅":"خاموش ❌";
     $increaseVolume = $botState['increaseVolumeState']=="on"?"روشن ✅":"خاموش ❌";
@@ -695,7 +695,7 @@ function getBotSettingKeys(){
             ['text'=>"تمدید سرویس",'callback_data'=>"biocidech"]
         ],
         [
-            ['text'=>$plandelkhahwiz,'callback_data'=>"changeBotplandelkhahState"],
+            ['text'=>$plandelkhahbio,'callback_data'=>"changeBotplandelkhahState"],
             ['text'=>"پلن دلخواه",'callback_data'=>"biocidech"]
         ],
         [

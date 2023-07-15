@@ -132,7 +132,7 @@ fi
  destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
 
  if [ -z "$destination_dir" ]; then
-   echo "Error: Could not find directory containing 'wiz' in '/var/www/html'"
+   echo "Error: Could not find directory containing 'bio' in '/var/www/html'"
    exit 1
  fi
 
