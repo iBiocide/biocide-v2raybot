@@ -43,7 +43,7 @@ if(isset($_GET['NP_id'])){
     
         $plan_id = $payParam['plan_id'];
         $volume = $payParam['volume'];
-        $days = $payParam['day'];
+        $day = $payParam['day'];
         if($payType == "BUY_SUB") $payDescription = "خرید اکانت";
         elseif($payType == "RENEW_ACCOUNT") $payDescription = "تمدید اکانت";
         elseif($payType == "INCREASE_WALLET") $payDescription ="شارژ کیف پول";
@@ -159,7 +159,7 @@ if(mysqli_num_rows($payInfo)==0){
         $stmt->execute();
         $stmt->close();
         
-        showForm("پرداخت شما انجام نشد!","درگاه نکست پی");
+        showForm("پرداخت شما انجام نشد!","درگاه زرین پال");
     }
 }
 }
@@ -185,7 +185,7 @@ $from_id = $user_id;
 
 $plan_id = $payParam['plan_id'];
 $volume = $payParam['volume'];
-$days = $payParam['day'];
+$day = $payParam['day'];
 if($payType == "BUY_SUB") $payDescription = "خرید اشتراک";
 elseif($payType == "RENEW_ACCOUNT") $payDescription = "تمدید اکانت";
 elseif($payType == "INCREASE_WALLET") $payDescription ="شارژ کیف پول";
@@ -224,7 +224,8 @@ if($payType == "BUY_SUB"){
     $type = $file_detail['type'];
     $volume = $file_detail['volume'];
     $protocol = $file_detail['protocol'];
-
+    $amount = $file_detail['price'];
+    
     $server_id = $file_detail['server_id'];
     $netType = $file_detail['type'];
     $acount = $file_detail['acount'];
@@ -474,6 +475,7 @@ elseif($payType == "RENEW_ACCOUNT"){
     $name = $respd['title'];
     $days = $respd['days'];
     $volume = $respd['volume'];
+    $amount = $respd['price'];
 
     if($inbound_id > 0)
         $response = editClientTraffic($server_id, $inbound_id, $remark, $volume, $days);
@@ -537,6 +539,7 @@ elseif(preg_match('/^INCREASE_DAY_(\d+)_(\d+)_(.+)_(\d+)/',$payType,$match)){
     $stmt->execute();
     $res = $stmt->get_result()->fetch_assoc();
     $stmt->close();
+    $amount = $res['price'];
     $volume = $res['volume'];
 
     if($inbound_id > 0)
@@ -600,6 +603,7 @@ elseif(preg_match('/^INCREASE_VOLUME_(\d+)_(\d+)_(.+)_(\d+)/',$payType, $match))
     $stmt->execute();
     $res = $stmt->get_result()->fetch_assoc();
     $stmt->close();
+    $amount = $res['price'];
     $volume = $res['volume'];
 
     $acctxt = '';

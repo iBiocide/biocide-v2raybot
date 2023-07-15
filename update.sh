@@ -22,6 +22,7 @@ do
 			echo " "
 			if [ "$answer" != "${answer#[Yy]}" ]; then
 			mv /var/www/html/biocide-v2raybot/baseInfo.php /root/
+			mv /var/www/html/biocide-v2raybot/userInfo.json /root/
 			sudo apt-get install -y git
 			sudo apt-get install -y wget
 			sudo apt-get install -y unzip
@@ -36,6 +37,7 @@ do
 			sudo chmod -R 755 /var/www/html/biocide-v2raybot/
 			sleep 3
 			mv /root/baseInfo.php /var/www/html/biocide-v2raybot/
+			mv /root/userInfo.json /var/www/html/biocide-v2raybot/
 # 			if [ $? -ne 0 ]; then
 # 			echo -e "\n\e[41mError: The update failed!\033[0m\n"
 # 			exit 1
@@ -89,11 +91,13 @@ do
 			sudo apt-get install -y php-ssh2
 			sudo apt-get install -y libssh2-1-dev libssh2-1
 
-			destination_dir=$(find /var/www/html -type d -name "*shop*" | head -n 1)
+			destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
 
 			if [ -z "$destination_dir" ]; then
 			    RANDOM_NUMBER=$(( RANDOM % 10000000 + 1000000 ))
-			    mkdir "/var/www/html/shop"
+			    mkdir "/var/www/html/biocidepanel"
+			    echo "Directory created: biocidepanel"
+			    echo "Folder created successfully!"
 			    sudo mkdir /root/updatewizwiz
    			    sleep 1
 			    touch /root/updatewizwiz/wizup.txt
@@ -107,20 +111,20 @@ do
 			
 			
 
-			 destination_dir=$(find /var/www/html -type d -name "*shop*" | head -n 1)
+			 destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
 
 			 cd /var/www/html/
-			 wget -O v2raybot.zip https://github.com/ibiocide/biocide-v2raybot/releases/download/7.5.3/v2raybot.zip
+			 wget -O biocidepanel.zip https://github.com/ibiocide/biocide-v2raybot/releases/download/7.5.3/biocidepanel.zip
 
-			 file_to_transfer="/var/www/html/v2raybot.zip"
-			 destination_dir=$(find /var/www/html -type d -name "*shop*" | head -n 1)
+			 file_to_transfer="/var/www/html/biocidepanel.zip"
+			 destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
 
 			 if [ -z "$destination_dir" ]; then
 			   echo "Error: Could not find directory containing 'wiz' in '/var/www/html'"
 			   exit 1
 			 fi
 
-			 mv "$file_to_transfer" "$destination_dir/" && yes | unzip "$destination_dir/v2raybot.zip" -d "$destination_dir/" && rm "$destination_dir/v2raybot.zip" && sudo chmod -R 755 "$destination_dir/" && sudo chown -R www-data:www-data "$destination_dir/" 
+			 mv "$file_to_transfer" "$destination_dir/" && yes | unzip "$destination_dir/biocidepanel.zip" -d "$destination_dir/" && rm "$destination_dir/biocidepanel.zip" && sudo chmod -R 755 "$destination_dir/" && sudo chown -R www-data:www-data "$destination_dir/" 
 
 
 			wait
@@ -149,7 +153,7 @@ do
 			
 # 			echo -e '\e[31m'
 
-# 			find /var/www/html -type d -name "*shop*" -print | sed "s|/var/www/html|& \n\n\nPanel: https://yourdomain.com|g"
+# 			find /var/www/html -type d -name "*biocidepanel*" -print | sed "s|/var/www/html|& \n\n\nPanel: https://yourdomain.com|g"
 			
 # 			echo -e '\033[0m'
 
@@ -174,8 +178,8 @@ do
 # 			PATHS=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$path' | cut -d"'" -f2)
 # 			(crontab -l | grep -v "backupnutif.php") | crontab -
 			
-# 			(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/shop${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
-# 			(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/shop${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+# 			(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+# 			(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 # 			fi
 			
 			clear
@@ -186,11 +190,11 @@ do
 # 			PATHS2=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$path' | cut -d"'" -f2)
 # 			PATHS3=$(cat /root/updatewizwiz/wizup.txt | grep '$path' | cut -d"'" -f2)
 # 			if [ -d "/root/confwizwiz/dbrootwizwiz.txt" ]; then
-#                             echo -e "\e[92mPanel: \e[31mhttps://${DOMAIN_NAME}/shop${PATHS}\033[0m\n"
-# 			    (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/shop${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+#                             echo -e "\e[92mPanel: \e[31mhttps://${DOMAIN_NAME}/biocidepanel${PATHS}\033[0m\n"
+# 			    (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 # 			else
-# 			    echo -e "\e[92mPanel: \e[31mhttps://${DOMAIN_NAME}/shop${PATHS3}\033[0m\n"
-# 			    (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/shop${PATHS3}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+# 			    echo -e "\e[92mPanel: \e[31mhttps://${DOMAIN_NAME}/biocidepanel${PATHS3}\033[0m\n"
+# 			    (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS3}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 # 			fi
 			
 			
@@ -289,7 +293,7 @@ do
 			
 			mysql -u $userrr -p$passs -e "DROP DATABASE wizwiz;" -e "DROP USER '$userrrname'@'localhost';" -e "DROP USER '$userrrname'@'%';"
 
-			sudo rm -r /var/www/html/shop${pathsss}
+			sudo rm -r /var/www/html/biocidepanel${pathsss}
 			sudo rm -r /var/www/html/biocide-v2raybot
 			
 			clear
