@@ -12,7 +12,7 @@ function bot($method, $datas = []){
     $url = "https://api.telegram.org/bot" . $botToken . "/" . $method;
     $ch = curl_init(); 
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($datas));
     $res = curl_exec($ch);
     if (curl_error($ch)) {
@@ -217,7 +217,7 @@ if ($update->message->document->file_id) {
     $fileid = $update->message->video->file_id;
 }
 
-$cancelText = '😪 منصرف شدم بیخیال';
+$cancelText = ' منصرف شدم بیخیال';
 $cancelKey=json_encode(['keyboard'=>[
     [['text'=>$cancelText]]
 ],'resize_keyboard'=>true]);
@@ -226,13 +226,13 @@ $removeKeyboard = json_encode(['remove_keyboard'=>true]);
 if ($from_id == $admin || $userInfo['isAdmin'] == true) {
     $mainKeys = array();
     $temp = array();
-    $mainKeys[] = [['text'=>"🎁 دریافت اکانت تست ",'callback_data'=>"getTestAccount"]];
-    $mainKeys[] = [['text'=>"🏃‍♂️ دعوت از دوستان",'callback_data'=>"inviteFriends"],['text'=>"🧑‍💼 حساب من",'callback_data'=>"myInfo"]];
-    $mainKeys[] = [['text'=>'🛒  خرید کانفیگ جدید','callback_data'=>"buySubscription"],['text'=>'📦  کانفیگ های من','callback_data'=>'mySubscriptions']];
+    $mainKeys[] = [['text'=>'🛒  خرید اشتراک جدید','callback_data'=>"buySubscription"]];
+    $mainKeys[] = [['text'=>"👨🏻‍💻 حساب من",'callback_data'=>"myInfo"]];
+    $mainKeys[] = [['text'=>"🎁 دریافت اکانت تست ",'callback_data'=>"getTestAccount"],['text'=>'♾️  اشتراک های من','callback_data'=>'mySubscriptions']];
     // $mainKeys[] = [['text'=>"▫️ موجودی سرورها ▫️",'callback_data'=>"availableServers"]];
-    $mainKeys[] = [['text'=>"❕ موجودی اشتراکی ",'callback_data'=>"availableServers"],['text'=>"❗️ موجودی اختصاصی ",'callback_data'=>"availableServers2"]];
-    $mainKeys[] = [['text'=>'🔗 لینک نرم افزار ها','callback_data'=>"reciveApplications"],['text'=>"📨 تیکت های من",'callback_data'=>"supportSection"]];
-    $temp[] = ['text'=>"🪫 مشخصات کانفیگ",'callback_data'=>"showUUIDLeft"];
+    // $mainKeys[] = [['text'=>"❕ موجودی اشتراکی ",'callback_data'=>"availableServers"],['text'=>"❗️ موجودی اختصاصی ",'callback_data'=>"availableServers2"]];
+    $mainKeys[] = [['text'=>'🔗 دانلود افزار ها','callback_data'=>"reciveApplications"]];
+    $temp[] = ['text'=>"🔋 مشاهده حجم باقیمانده اکانت",'callback_data'=>"showUUIDLeft"];
     
     $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` LIKE '%MAIN_BUTTONS%'");
     $stmt->execute();
@@ -276,16 +276,16 @@ if ($from_id == $admin || $userInfo['isAdmin'] == true) {
     $keys=array();
     $temp=array();
     
-    $keys[] = [['text'=>"🎁 دریافت اکانت تست ",'callback_data'=>"getTestAccount"]];
+    $keys[] = [['text'=>'🛒  خرید کانفیگ جدید','callback_data'=>"buySubscription"]];
     $keys[] = [['text'=>"🏃‍♂️ دعوت از دوستان",'callback_data'=>"inviteFriends"],['text'=>"🧑‍💼 حساب من",'callback_data'=>"myInfo"]];
     if($botState['sellState']=="on"){
-        $keys[]= [['text'=>'📦  کانفیگ های من','callback_data'=>'mySubscriptions'],['text'=>'🛒  خرید کانفیگ جدید','callback_data'=>"buySubscription"]];
+        $keys[]= [['text'=>'📦  کانفیگ های من','callback_data'=>'mySubscriptions'],['text'=>"🎁 دریافت اکانت تست ",'callback_data'=>"getTestAccount"]];
     }
     // $keys[] = [['text'=>"▫️ موجودی سرورها ▫️",'callback_data'=>"availableServers"]];
-    $keys[] = [['text'=>"❕ موجودی اشتراکی ",'callback_data'=>"availableServers"],['text'=>"❗️ موجودی اختصاصی ",'callback_data'=>"availableServers2"]];
-    $temp[] =['text'=>"📨 تیکت های من",'callback_data'=>"supportSection"];
+    // $keys[] = [['text'=>"❕ موجودی اشتراکی ",'callback_data'=>"availableServers"],['text'=>"❗️ موجودی اختصاصی ",'callback_data'=>"availableServers2"]];
+    // $temp[] =['text'=>"📨 تیکت های من",'callback_data'=>"supportSection"];
     if($botState['searchState']=="on"){
-        $temp[] = ['text'=>"🪫 مشخصات کانفیگ",'callback_data'=>"showUUIDLeft"];
+        $temp[] = ['text'=>"🪫 مشاهده حجم باقیمانده اکانت",'callback_data'=>"showUUIDLeft"];
         array_push($keys,$temp);
         $temp = array();
     }
@@ -625,7 +625,7 @@ function getGateWaysKeys(){
         ],
         [
             ['text'=>$zarinpal,'callback_data'=>"changeGateWayszarinpal"],
-            ['text'=>"درگاه زرین پال",'callback_data'=>"wizwizch"]
+            ['text'=>"درگاه پرداخت زرینپال",'callback_data'=>"wizwizch"]
         ],
         [
             ['text'=>$nowPaymentWallet,'callback_data'=>"changeGateWaysnowPaymentWallet"],
@@ -2208,16 +2208,19 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                 if($netType == 'grpc') {
                     if($tlsStatus == 'tls'){
                         $alpn = $tlsSetting->certificates->alpn;
+                        if(isset($tlsSetting->settings->serverName)) $sni = $tlsSetting->settings->serverName;
                     } 
                     $serviceName = json_decode($row->streamSettings)->grpcSettings->serviceName;
                     $grpcSecurity = json_decode($row->streamSettings)->security;
                 }
                 if($tlsStatus == 'tls'){
                     $serverName = $tlsSetting->serverName;
+                    if(isset($tlsSetting->settings->serverName)) $sni = $tlsSetting->settings->serverName;
                 }
                 if($tlsStatus == "xtls"){
                     $serverName = $xtlsSetting->serverName;
-                    $alpn = $tlsSetting->alpn;
+                    $alpn = $xtlsSetting->alpn;
+                    if(isset($xtlsSetting->settings->serverName)) $sni = $xtlsSetting->settings->serverName;
                 }
                 if($netType == 'kcp'){
                     $kcpSettings = json_decode($row->streamSettings)->kcpSettings;
@@ -2266,6 +2269,7 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                 }elseif($netType == 'grpc') {
                     if($tlsStatus == 'tls'){
                         $alpn = $tlsSetting->alpn;
+                        if(isset($tlsSetting->settings->serverName)) $sni = $tlsSetting->settings->serverName;
                     }
                     $grpcSecurity = json_decode($row->streamSettings)->security;
                     $serviceName = json_decode($row->streamSettings)->grpcSettings->serviceName;
@@ -2276,10 +2280,12 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                 }
                 if($tlsStatus == 'tls'){
                     $serverName = $tlsSetting->serverName;
+                    if(isset($tlsSetting->settings->serverName)) $sni = $tlsSetting->settings->serverName;
                 }
                 if($tlsStatus == "xtls"){
                     $serverName = $xtlsSetting->serverName;
-                    $alpn = $tlsSetting->alpn;
+                    $alpn = $xtlsSetting->alpn;
+                    if(isset($xtlsSetting->settings->serverName)) $sni = $xtlsSetting->settings->serverName;
                 }
 
                 break;
@@ -2305,7 +2311,7 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                 }
                 
                 $psting = '';
-                if($header_type == 'http' && $tlsStatus != "reality" && $rahgozar != true) $psting .= "&path=/&host=$host"; else $psting .= '';
+                if($header_type == 'http' && $rahgozar != true) $psting .= "&path=/&host=$host"; else $psting .= '';
                 if($netType == 'tcp' and $header_type == 'http') $psting .= '&headerType=http';
                 if(strlen($sni) > 1 && $tlsStatus != "reality") $psting .= "&sni=$sni";
                 if(strlen($serverName)>1 && $tlsStatus=="xtls") $server_ip = $serverName;
@@ -2328,8 +2334,16 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                 if($header_type == 'http') $psting .= "&path=/&host=$host";
                 if($netType == 'tcp' and $header_type == 'http') $psting .= '&headerType=http';
                 if(strlen($sni) > 1) $psting .= "&sni=$sni";
-                if($tlsStatus != 'none') $tlsStatus = 'tls';
-                $outputlink = "$protocol://$uniqid@$server_ip:$port?security=$tlsStatus{$psting}#$remark";
+                $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus{$psting}#$remark";
+                
+                if($netType == 'grpc'){
+                    if($tlsStatus == 'tls'){
+                        $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName&sni=$sni#$remark";
+                    }else{
+                        $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName#$remark";
+                    }
+    
+                }
             }elseif($protocol == 'vmess'){
                 $vmessArr = [
                     "v"=> "2",
@@ -2391,7 +2405,7 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                     if($netType == 'tcp' and $header_type == 'http') $psting .= '&headerType=http';
                     if($tlsStatus=="xtls") $psting .= "&flow=xtls-rprx-direct";
                     if($tlsStatus=="reality") $psting .= "&fp=$fp&pbk=$pbk&sni=$sni" . ($flow != ""?"&flow=$flow":"") . "&sid=$sid&spx=$spiderX";
-                    else $psting .= "&path=/&host=$host";
+                    if($header_type == "http") $psting .= "&path=/&host=$host";
                     $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus{$psting}#$remark";
                 }elseif($netType == 'ws'){
                     if($rahgozar == true)$outputlink = "$protocol://$uniqid@$server_ip:443?type=$netType&security=tls&path=" . urlencode("$path?ed=2048") . "&encryption=none&host=$server_ip{$psting}#$remark";
@@ -2406,15 +2420,21 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                         $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName#$remark";
                     }
                 }
-            }elseif($protocol == 'trojan'){
+            }elseif($protocol == 'trojan'){                
                 $psting = '';
                 if($header_type == 'http') $psting .= "&path=/&host=$host";
                 if($netType == 'tcp' and $header_type == 'http') $psting .= '&headerType=http';
                 if(strlen($sni) > 1) $psting .= "&sni=$sni";
-                if($tlsStatus != 'none') $psting .= "&security=tls&flow=";
-                if($netType == 'grpc') $psting = "&serviceName=$serviceName";
+                $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus{$psting}#$remark";
+                
+                if($netType == 'grpc'){
+                    if($tlsStatus == 'tls'){
+                        $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName&sni=$sni#$remark";
+                    }else{
+                        $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName#$remark";
+                    }
     
-                $outputlink = "$protocol://$uniqid@$server_ip:$port{$psting}#$remark";
+                }
             }elseif($protocol == 'vmess'){
                 $vmessArr = [
                     "v"=> "2",
@@ -2476,7 +2496,13 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
     $cookie = 'Cookie: session='.$server_info['cookie'];
     $serverType = $server_info['type'];
     $xtlsTitle = ($serverType == "sanaei" || $serverType == "alireza")?"XTLSSettings":"xtlsSettings";
-
+    $sni = $server_info['sni'];
+    if(!empty($sni) && ($serverType == "sanaei" || $serverType == "alireza")){
+        $tlsSettings = json_decode($tlsSettings,true);
+        $tlsSettings['settings']['serverName'] = $sni;
+        $tlsSettings = json_encode($tlsSettings);
+    }
+    
     $response = getJson($server_id);
     if(!$response) return null;
     $response = $response->obj;
@@ -2494,15 +2520,24 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
 
     if($protocol == 'trojan'){
         if($security == 'none'){
-            $streamSettings = '{
-    	  "network": "tcp",
-    	  "security": "none",
-    	  "tcpSettings": {
-    		"header": {
-			  "type": "none"
-			}
-    	  }
-    	}';
+            $tcpSettings = '{
+        	  "network": "tcp",
+        	  "security": "'.$security.'",
+        	  "tlsSettings": '.$tlsSettings.',
+        	  "tcpSettings": {
+                "header": '.$headers.'
+              }
+        	}';
+                $wsSettings = '{
+              "network": "ws",
+              "security": "'.$security.'",
+        	  "tlsSettings": '.$tlsSettings.',
+              "wsSettings": {
+                "path": "/",
+                "headers": '.$headers.'
+              }
+            }';
+
     	if($serverType == "sanaei" || $serverType == "alireza"){
             $settings = '{
         	  "clients": [
@@ -2530,7 +2565,8 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
         	}';
     	}
         }elseif($security == 'xtls' && $serverType != "sanaei" && $serverType != "alireza") {
-                $streamSettings = '{
+            
+            $tcpSettings = '{
         	  "network": "tcp",
         	  "security": "'.$security.'",
         	  "' . $xtlsTitle . '": '.$tlsSettings.',
@@ -2541,12 +2577,13 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
                 $wsSettings = '{
               "network": "ws",
               "security": "'.$security.'",
-        	  "' . $xtlsTitle .'": '.$tlsSettings.',
+        	  "' . $xtlsTitle . '": '.$tlsSettings.',
               "wsSettings": {
                 "path": "/",
                 "headers": '.$headers.'
               }
             }';
+
                 $settings = '{
               "clients": [
                 {
@@ -2559,16 +2596,23 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
             }';
         }
         else{
-            $streamSettings = '{
-		  "network": "tcp",
-		  "security": "'.$security.'",
-		  "'.$security.'Settings": '.$tlsSettings.',
-		  "tcpSettings": {
-			"header": {
-			  "type": "none"
-			}
-		  }
-		}';
+            $tcpSettings = '{
+        	  "network": "tcp",
+        	  "security": "'.$security.'",
+        	  "tlsSettings": '.$tlsSettings.',
+        	  "tcpSettings": {
+                "header": '.$headers.'
+              }
+        	}';
+            $wsSettings = '{
+              "network": "ws",
+              "security": "'.$security.'",
+        	  "tlsSettings": '.$tlsSettings.',
+              "wsSettings": {
+                "path": "/",
+                "headers": '.$headers.'
+              }
+            }';
 		if($serverType == "sanaei" || $serverType == "alireza"){
             $settings = '{
 		  "clients": [
@@ -2594,6 +2638,45 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
 		}';
 		}
         }
+        
+        
+                $streamSettings = ($netType == 'tcp') ? $tcpSettings : $wsSettings;
+		if($netType == 'grpc'){
+			if($security == 'tls') {
+				$streamSettings = '{
+  "network": "grpc",
+  "security": "tls",
+  "tlsSettings": {
+    "serverName": "' . parse_url($panel_url, PHP_URL_HOST) . '",
+    "certificates": [
+      {
+        "certificateFile": "/root/cert.crt",
+        "keyFile": "/root/private.key"
+      }
+    ],
+    "alpn": []'
+    .
+    (!empty($sni) && ($serverType == "sanaei" || $serverType == "alireza") ? ',
+    "settings": {
+            "serverName": "' . $sni . '"
+            }':'')
+    .'
+  },
+  "grpcSettings": {
+    "serviceName": ""
+  }
+}';
+		    }else{
+			$streamSettings = '{
+  "network": "grpc",
+  "security": "none",
+  "grpcSettings": {
+    "serviceName": "' . parse_url($panel_url, PHP_URL_HOST) . '"
+  }
+}';
+		}
+	    }
+
 
         $dataArr = array('up' => $row->up,'down' => $row->down,'total' => $row->total,'remark' => $remark,'enable' => 'true',
             'expiryTime' => $row->expiryTime,'listen' => '','port' => $row->port,'protocol' => $protocol,'settings' => $settings,'streamSettings' => $streamSettings,
@@ -2974,57 +3057,105 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
     $header_type = $server_info['header_type'];
     $request_header = $server_info['request_header'];
     $response_header = $server_info['response_header'];
+    $sni = $server_info['sni'];
     $cookie = 'Cookie: session='.$server_info['cookie'];
     $serverType = $server_info['type'];
     $xtlsTitle = ($serverType == "sanaei" || $serverType == "alireza")?"XTLSSettings":"xtlsSettings";
     $reality = $server_info['reality'];
 
+    if(!empty($sni) && ($serverType == "sanaei" || $serverType == "alireza")){
+        $tlsSettings = json_decode($tlsSettings,true);
+        $tlsSettings['settings']['serverName'] = $sni;
+        $tlsSettings = json_encode($tlsSettings);
+    }
+    
     $volume = ($volume == 0) ? 0 : floor($volume * 1073741824);
     $headers = getNewHeaders($netType, $request_header, $response_header, $header_type);
 //---------------------------------------Trojan------------------------------------//
     if($protocol == 'trojan'){
         // protocol trojan
         if($security == 'none'){
-            $streamSettings = '{
-    	  "network": "tcp",
-    	  "security": "none",
-    	  "tcpSettings": {
-    		"header": {
-			  "type": "none"
-			}
-    	  }
-    	}';
-    	if($serverType == "sanaei" || $serverType == "alireza"){
-            $settings = '{
-    	  "clients": [
-    		{
-    		  "id": "'.$client_id.'",
-              "email": "' . $remark. '",
-              "limitIp": 0,
-              "totalGB": 0,
-              "expiryTime": 0
-    		}
-    	  ],
-    	  "decryption": "none",
-    	  "fallbacks": []
-    	}';
-    	}else{
-            $settings = '{
-    	  "clients": [
-    		{
-    		  "id": "'.$client_id.'",
-    		  "flow": ""
-    		}
-    	  ],
-    	  "decryption": "none",
-    	  "fallbacks": []
-    	}';
-    	}
-        }elseif($security == 'xtls' && $serverType != "sanaei" && $serverType != "alireza") {
-                $streamSettings = '{
+            
+            $tcpSettings = '{
         	  "network": "tcp",
         	  "security": "'.$security.'",
-        	  "' . $xtlsTitle . '": '.$tlsSettings.',
+        	  "tlsSettings": '.$tlsSettings.',
+        	  "tcpSettings": {
+                "header": '.$headers.'
+              }
+        	}';
+            $wsSettings = '{
+              "network": "ws",
+              "security": "'.$security.'",
+        	  "tlsSettings": '.$tlsSettings.',
+              "wsSettings": {
+                "path": "/",
+                "headers": '.$headers.'
+              }
+            }';
+            
+        	if($serverType == "sanaei" || $serverType == "alireza"){
+                $settings = '{
+        	  "clients": [
+        		{
+        		  "id": "'.$client_id.'",
+                  "email": "' . $remark. '",
+                  "limitIp": 0,
+                  "totalGB": 0,
+                  "expiryTime": 0
+        		}
+        	  ],
+        	  "decryption": "none",
+        	  "fallbacks": []
+        	}';
+        	}else{
+                $settings = '{
+        	  "clients": [
+        		{
+        		  "id": "'.$client_id.'",
+        		  "flow": ""
+        		}
+        	  ],
+        	  "decryption": "none",
+        	  "fallbacks": []
+        	}';
+        	}
+        }elseif($security == 'xtls' && $serverType != "sanaei" && $serverType != "alireza") {
+                    $tcpSettings = '{
+                	  "network": "tcp",
+                	  "security": "'.$security.'",
+                	  "' . $xtlsTitle . '": '.$tlsSettings.',
+                	  "tcpSettings": {
+                        "header": '.$headers.'
+                      }
+                	}';
+
+                    $wsSettings = '{
+                  "network": "ws",
+                  "security": "'.$security.'",
+            	  "' . $xtlsTitle .'": '.$tlsSettings.',
+                  "wsSettings": {
+                    "path": "/",
+                    "headers": '.$headers.'
+                  }
+                }';
+                    $settings = '{
+                  "clients": [
+                    {
+                      "id": "'.$uniqid.'",
+                      "alterId": 0
+                    }
+                  ],
+                  "decryption": "none",
+            	  "fallbacks": []
+                }';
+                }
+        
+        else{
+            $tcpSettings = '{
+        	  "network": "tcp",
+        	  "security": "'.$security.'",
+        	  "tlsSettings": '.$tlsSettings.',
         	  "tcpSettings": {
                 "header": '.$headers.'
               }
@@ -3032,35 +3163,12 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
                 $wsSettings = '{
               "network": "ws",
               "security": "'.$security.'",
-        	  "' . $xtlsTitle .'": '.$tlsSettings.',
+        	  "tlsSettings": '.$tlsSettings.',
               "wsSettings": {
                 "path": "/",
                 "headers": '.$headers.'
               }
             }';
-                $settings = '{
-              "clients": [
-                {
-                  "id": "'.$uniqid.'",
-                  "alterId": 0
-                }
-              ],
-              "decryption": "none",
-        	  "fallbacks": []
-            }';
-            }
-        
-        else{
-            $streamSettings = '{
-		  "network": "tcp",
-		  "security": "'.$security.'",
-		  "'.$security.'Settings": '.$tlsSettings.',
-		  "tcpSettings": {
-			"header": {
-			  "type": "none"
-			}
-		  }
-		}';
 		if($serverType == "sanaei" || $serverType == "alireza"){
             $settings = '{
 		  "clients": [
@@ -3086,6 +3194,48 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
 		}';
 		}
         }
+
+
+
+        $streamSettings = ($netType == 'tcp') ? $tcpSettings : $wsSettings;
+		if($netType == 'grpc'){
+			if($security == 'tls') {
+				$streamSettings = '{
+  "network": "grpc",
+  "security": "tls",
+  "tlsSettings": {
+    "serverName": "' . parse_url($panel_url, PHP_URL_HOST) . '",
+    "certificates": [
+      {
+        "certificateFile": "/root/cert.crt",
+        "keyFile": "/root/private.key"
+      }
+    ],
+    "alpn": []'
+    .
+    (!empty($sni) && ($serverType == "sanaei" || $serverType == "alireza") ? ',
+    "settings": {
+            "serverName": "' . $sni . '"
+            }':'')
+    .'
+  },
+  "grpcSettings": {
+    "serviceName": ""
+  }
+}';
+		    }else{
+			$streamSettings = '{
+  "network": "grpc",
+  "security": "none",
+  "grpcSettings": {
+    "serviceName": "' . parse_url($panel_url, PHP_URL_HOST) . '"
+  }
+}';
+		}
+	    }
+
+
+
 
         // trojan
         $dataArr = array('up' => '0','down' => '0','total' => $volume,'remark' => $remark,'enable' => 'true','expiryTime' => $expiryTime,'listen' => '','port' => $port,'protocol' => $protocol,'settings' => $settings,'streamSettings' => $streamSettings,
@@ -3299,9 +3449,7 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
                               },
                               "tcpSettings": {
                                 "acceptProxyProtocol": false,
-                                "header": {
-                                  "type": "none"
-                                }
+                        		"header": '.$headers.'
                               }
                             }';
     			    $settings = '{
