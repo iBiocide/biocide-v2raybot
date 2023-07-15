@@ -150,7 +150,7 @@ function showForm($type){
                                 </div>
 								<div style="margin-top: 5px">
                                     <span>
-                                        <a target="_blank" href="https://t.me/wizwizch">
+                                        <a target="_blank" href="https://t.me/biocidech">
                                         <button style="width: 150px;margin: 5px;padding: 3px;font-size: 16px">
                                             <span>کانال تلگرام</span>
                                         </button>
@@ -199,7 +199,7 @@ function showForm($type){
                                             <fieldset>
                                                 <button class="btninstall" type="submit">نصب ربات</button>
                                             </fieldset>
-											<p style="font-size:13px">Made with 🖤 in <a target="_blank" href="https://github.com/ibiocide/biocide-v2raybot">wizwiz</a></p>
+											<p style="font-size:13px">Made with 🖤 in <a target="_blank" href="https://github.com/ibiocide/biocide-v2raybot">biocide</a></p>
                                         </form>
                                     </div>
                                     <br>

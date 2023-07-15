@@ -31,7 +31,7 @@ biocide is a powerful and professional robot that supports several types of pane
 
 <div align=center>
 
-[![Telegram Channel](https://img.shields.io/endpoint?label=Channel&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fwizwizch&color=blue)](https://telegram.dog/wizwizch)
+[![Telegram Channel](https://img.shields.io/endpoint?label=Channel&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fbiocidech&color=blue)](https://telegram.dog/biocidech)
 [![Telegram Group](https://img.shields.io/endpoint?color=neon&label=Support%20Group&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fibiocide)](https://telegram.dog/ibiocide)
 <img src="https://img.shields.io/github/license/ibiocide/biocide-v2raybot?style=flat-square" />
 <img src="https://img.shields.io/github/v/release/ibiocide/biocide-v2raybot.svg" />

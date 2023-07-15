@@ -1,10 +1,10 @@
 <!--
-* WizWiz v7.5.3
+* biocide v7.5.3
 * https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @wizwizch
+* Copyright (c) @biocidech
 -->
 <?php
-function deletewizwiz()
+function deletebiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #f6d2da;color:#c60313 !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -18,7 +18,7 @@ function deletewizwiz()
 
 }
 
-function creatwizwiz()
+function creatbiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #d2f1ce;color:#1ebb0c !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -35,7 +35,7 @@ function creatwizwiz()
 
 }
 
-function editwizwiz()
+function editbiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #d2f1ce;color:#1ebb0c !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -50,7 +50,7 @@ function editwizwiz()
 
 }
 
-function statusonwizwiz()
+function statusonbiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #d2f1ce;color:#1ebb0c !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -66,7 +66,7 @@ function statusonwizwiz()
 
 }
 
-function statusoffwizwiz()
+function statusoffbiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #f6d2da;color:#c60313 !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -82,7 +82,7 @@ function statusoffwizwiz()
 
 }
 
-function statusportwizwiz()
+function statusportbiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #d2e2f6;color:#0351c6 !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -97,7 +97,7 @@ function statusportwizwiz()
 
 }
 
-function statustypetwizwiz()
+function statustypetbiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #e0d2f6;color:#6103c6 !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -112,7 +112,7 @@ function statustypetwizwiz()
 
 }
 
-function statustruewizwiz()
+function statustruebiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #d2f1ce;color:#1ebb0c !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -127,7 +127,7 @@ function statustruewizwiz()
                         ';
 
 }
-function statusfalsewizwiz()
+function statusfalsebiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #f6d2da;color:#c60313 !important;position: fixed;top: 8%;right: 2%;z-index: 10" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">
@@ -142,7 +142,7 @@ function statusfalsewizwiz()
                         ';
 
 }
-function welcomwizwiz()
+function welcombiocide()
 {
     $_SESSION['flash_message'] = '
                 <a id="myDiv" style="background-color: #e7cef1;color:#45013c !important;position: fixed;top: 4%;right: 40%; left: 40%;z-index: 10;text-align: center" class=" p-4 mb-8 font-semibold rounded-lg shadow-sm focus:outline-none">

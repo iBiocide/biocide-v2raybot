@@ -38,7 +38,7 @@
 
 <div align=center>
 
-[![Telegram Channel](https://img.shields.io/endpoint?label=Channel&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fwizwizch&color=blue)](https://telegram.dog/wizwizch)
+[![Telegram Channel](https://img.shields.io/endpoint?label=Channel&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fbiocidech&color=blue)](https://telegram.dog/biocidech)
 [![Telegram Group](https://img.shields.io/endpoint?color=neon&label=Support%20Group&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fibiocide)](https://telegram.dog/ibiocide)
 <img src="https://img.shields.io/github/license/ibiocide/biocide-v2raybot?style=flat-square" />
 <img src="https://img.shields.io/github/v/release/ibiocide/biocide-v2raybot.svg" />
@@ -118,7 +118,7 @@ bash <(curl -s https://raw.githubusercontent.com/ibiocide/biocide-v2raybot/main/
 
 
 ### مشکل stop شدن پنل x-ui:
-- اگر با گرفتن کانکشن از ربات دچار stop شدن پنل شدید به خاطر این هست که تنظیمات ربات رو درست انجام ندادین برای ایجاد سرور و پلن میتونید از طریق این <a href="https://uupload.ir/view/wizwiz_6gtf.docx">لینک</a> آموزش رو دانلود کنید و انجام بدین
+- اگر با گرفتن کانکشن از ربات دچار stop شدن پنل شدید به خاطر این هست که تنظیمات ربات رو درست انجام ندادین برای ایجاد سرور و پلن میتونید از طریق این <a href="https://uupload.ir/view/biocide_6gtf.docx">لینک</a> آموزش رو دانلود کنید و انجام بدین
 
 
 
@@ -149,7 +149,7 @@ bash <(curl -s https://raw.githubusercontent.com/ibiocide/biocide-v2raybot/main/
 
 ### ثبت نشدن سرور در ربات:
 
-- اگر هنگام خرید با خطای ( ارتباط شما با سرور برقرار نیست ) برخوردید حتما این <a href="https://t.me/wizwizch/186">ویس</a> رو گوش بدید
+- اگر هنگام خرید با خطای ( ارتباط شما با سرور برقرار نیست ) برخوردید حتما این <a href="https://t.me/biocidech/186">ویس</a> رو گوش بدید
 
 
 

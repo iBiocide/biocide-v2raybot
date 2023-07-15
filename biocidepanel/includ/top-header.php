@@ -1,7 +1,7 @@
 <!--
-* WizWiz v7.5.3
+* biocide v7.5.3
 * https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @wizwizch
+* Copyright (c) @biocidech
 -->
 <header class="">
     <div style="margin: 2%;"
@@ -32,7 +32,7 @@
                 <li class="relative flex items-center">
                     <p>
                         <a href="https://github.com/ibiocide/biocide-v2raybot">
-                            <img width="85px" alt="GitHub wizwiz stars"
+                            <img width="85px" alt="GitHub biocide stars"
                                  src="https://img.shields.io/github/stars/ibiocide/biocide-v2raybot?color=%23f3f4f8&label=star">
                         </a>
                     </p>

@@ -1,7 +1,7 @@
 <!--
-* WizWiz v7.5.3
+* biocide v7.5.3
 * https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @wizwizch
+* Copyright (c) @biocidech
 -->
 <?php
 
@@ -35,7 +35,7 @@ class VolumeInsertionHandler {
         if (!mysqli_stmt_execute($stmt)) {
             echo "Error updating tables: ". mysqli_stmt_error($stmt);
         } else {
-            creatwizwiz();
+            creatbiocide();
             header("Location: add-volume.php");
             exit();
         }
@@ -74,7 +74,7 @@ class VolumeInsertionHandler {
         if (!mysqli_stmt_execute($stmt)) {
             echo "Error updating tables: ". mysqli_stmt_error($stmt);
         } else {
-            creatwizwiz();
+            creatbiocide();
             header("Location: add-volume.php");
             exit();
         }
@@ -90,7 +90,7 @@ class VolumeInsertionHandler {
             if (!$result_delete_increase_plan) {
                 die("database error" . mysqli_error($this->conn));
             } else {
-                deletewizwiz();
+                deletebiocide();
                 header("location: add-volume.php");
             }
         }
@@ -105,7 +105,7 @@ class VolumeInsertionHandler {
             if (!$result_delete_increase_day) {
                 die("database error" . mysqli_error($this->conn));
             } else {
-                deletewizwiz();
+                deletebiocide();
                 header("location: add-volume.php");
             }
         }
@@ -179,7 +179,7 @@ function settingsave_state($conn) {
             echo "Error updating tables: " . mysqli_error($conn);
 
         } else {
-            editwizwiz();
+            editbiocide();
             header("location: settings.php");
         }
     }
@@ -213,7 +213,7 @@ function categories_delete($conn){
         if (!$result_delete_categories) {
             die("خطای پایگاه داده" . mysqli_error($conn));
         } else {
-            deletewizwiz();
+            deletebiocide();
             header("location: category.php");
         }
     }
@@ -245,7 +245,7 @@ function server_insert($conn){
         if (!$result_category_sql) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            creatwizwiz();
+            creatbiocide();
             header('Location: category.php');
 
         }
@@ -270,7 +270,7 @@ function discounts_delete($conn){
         if (!$result_delete_categories) {
             die("خطای پایگاه داده" . mysqli_error($conn));
         } else {
-            deletewizwiz();
+            deletebiocide();
             header("location: discount.php");
         }
     }
@@ -299,7 +299,7 @@ VALUES ('$hash_ids','$category_discountss','$percent_discounts','$discounts_date
         if (!$result_category_sql) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            creatwizwiz();
+            creatbiocide();
             header('Location: discount.php');
 
         }
@@ -354,7 +354,7 @@ function users_insert($conn){
             echo "Error updating tables: " . mysqli_error($conn);
 
         } else {
-            creatwizwiz();
+            creatbiocide();
             header("location: gift.php");
         }
 
@@ -372,7 +372,7 @@ function users_on_off($conn){
         if (!$res_on_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusonwizwiz();
+            statusonbiocide();
             header("location: index.php");
         }
     }
@@ -384,7 +384,7 @@ function users_on_off($conn){
         if (!$res_off_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusoffwizwiz();
+            statusoffbiocide();
             header("location: index.php");
         }
     }
@@ -398,7 +398,7 @@ function users_ban($conn){
         if (!$res_stepon_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusonwizwiz();
+            statusonbiocide();
             header("location: index.php");
         }
     }
@@ -410,7 +410,7 @@ function users_ban($conn){
         if (!$res_stepoff_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusoffwizwiz();
+            statusoffbiocide();
             header("location: index.php");
         }
     }
@@ -460,7 +460,7 @@ function order_on($conn){
         if (!$res_on_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusonwizwiz();
+            statusonbiocide();
             header("location: orders.php");
         }
     }
@@ -473,7 +473,7 @@ function order_off($conn){
         if (!$res_off_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusoffwizwiz();
+            statusoffbiocide();
             header("location: orders.php");
         }
     }
@@ -488,7 +488,7 @@ function order_delete($conn){
         if (!$result_delete_orders) {
             die("خطای پایگاه داده" . mysqli_error($conn));
         } else {
-            deletewizwiz();
+            deletebiocide();
             header("location: orders.php");
 
         }
@@ -538,8 +538,8 @@ function plan_insert($conn){
         $type_plans = $_POST['type_plan'];
         $price_plans = $_POST['price_plan'];
         $limitip_plans = $_POST['limitip_plan'];
-        $name_category_plans = $_POST['name_category_wizwiz'];
-        $name_servers_plans = $_POST['name_servers_wizwiz'];
+        $name_category_plans = $_POST['name_category_biocide'];
+        $name_servers_plans = $_POST['name_servers_biocide'];
         $descriptions = $_POST['description'];
         $fileid = '0';
         $pic = '0';
@@ -566,7 +566,7 @@ function plan_insert($conn){
         if (!$result_plans_sql) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            creatwizwiz();
+            creatbiocide();
             header('Location: plans.php');
 
         }
@@ -581,7 +581,7 @@ function plans($conn) {
         if (!$result_delete_server_plans) {
             die("خطای پایگاه داده" . mysqli_error($conn));
         } else {
-            deletewizwiz();
+            deletebiocide();
             header("location: plans.php");
         }
     }
@@ -593,7 +593,7 @@ function plans($conn) {
         if (!$res_on_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusonwizwiz();
+            statusonbiocide();
             header("location: plans.php");
         }
     }
@@ -605,7 +605,7 @@ function plans($conn) {
         if (!$res_off_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusoffwizwiz();
+            statusoffbiocide();
             header("location: plans.php");
         }
     }
@@ -620,7 +620,7 @@ function rahgozar($conn) {
         if (!$result_delete_server_plans) {
             die("خطای پایگاه داده" . mysqli_error($conn));
         } else {
-            deletewizwiz();
+            deletebiocide();
             header("location: rahgozar.php");
         }
     }
@@ -632,7 +632,7 @@ function rahgozar($conn) {
         if (!$res_on_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusonwizwiz();
+            statusonbiocide();
             header("location: rahgozar.php");
         }
     }
@@ -644,7 +644,7 @@ function rahgozar($conn) {
         if (!$res_off_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusoffwizwiz();
+            statusoffbiocide();
             header("location: rahgozar.php");
         }
     }
@@ -668,8 +668,8 @@ class rahgozar_insert {
             $volume_plans = $_POST['volume_plan'];
             $price_plans = $_POST['price_plan'];
             $limitip_plans = $_POST['limitip_plan'];
-            $name_category_plans = $_POST['name_category_wizwiz'];
-            $name_servers_plans = $_POST['name_servers_wizwiz'];
+            $name_category_plans = $_POST['name_category_biocide'];
+            $name_servers_plans = $_POST['name_servers_biocide'];
             $descriptions = $_POST['description'];
             $fileid = '0';
             $pic = '0';
@@ -701,7 +701,7 @@ class rahgozar_insert {
             if (!$result_plans_sql) {
                 echo "Error" . die(mysqli_error($this->conn));
             } else {
-                creatwizwiz();
+                creatbiocide();
                 header('Location: rahgozar.php');
             }
         }
@@ -753,7 +753,7 @@ class ServerHandler
         if (!$res_on_select) {
             echo "Error" . die(mysqli_error($this->conn));
         } else {
-            statusonwizwiz();
+            statusonbiocide();
             header("location: servers.php");
         }
     }
@@ -766,7 +766,7 @@ class ServerHandler
         if (!$res_off_select) {
             echo "Error" . die(mysqli_error($this->conn));
         } else {
-            statusoffwizwiz();
+            statusoffbiocide();
             header("location: servers.php");
         }
     }
@@ -779,7 +779,7 @@ class ServerHandler
         if (!$res_true_select) {
             echo "Error" . die(mysqli_error($this->conn));
         } else {
-            statustruewizwiz();
+            statustruebiocide();
             header("location: servers.php");
         }
     }
@@ -792,7 +792,7 @@ class ServerHandler
         if (!$res_false_select) {
             echo "Error" . die(mysqli_error($this->conn));
         } else {
-            statusfalsewizwiz();
+            statusfalsebiocide();
             header("location: servers.php");
         }
     }
@@ -805,7 +805,7 @@ class ServerHandler
         if (!$res_port_type_auto) {
             echo "Error" . die(mysqli_error($this->conn));
         } else {
-            statusportwizwiz();
+            statusportbiocide();
             header("location: servers.php");
         }
     }
@@ -818,7 +818,7 @@ class ServerHandler
         if (!$res_port_type_random) {
             echo "Error" . die(mysqli_error($this->conn));
         } else {
-            statusportwizwiz();
+            statusportbiocide();
             header("location: servers.php");
         }
     }
@@ -835,7 +835,7 @@ class ServerHandler
         if (!$query) {
             die("database error" . mysqli_error($this->conn));
         } else {
-            deletewizwiz();
+            deletebiocide();
             header("location: servers.php");
         }
     }
@@ -848,7 +848,7 @@ class ServerHandler
             if (!$res_type_normal) {
                 echo "خطا" . die(mysqli_error($conn));
             } else {
-                statustypetwizwiz();
+                statustypetbiocide();
                 header("location: servers.php");
             }
         }
@@ -860,7 +860,7 @@ class ServerHandler
             if (!$res_type_sanaei) {
                 echo "خطا" . die(mysqli_error($conn));
             } else {
-                statustypetwizwiz();
+                statustypetbiocide();
                 header("location: servers.php");
             }
         }
@@ -871,7 +871,7 @@ class ServerHandler
             if (!$res_type_alireza) {
                 echo "خطا" . die(mysqli_error($conn));
             } else {
-                statustypetwizwiz();
+                statustypetbiocide();
                 header("location: servers.php");
             }
         }
@@ -914,7 +914,7 @@ function settings_save_admin($conn){
             echo "Error updating tables: " . mysqli_error($conn);
 
         } else {
-            editwizwiz();
+            editbiocide();
             header("location: settings.php");
         }
 
@@ -936,7 +936,7 @@ function settings_backup_channel($conn){
         if (!$resultsetting) {
             echo "Error updating tables: ". mysqli_error($conn);
         } else {
-            editwizwiz();
+            editbiocide();
             header("location: settings.php");
         }
     }
@@ -949,7 +949,7 @@ function software($conn){
         if (!$res_on_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else {
-            statusonwizwiz();
+            statusonbiocide();
             header("location: software.php");
         }
     }
@@ -961,7 +961,7 @@ function software($conn){
         if (!$res_off_select) {
             echo "خطا" . die(mysqli_error($conn));
         } else{
-            statusoffwizwiz();
+            statusoffbiocide();
             header("location: software.php");
         }
     }
@@ -975,7 +975,7 @@ function software($conn){
         if (!$result_delete_software) {
             die("خطای پایگاه داده" . mysqli_error($conn));
         } else {
-            deletewizwiz();
+            deletebiocide();
             header("location: software.php?remove=1");
         }
     }
@@ -1022,7 +1022,7 @@ function volumes_delete($conn){
             if (!$result) {
                 die("database error" . mysqli_error($this->conn));
             } else {
-                $this->deletewizwiz();
+                $this->deletebiocide();
                 header("location: volume.php");
             }
         }

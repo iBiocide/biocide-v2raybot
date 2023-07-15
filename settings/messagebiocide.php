@@ -1,5 +1,5 @@
 <?php 
-$msgInfo = json_decode(file_get_contents("messagewizwiz.json"),true);
+$msgInfo = json_decode(file_get_contents("messagebiocide.json"),true);
 $offset = $msgInfo['offset']??-1;
 $messageParam = json_decode($msgInfo['text']);
 
@@ -66,13 +66,13 @@ if( $usersList->num_rows > 1 ) {
         $offset++;
     }
     $msgInfo['offset'] = $offset;
-    file_put_contents("messagewizwiz.json",json_encode($msgInfo));
+    file_put_contents("messagebiocide.json",json_encode($msgInfo));
 }else{
     bot('sendMessage',[
         'chat_id'=>$admin,
         'text'=>"عملیات ارسال پیام همگانی با موفقیت انجام شد\nبه " . $offset . " نفر پیامتو فرستادم"
         ]);
     $msgInfo['offset'] = -1;
-    file_put_contents("messagewizwiz.json",json_encode($msgInfo));
+    file_put_contents("messagebiocide.json",json_encode($msgInfo));
 }
 

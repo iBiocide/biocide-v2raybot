@@ -367,8 +367,8 @@ function getServerConfigKeys($serverId,$offset = 0){
     $cty = $cats->fetch_assoc();
     $id = $cty['id'];
     $cname = $cty['title'];
-    $flagwizwiz = $cty['flag'];
-    $remarkwizwiz = $cty['remark'];
+    $flagbiocide = $cty['flag'];
+    $remarkbiocide = $cty['remark'];
     $ucount = $cty['ucount'];
     $stmt = $connection->prepare("SELECT * FROM `server_config` WHERE `id`=?");
     $stmt->bind_param("i", $id);
@@ -397,56 +397,56 @@ function getServerConfigKeys($serverId,$offset = 0){
     }
     return json_encode(['inline_keyboard'=>[
         [
-            ['text'=>$panelUrl,'callback_data'=>"wizwizch"],
+            ['text'=>$panelUrl,'callback_data'=>"biocidech"],
             ],
         [
             ['text'=>$cname,'callback_data'=>"editServerName$id"],
-            ['text'=>"❕نام سرور",'callback_data'=>"wizwizch"]
+            ['text'=>"❕نام سرور",'callback_data'=>"biocidech"]
             ],
         [
-            ['text'=>$flagwizwiz,'callback_data'=>"editServerFlag$id"],
-            ['text'=>"🚩 پرچم سرور",'callback_data'=>"wizwizch"]
+            ['text'=>$flagbiocide,'callback_data'=>"editServerFlag$id"],
+            ['text'=>"🚩 پرچم سرور",'callback_data'=>"biocidech"]
             ],
         [
-            ['text'=>$remarkwizwiz,'callback_data'=>"editServerRemark$id"],
-            ['text'=>"📣 ریمارک سرور",'callback_data'=>"wizwizch"]
+            ['text'=>$remarkbiocide,'callback_data'=>"editServerRemark$id"],
+            ['text'=>"📣 ریمارک سرور",'callback_data'=>"biocidech"]
             ],
         [
             ['text'=>$serverType??" ",'callback_data'=>"changeServerType$id"],
-            ['text'=>"🔅نوعیت سرور",'callback_data'=>"wizwizch"]
+            ['text'=>"🔅نوعیت سرور",'callback_data'=>"biocidech"]
             ],
         [
             ['text'=>$portType,'callback_data'=>"changePortType$id"],
-            ['text'=>"🔅نوعیت پورت",'callback_data'=>"wizwizch"]
+            ['text'=>"🔅نوعیت پورت",'callback_data'=>"biocidech"]
             ],
         [
             ['text'=>$ucount,'callback_data'=>"editServerMax$id"],
-            ['text'=>"🔅ظرفیت سرور",'callback_data'=>"wizwizch"]
+            ['text'=>"🔅ظرفیت سرور",'callback_data'=>"biocidech"]
             ],
         [
             ['text'=>$sni,'callback_data'=>"editsServersni$id"],
-            ['text'=>"sni",'callback_data'=>"wizwizch"],
+            ['text'=>"sni",'callback_data'=>"biocidech"],
             ],
         [
             ['text'=>$headerType,'callback_data'=>"editsServerheader_type$id"],
-            ['text'=>"header type",'callback_data'=>"wizwizch"],
+            ['text'=>"header type",'callback_data'=>"biocidech"],
             ],
         [
             ['text'=>$requestHeader,'callback_data'=>"editsServerrequest_header$id"],
-            ['text'=>"request header",'callback_data'=>"wizwizch"],
+            ['text'=>"request header",'callback_data'=>"biocidech"],
             ],
         [
             ['text'=>$responseHeader,'callback_data'=>"editsServerresponse_header$id"],
-            ['text'=>"response header",'callback_data'=>"wizwizch"],
+            ['text'=>"response header",'callback_data'=>"biocidech"],
             ],
         [
             ['text'=>$security,'callback_data'=>"editsServersecurity$id"],
-            ['text'=>"security",'callback_data'=>"wizwizch"],
+            ['text'=>"security",'callback_data'=>"biocidech"],
             ],
         (($serverConfig['type'] == "sanaei" || $serverConfig['type'] == "alireza")?
         [
             ['text'=>$reality,'callback_data'=>"changeRealityState$id"],
-            ['text'=>"reality",'callback_data'=>"wizwizch"],
+            ['text'=>"reality",'callback_data'=>"biocidech"],
             ]:[]),
         [
             ['text'=>"♻️ تغییر آیپی های سرور",'callback_data'=>"changesServerIp$id"],
@@ -458,7 +458,7 @@ function getServerConfigKeys($serverId,$offset = 0){
             ['text'=>"🔅تغییر اطلاعات ورود",'callback_data'=>"changesServerLoginInfo$id"],
             ],
         [
-            ['text'=>"✂️ حذف سرور",'callback_data'=>"wizwizdeleteserver$id"],
+            ['text'=>"✂️ حذف سرور",'callback_data'=>"biocidedeleteserver$id"],
             ],
         [['text' => "↪ برگشت", 'callback_data' => "nextServerPage" . $offset]]
         ]]);
@@ -475,15 +475,15 @@ function getServerListKeys($offset = 0){
 
 
     $keys = array();
-    $keys[] = [['text'=>"وضعیت",'callback_data'=>"wizwizch"],['text'=>"تنظیمات",'callback_data'=>"wizwizch"],['text'=>"نوعیت",'callback_data'=>"wizwizch"],['text'=>"سرور",'callback_data'=>"wizwizch"]];
+    $keys[] = [['text'=>"وضعیت",'callback_data'=>"biocidech"],['text'=>"تنظیمات",'callback_data'=>"biocidech"],['text'=>"نوعیت",'callback_data'=>"biocidech"],['text'=>"سرور",'callback_data'=>"biocidech"]];
     if($cats->num_rows == 0){
-        $keys[] = [['text'=>"سروری یافت نشد",'callback_data'=>"wizwizch"]];
+        $keys[] = [['text'=>"سروری یافت نشد",'callback_data'=>"biocidech"]];
     }else {
         while($cty = $cats->fetch_assoc()){
             $id = $cty['id'];
             $cname = $cty['title'];
-            $flagwizwiz = $cty['flag'];
-            $remarkwizwiz = $cty['remark'];
+            $flagbiocide = $cty['flag'];
+            $remarkbiocide = $cty['remark'];
             $state = $cty['state'] == "1"?"✅ فعال":"❌ غیر فعال";
             $ucount = $cty['ucount'];
             $stmt = $connection->prepare("SELECT * FROM `server_config` WHERE `id`=?");
@@ -504,7 +504,7 @@ function getServerListKeys($offset = 0){
                     $serverType = "ساده";
                     break;
             }
-            $keys[] = [['text'=>$state,'callback_data'=>'toggleServerState' . $id . "_" . $offset],['text'=>"⚙️",'callback_data'=>"showServerSettings" . $id . "_" . $offset],['text'=>$serverType??" ",'callback_data'=>"wizwizch"],['text'=>$cname,'callback_data'=>"wizwizch"]];
+            $keys[] = [['text'=>$state,'callback_data'=>'toggleServerState' . $id . "_" . $offset],['text'=>"⚙️",'callback_data'=>"showServerSettings" . $id . "_" . $offset],['text'=>$serverType??" ",'callback_data'=>"biocidech"],['text'=>$cname,'callback_data'=>"biocidech"]];
         } 
     }
     if($offset == 0 && $cats->num_rows >= $limit){
@@ -534,14 +534,14 @@ function getCategoriesKeys($offset = 0){
 
 
     $keys = array();
-    $keys[] = [['text'=>"حذف",'callback_data'=>"wizwizch"],['text'=>"اسم دسته",'callback_data'=>"wizwizch"]];
+    $keys[] = [['text'=>"حذف",'callback_data'=>"biocidech"],['text'=>"اسم دسته",'callback_data'=>"biocidech"]];
     if($cats->num_rows == 0){
-        $keys[] = [['text'=>"دسته بندی یافت نشد",'callback_data'=>"wizwizch"]];
+        $keys[] = [['text'=>"دسته بندی یافت نشد",'callback_data'=>"biocidech"]];
     }else {
         while($cty = $cats->fetch_assoc()){
             $id = $cty['id'];
             $cname = $cty['title'];
-            $keys[] = [['text'=>"❌",'callback_data'=>"wizwizcategorydelete$id" . "_" . $offset],['text'=>$cname,'callback_data'=>"wizwizcategoryedit$id" . "_" . $offset]];
+            $keys[] = [['text'=>"❌",'callback_data'=>"biocidecategorydelete$id" . "_" . $offset],['text'=>$cname,'callback_data'=>"biocidecategoryedit$id" . "_" . $offset]];
         }
     }
     
@@ -593,59 +593,59 @@ function getGateWaysKeys(){
     return json_encode(['inline_keyboard'=>[
         [
             ['text'=>(!empty($paymentKeys['bankAccount'])?$paymentKeys['bankAccount']:" "),'callback_data'=>"changePaymentKeysbankAccount"],
-            ['text'=>"شماره حساب",'callback_data'=>"wizwizch"]
+            ['text'=>"شماره حساب",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>(!empty($paymentKeys['holderName'])?$paymentKeys['holderName']:" "),'callback_data'=>"changePaymentKeysholderName"],
-            ['text'=>"دارنده حساب",'callback_data'=>"wizwizch"]
+            ['text'=>"دارنده حساب",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>(!empty($paymentKeys['nowpayment'])?$paymentKeys['nowpayment']:" "),'callback_data'=>"changePaymentKeysnowpayment"],
-            ['text'=>"کد درگاه nowPayment",'callback_data'=>"wizwizch"]
+            ['text'=>"کد درگاه nowPayment",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>(!empty($paymentKeys['zarinpal'])?$paymentKeys['zarinpal']:" "),'callback_data'=>"changePaymentKeyszarinpal"],
-            ['text'=>"کد درگاه زرین پال",'callback_data'=>"wizwizch"]
+            ['text'=>"کد درگاه زرین پال",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>(!empty($paymentKeys['nextpay'])?$paymentKeys['nextpay']:" "),'callback_data'=>"changePaymentKeysnextpay"],
-            ['text'=>"کد درگاه نکست پی",'callback_data'=>"wizwizch"]
+            ['text'=>"کد درگاه نکست پی",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$weSwapState,'callback_data'=>"changeGateWaysweSwapState"],
-            ['text'=>"درگاه وی سواپ",'callback_data'=>"wizwizch"]
+            ['text'=>"درگاه وی سواپ",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$cartToCartState,'callback_data'=>"changeGateWayscartToCartState"],
-            ['text'=>"کارت به کارت",'callback_data'=>"wizwizch"]
+            ['text'=>"کارت به کارت",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$nextpay,'callback_data'=>"changeGateWaysnextpay"],
-            ['text'=>"درگاه نکست پی",'callback_data'=>"wizwizch"]
+            ['text'=>"درگاه نکست پی",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$zarinpal,'callback_data'=>"changeGateWayszarinpal"],
-            ['text'=>"درگاه پرداخت زرینپال",'callback_data'=>"wizwizch"]
+            ['text'=>"درگاه پرداخت زرینپال",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$nowPaymentWallet,'callback_data'=>"changeGateWaysnowPaymentWallet"],
-            ['text'=>"درگاه NowPayment کیف پول",'callback_data'=>"wizwizch"]
+            ['text'=>"درگاه NowPayment کیف پول",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$nowPaymentOther,'callback_data'=>"changeGateWaysnowPaymentOther"],
-            ['text'=>"درگاه NowPayment سایر",'callback_data'=>"wizwizch"]
+            ['text'=>"درگاه NowPayment سایر",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$walletState,'callback_data'=>"changeGateWayswalletState"],
-            ['text'=>"کیف پول",'callback_data'=>"wizwizch"]
+            ['text'=>"کیف پول",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$rewaredChannel,'callback_data'=>'editRewardChannel'],
-            ['text'=>"کانال گزارش درآمد",'callback_data'=>'wizwizch']
+            ['text'=>"کانال گزارش درآمد",'callback_data'=>'biocidech']
             ],
         [
             ['text'=>$lockChannel,'callback_data'=>'editLockChannel'],
-            ['text'=>"کانال قفل",'callback_data'=>'wizwizch']
+            ['text'=>"کانال قفل",'callback_data'=>'biocidech']
             ],
         [['text'=>"↩️ برگشت",'callback_data'=>"managePanel"]]
         ]]);
@@ -688,55 +688,55 @@ function getBotSettingKeys(){
             ],
         [
             ['text'=>$changeProtocole,'callback_data'=>"changeBotchangeProtocolState"],
-            ['text'=>"تغییر پروتکل",'callback_data'=>"wizwizch"]
+            ['text'=>"تغییر پروتکل",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$renewAccount,'callback_data'=>"changeBotrenewAccountState"],
-            ['text'=>"تمدید سرویس",'callback_data'=>"wizwizch"]
+            ['text'=>"تمدید سرویس",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$plandelkhahwiz,'callback_data'=>"changeBotplandelkhahState"],
-            ['text'=>"پلن دلخواه",'callback_data'=>"wizwizch"]
+            ['text'=>"پلن دلخواه",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$switchLocation,'callback_data'=>"changeBotswitchLocationState"],
-            ['text'=>"تغییر لوکیشن",'callback_data'=>"wizwizch"]
+            ['text'=>"تغییر لوکیشن",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$increaseTime,'callback_data'=>"changeBotincreaseTimeState"],
-            ['text'=>"افزایش زمان",'callback_data'=>"wizwizch"]
+            ['text'=>"افزایش زمان",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$increaseVolume,'callback_data'=>"changeBotincreaseVolumeState"],
-            ['text'=>"افزایش حجم",'callback_data'=>"wizwizch"]
+            ['text'=>"افزایش حجم",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$requirePhone,'callback_data'=>"changeBotrequirePhone"],
-            ['text'=>"تأیید شماره",'callback_data'=>"wizwizch"]
+            ['text'=>"تأیید شماره",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$requireIranPhone,'callback_data'=>"changeBotrequireIranPhone"],
-            ['text'=>"تأیید شماره ایرانی",'callback_data'=>"wizwizch"]
+            ['text'=>"تأیید شماره ایرانی",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$sellState,'callback_data'=>"changeBotsellState"],
-            ['text'=>"فروش",'callback_data'=>"wizwizch"]
+            ['text'=>"فروش",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$robotState,'callback_data'=>"changeBotbotState"],
-            ['text'=>"وضعیت ربات",'callback_data'=>"wizwizch"]
+            ['text'=>"وضعیت ربات",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$subLink,'callback_data'=>"changeBotsubLinkState"],
-            ['text'=>"لینک ساب",'callback_data'=>"wizwizch"]
+            ['text'=>"لینک ساب",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$searchState,'callback_data'=>"changeBotsearchState"],
-            ['text'=>"مشخصات کانفیگ",'callback_data'=>"wizwizch"]
+            ['text'=>"مشخصات کانفیگ",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$rewaredTime,'callback_data'=>'editRewardTime'],
-            ['text'=>"ارسال گزارش درآمد", 'callback_data'=>'wizwizch']
+            ['text'=>"ارسال گزارش درآمد", 'callback_data'=>'biocidech']
             ],
         [['text'=>"↩️ برگشت",'callback_data'=>"managePanel"]]
         ]]);
@@ -777,28 +777,28 @@ function getBotReportKeys(){
     
     return json_encode(['inline_keyboard'=>[
         [
-            ['text'=>$allUsers,'callback_data'=>'wizwizch'],
-            ['text'=>"تعداد کل کاربران",'callback_data'=>'wizwizch']
+            ['text'=>$allUsers,'callback_data'=>'biocidech'],
+            ['text'=>"تعداد کل کاربران",'callback_data'=>'biocidech']
             ],
         [
-            ['text'=>$allOrders,'callback_data'=>'wizwizch'],
-            ['text'=>"کل محصولات خریداری شده",'callback_data'=>'wizwizch']
+            ['text'=>$allOrders,'callback_data'=>'biocidech'],
+            ['text'=>"کل محصولات خریداری شده",'callback_data'=>'biocidech']
             ],
         [
-            ['text'=>$allServers,'callback_data'=>'wizwizch'],
-            ['text'=>"تعداد سرورها",'callback_data'=>'wizwizch']
+            ['text'=>$allServers,'callback_data'=>'biocidech'],
+            ['text'=>"تعداد سرورها",'callback_data'=>'biocidech']
             ],
         [
-            ['text'=>$allCategories,'callback_data'=>'wizwizch'],
-            ['text'=>"تعداد دسته ها",'callback_data'=>'wizwizch']
+            ['text'=>$allCategories,'callback_data'=>'biocidech'],
+            ['text'=>"تعداد دسته ها",'callback_data'=>'biocidech']
             ],
         [
-            ['text'=>$allPlans,'callback_data'=>'wizwizch'],
-            ['text'=>"تعداد پلن ها",'callback_data'=>'wizwizch']
+            ['text'=>$allPlans,'callback_data'=>'biocidech'],
+            ['text'=>"تعداد پلن ها",'callback_data'=>'biocidech']
             ],
         [
-            ['text'=>$totalRewards,'callback_data'=>'wizwizch'],
-            ['text'=>"درآمد کل",'callback_data'=>'wizwizch']
+            ['text'=>$totalRewards,'callback_data'=>'biocidech'],
+            ['text'=>"درآمد کل",'callback_data'=>'biocidech']
             ],
         [
             ['text'=>"برگشت به مدیریت",'callback_data'=>'managePanel']
@@ -815,10 +815,10 @@ function getAdminsKeys(){
     $stmt->close();
     if($usersList->num_rows > 0){
         while($user = $usersList->fetch_assoc()){
-            $keys[] = [['text'=>"❌",'callback_data'=>"delAdmin" . $user['userid']],['text'=>$user['name'], "callback_data"=>"wizwizch"]];
+            $keys[] = [['text'=>"❌",'callback_data'=>"delAdmin" . $user['userid']],['text'=>$user['name'], "callback_data"=>"biocidech"]];
         }
     }else{
-        $keys[] = [['text'=>"لیست ادمین ها خالی است ❕",'callback_data'=>"wizwizch"]];
+        $keys[] = [['text'=>"لیست ادمین ها خالی است ❕",'callback_data'=>"biocidech"]];
     }
     $keys[] = [['text'=>"➕ افزودن ادمین",'callback_data'=>"addNewAdmin"]];
     $keys[] = [['text'=>"↩️ برگشت",'callback_data'=>"managePanel"]];
@@ -850,23 +850,23 @@ function getUserInfoKeys($userId){
         return json_encode(['inline_keyboard'=>[
             [
                 ['text'=>$userUserName??" ",'url'=>"t.me/$userUserName"],
-                ['text'=>"یوزرنیم",'callback_data'=>"wizwizch"]
+                ['text'=>"یوزرنیم",'callback_data'=>"biocidech"]
                 ],
             [
-                ['text'=>$fullName??" ",'callback_data'=>"wizwizch"],
-                ['text'=>"نام",'callback_data'=>"wizwizch"]
+                ['text'=>$fullName??" ",'callback_data'=>"biocidech"],
+                ['text'=>"نام",'callback_data'=>"biocidech"]
                 ],
             [
-                ['text'=>$boughtService??" ",'callback_data'=>"wizwizch"],
-                ['text'=>"سرویس ها",'callback_data'=>"wizwizch"]
+                ['text'=>$boughtService??" ",'callback_data'=>"biocidech"],
+                ['text'=>"سرویس ها",'callback_data'=>"biocidech"]
                 ],
             [
-                ['text'=>$totalBoughtPrice??" ",'callback_data'=>"wizwizch"],
-                ['text'=>"مبلغ خرید",'callback_data'=>"wizwizch"]
+                ['text'=>$totalBoughtPrice??" ",'callback_data'=>"biocidech"],
+                ['text'=>"مبلغ خرید",'callback_data'=>"biocidech"]
                 ],
             [
-                ['text'=>$userWallet??" ",'callback_data'=>"wizwizch"],
-                ['text'=>"موجودی کیف پول",'callback_data'=>"wizwizch"]
+                ['text'=>$userWallet??" ",'callback_data'=>"biocidech"],
+                ['text'=>"موجودی کیف پول",'callback_data'=>"biocidech"]
                 ],
             [
                 ['text'=>"برگشت 🔙",'callback_data'=>"mainMenu"]
@@ -883,7 +883,7 @@ function getDiscountCodeKeys(){
     $stmt->close();
     $keys = array();
     if($list->num_rows > 0){
-        $keys[] = [['text'=>'حذف','callback_data'=>"wizwizch"],['text'=>"تاریخ ختم",'callback_data'=>"wizwizch"],['text'=>"تعداد استفاده",'callback_data'=>"wizwizch"],['text'=>"مقدار تخفیف",'callback_data'=>"wizwizch"],['text'=>"کد تخفیف",'callback_data'=>"wizwizch"]];
+        $keys[] = [['text'=>'حذف','callback_data'=>"biocidech"],['text'=>"تاریخ ختم",'callback_data'=>"biocidech"],['text'=>"تعداد استفاده",'callback_data'=>"biocidech"],['text'=>"مقدار تخفیف",'callback_data'=>"biocidech"],['text'=>"کد تخفیف",'callback_data'=>"biocidech"]];
         while($row = $list->fetch_assoc()){
             $date = $row['expire_date']!=0?jdate("Y/n/j H:i", $row['expire_date']):"نامحدود";
             $count = $row['expire_count']!=-1?$row['expire_count']:"نامحدود";
@@ -892,10 +892,10 @@ function getDiscountCodeKeys(){
             $hashId = $row['hash_id'];
             $rowId = $row['id'];
             
-            $keys[] = [['text'=>'❌','callback_data'=>"delDiscount" . $rowId],['text'=>$date,'callback_data'=>"wizwizch"],['text'=>$count,'callback_data'=>"wizwizch"],['text'=>$amount,'callback_data'=>"wizwizch"],['text'=>$hashId,'callback_data'=>'copyHash' . $hashId]];
+            $keys[] = [['text'=>'❌','callback_data'=>"delDiscount" . $rowId],['text'=>$date,'callback_data'=>"biocidech"],['text'=>$count,'callback_data'=>"biocidech"],['text'=>$amount,'callback_data'=>"biocidech"],['text'=>$hashId,'callback_data'=>'copyHash' . $hashId]];
         }
     }else{
-        $keys[] = [['text'=>"کد تخفیفی یافت نشد",'callback_data'=>"wizwizch"]];
+        $keys[] = [['text'=>"کد تخفیفی یافت نشد",'callback_data'=>"biocidech"]];
     }
     
     $keys[] = [['text'=>"افزودن کد تخفیف",'callback_data'=>"addDiscountCode"]];
@@ -918,10 +918,10 @@ function getMainMenuButtonsKeys(){
             $answer = $row['value'];
             $keys[] = [
                         ['text'=>"❌",'callback_data'=>"delMainButton" . $rowId],
-                        ['text'=>$title??" " ,'callback_data'=>"wizwizch"]];
+                        ['text'=>$title??" " ,'callback_data'=>"biocidech"]];
         }
     }else{
-        $keys[] = [['text'=>"دکمه ای یافت نشد ❕",'callback_data'=>"wizwizch"]];
+        $keys[] = [['text'=>"دکمه ای یافت نشد ❕",'callback_data'=>"biocidech"]];
     }
     $keys[] = [['text'=>"افزودن دکمه جدید ➕",'callback_data'=>"addNewMainButton"]];
     $keys[] = [['text'=>"برگشت 🔙",'callback_data'=>"managePanel"]];
@@ -961,24 +961,24 @@ function getPlanDetailsKeys($planId){
         $stmt = $connection->prepare("SELECT * FROM `orders_list` WHERE `status`=1 AND `fileid`=?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
-        $wizwizplanaccnumber = $stmt->get_result()->num_rows;
+        $biocideplanaccnumber = $stmt->get_result()->num_rows;
         $stmt->close();
 
         $srvid= $pd['server_id'];
         $keyboard = [
-            ($rahgozar==true?[['text'=>"* نوع پلن: رهگذر *",'callback_data'=>'wizwizch']]:[]),
-            [['text'=>$name,'callback_data'=>"wizwizplanname$id"],['text'=>"🔮 نام پلن",'callback_data'=>"wizwizch"]],
-            ($reality == "true"?[['text'=>$dest,'callback_data'=>"editDestName$id"],['text'=>"dest",'callback_data'=>"wizwizch"]]:[]),
-            ($reality == "true"?[['text'=>$serverName,'callback_data'=>"editServerNames$id"],['text'=>"serverNames",'callback_data'=>"wizwizch"]]:[]),
-            ($reality == "true"?[['text'=>$spiderX,'callback_data'=>"editSpiderX$id"],['text'=>"spiderX",'callback_data'=>"wizwizch"]]:[]),
-            ($reality == "true"?[['text'=>$flow,'callback_data'=>"editFlow$id"],['text'=>"flow",'callback_data'=>"wizwizch"]]:[]),
-            [['text'=>$wizwizplanaccnumber,'callback_data'=>"wizwizch"],['text'=>"🎗 تعداد اکانت های فروخته شده",'callback_data'=>"wizwizch"]],
-            ($pd['inbound_id'] != 0?[['text'=>"$acount",'callback_data'=>"wizwizplanslimit$id"],['text'=>"🚪 تغییر ظرفیت کانفیگ",'callback_data'=>"wizwizch"]]:[]),
-            ($pd['inbound_id'] != 0?[['text'=>$pd['inbound_id'],'callback_data'=>"wizwizplansinobundid$id"],['text'=>"🚪 سطر کانفیگ",'callback_data'=>"wizwizch"]]:[]),
-            [['text'=>"✏️ ویرایش توضیحات",'callback_data'=>"wizwizplaneditdes$id"]],
-            [['text'=>number_format($price) . " تومان",'callback_data'=>"wizwizplanrial$id"],['text'=>"💰 قیمت پلن",'callback_data'=>"wizwizch"]],
-            [['text'=>"♻️ دریافت لیست اکانت ها",'callback_data'=>"wizwizplanacclist$id"]],
-            [['text'=>"✂️ حذف",'callback_data'=>"wizwizplandelete$id"]],
+            ($rahgozar==true?[['text'=>"* نوع پلن: رهگذر *",'callback_data'=>'biocidech']]:[]),
+            [['text'=>$name,'callback_data'=>"biocideplanname$id"],['text'=>"🔮 نام پلن",'callback_data'=>"biocidech"]],
+            ($reality == "true"?[['text'=>$dest,'callback_data'=>"editDestName$id"],['text'=>"dest",'callback_data'=>"biocidech"]]:[]),
+            ($reality == "true"?[['text'=>$serverName,'callback_data'=>"editServerNames$id"],['text'=>"serverNames",'callback_data'=>"biocidech"]]:[]),
+            ($reality == "true"?[['text'=>$spiderX,'callback_data'=>"editSpiderX$id"],['text'=>"spiderX",'callback_data'=>"biocidech"]]:[]),
+            ($reality == "true"?[['text'=>$flow,'callback_data'=>"editFlow$id"],['text'=>"flow",'callback_data'=>"biocidech"]]:[]),
+            [['text'=>$biocideplanaccnumber,'callback_data'=>"biocidech"],['text'=>"🎗 تعداد اکانت های فروخته شده",'callback_data'=>"biocidech"]],
+            ($pd['inbound_id'] != 0?[['text'=>"$acount",'callback_data'=>"biocideplanslimit$id"],['text'=>"🚪 تغییر ظرفیت کانفیگ",'callback_data'=>"biocidech"]]:[]),
+            ($pd['inbound_id'] != 0?[['text'=>$pd['inbound_id'],'callback_data'=>"biocideplansinobundid$id"],['text'=>"🚪 سطر کانفیگ",'callback_data'=>"biocidech"]]:[]),
+            [['text'=>"✏️ ویرایش توضیحات",'callback_data'=>"biocideplaneditdes$id"]],
+            [['text'=>number_format($price) . " تومان",'callback_data'=>"biocideplanrial$id"],['text'=>"💰 قیمت پلن",'callback_data'=>"biocidech"]],
+            [['text'=>"♻️ دریافت لیست اکانت ها",'callback_data'=>"biocideplanacclist$id"]],
+            [['text'=>"✂️ حذف",'callback_data'=>"biocideplandelete$id"]],
             [['text' => "↪ برگشت", 'callback_data' =>"plansList$srvid"]]
             ];
         return json_encode(['inline_keyboard'=>$keyboard]);
@@ -1075,26 +1075,26 @@ function getOrderDetailKeys($from_id, $id){
                 if($security == "xtls"){
                     $keyboard = [
                         [
-            			    ['text' => "$name", 'callback_data' => "wizwizch"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "wizwizch"],
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$expire_date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => " $leftgb", 'callback_data' => "wizwizch"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "wizwizch"],
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
             			],
             // 			[
             //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => "cantEditTrojan"],
             //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "wizwizch"],
+                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
                         ],
                         [
                             ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => ($botState['changeProtocolState']=="on"?"changeAccProtocol{$fid}_{$id}_trojan":"changeProtocolIsDisable")],
@@ -1113,26 +1113,26 @@ function getOrderDetailKeys($from_id, $id){
                 }else{
                     $keyboard = [
                         [
-            			    ['text' => "$name", 'callback_data' => "wizwizch"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "wizwizch"],
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$expire_date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => " $leftgb", 'callback_data' => "wizwizch"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "wizwizch"],
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
             			],
             // 			[
             //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => "cantEditTrojan"],
             //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "wizwizch"],
+                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
                         ],
                         [
                             ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => ($botState['changeProtocolState']=="on"?"changeAccProtocol{$fid}_{$id}_trojan":"changeProtocolIsDisable")],
@@ -1155,26 +1155,26 @@ function getOrderDetailKeys($from_id, $id){
                 if($netType == "grpc"){
                     $keyboard = [
                         [
-            			    ['text' => "$name", 'callback_data' => "wizwizch"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "wizwizch"],
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$expire_date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => " $leftgb", 'callback_data' => "wizwizch"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "wizwizch"],
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
             			],
             // 			[
             //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => "cantEditGrpc"],
             //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "wizwizch"],
+                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
                         ],
                         [
                             ['text' => $protocol == 'vmess' ? '☑️ vmess' : 'vmess', 'callback_data' => ($botState['changeProtocolState']=="on"?"changeAccProtocol{$fid}_{$id}_vmess":"changeProtocolIsDisable")],
@@ -1195,26 +1195,26 @@ function getOrderDetailKeys($from_id, $id){
                 elseif($netType == "tcp" && $security == "xtls"){
                     $keyboard = [
                         [
-            			    ['text' => "$name", 'callback_data' => "wizwizch"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "wizwizch"],
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$expire_date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => " $leftgb", 'callback_data' => "wizwizch"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "wizwizch"],
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
             			],
             // 			[
             //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => ($security=="xtls"?"cantEditGrpc":"changeNetworkType{$fid}_{$id}")],
             //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "wizwizch"],
+                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
                         ],
                         [
                             ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => ($botState['changeProtocolState']=="on"?"changeAccProtocol{$fid}_{$id}_trojan":"changeProtocolIsDisable")],
@@ -1235,26 +1235,26 @@ function getOrderDetailKeys($from_id, $id){
                 else{
                     $keyboard = [
                         [
-            			    ['text' => "$name", 'callback_data' => "wizwizch"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "wizwizch"],
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => "$expire_date ", 'callback_data' => "wizwizch"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "wizwizch"],
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
                         ],
                         [
-            			    ['text' => " $leftgb", 'callback_data' => "wizwizch"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "wizwizch"],
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
             			],
             // 			[
             //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => (($security=="xtls" || $rahgozar == true)?"cantEditGrpc":"changeNetworkType{$fid}_{$id}")],
             //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "wizwizch"],
+                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
                         ],
                         ($rahgozar == true?
                         [
@@ -1282,26 +1282,26 @@ function getOrderDetailKeys($from_id, $id){
         }else{
             $keyboard = [
                 [
-    			    ['text' => "$name", 'callback_data' => "wizwizch"],
-                    ['text' => " 🚀 نام پلن:", 'callback_data' => "wizwizch"],
+    			    ['text' => "$name", 'callback_data' => "biocidech"],
+                    ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
                 ],
                 [
-    			    ['text' => "$date ", 'callback_data' => "wizwizch"],
-                    ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "wizwizch"],
+    			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                    ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
                 ],
                 [
-    			    ['text' => "$expire_date ", 'callback_data' => "wizwizch"],
-                    ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "wizwizch"],
+    			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                    ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
                 ],
                 [
-    			    ['text' => " $leftgb", 'callback_data' => "wizwizch"],
-                    ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "wizwizch"],
+    			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                    ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
     			],
     			[
-                    ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "wizwizch"],
+                    ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
                 ],
                 [
-                    ['text' => " $protocol پروتکل ☑️", 'callback_data' => "wizwizch"],
+                    ['text' => " $protocol پروتکل ☑️", 'callback_data' => "biocidech"],
                 ]
             ];
             

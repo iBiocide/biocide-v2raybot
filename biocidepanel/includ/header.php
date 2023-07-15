@@ -1,7 +1,7 @@
 <!--
-* WizWiz v7.5.3
+* biocide v7.5.3
 * https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @wizwizch
+* Copyright (c) @biocidech
 -->
 <?php
 ob_start();
@@ -11,14 +11,14 @@ include 'includ/jdf.php';
 include 'includ/notif.php';
 include 'includ/session.php';
 include 'includ/fun.php';
-session_login_wizwiz();
+session_login_biocide();
 ?>
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>wizwiz</title>
+    <title>biocide</title>
     <script src="./assets/js/tailwind.js"></script>
     <link rel="stylesheet" href="./assets/css/tailwind.output.css"/>
     <link rel="stylesheet" href="./assets/css/talwind.min.css"/>
@@ -27,7 +27,7 @@ session_login_wizwiz();
     <script src="./assets/js/alpine.js"></script>
     <script src="./assets/js/init-alpine.js"></script>
     <script src="./assets/js/jquery.js"></script>
-    <script src="./assets/wizwiz.js"></script>
+    <script src="./assets/biocide.js"></script>
     <style>
         @font-face {
             font-family: 'iransans';
@@ -56,6 +56,6 @@ session_login_wizwiz();
     >
         <div class="py-3 text-gray-500 dark:text-gray-400">
             <div class="ml-2 flex justify-start items-center">
-            <img width="40px" src="./icons/wizwiz.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > WizWiz <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <img width="40px" src="./icons/biocide.png">
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
             </div>

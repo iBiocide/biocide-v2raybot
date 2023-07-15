@@ -1,7 +1,7 @@
 <!--
-* WizWiz v7.5.3
+* biocide v7.5.3
 * https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @wizwizch
+* Copyright (c) @biocidech
 -->
 <?php
 include 'includ/header.php';
@@ -202,7 +202,7 @@ include 'includ/header.php';
       ></span>
         <a
                 class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
-                href="wizwizbackup.php">
+                href="biocidebackup.php">
             <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="21" height="21"><path d="M18.4,7.379a1.128,1.128,0,0,1-.769-.754h0a8,8,0,1,0-15.1,5.237A1.046,1.046,0,0,1,2.223,13.1,5.5,5.5,0,0,0,.057,18.3,5.622,5.622,0,0,0,5.683,23H11a1,1,0,0,0,1-1h0a1,1,0,0,0-1-1H5.683a3.614,3.614,0,0,1-3.646-2.981,3.456,3.456,0,0,1,1.376-3.313A3.021,3.021,0,0,0,4.4,11.141a6.113,6.113,0,0,1-.073-4.126A5.956,5.956,0,0,1,9.215,3.05,6.109,6.109,0,0,1,9.987,3a5.984,5.984,0,0,1,5.756,4.28,2.977,2.977,0,0,0,2.01,1.99,5.934,5.934,0,0,1,.778,11.09.976.976,0,0,0-.531.888h0a.988.988,0,0,0,1.388.915c4.134-1.987,6.38-7.214,2.88-12.264A6.935,6.935,0,0,0,18.4,7.379Z"/><path d="M18.707,16.707a1,1,0,0,0,0-1.414l-1.586-1.586a3,3,0,0,0-4.242,0l-1.586,1.586a1,1,0,0,0,1.414,1.414L14,15.414V23a1,1,0,0,0,2,0V15.414l1.293,1.293a1,1,0,0,0,1.414,0Z"/></svg>
             <span class="ml-4">Backup</span>
         </a>
@@ -222,11 +222,11 @@ include 'includ/header.php';
     </li>
 </ul>
 <div class="px-6 my-2 mt-4">
-    <a href="https://t.me/wizwizch" target="_blank">
+    <a href="https://t.me/biocidech" target="_blank">
         <button
                 class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
         >
-            Telegram wizwiz
+            Telegram biocide
             <span class="ml-2" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                        fill="#fff" width="15" height="15"><g id="_01_align_center"
                                                                                              data-name="01 align center"><path
@@ -255,7 +255,7 @@ include 'includ/header.php';
     </a>
 </div>
 <div class="px-6 ">
-    <a href="https://t.me/wizwizch/119" target="_blank">
+    <a href="https://t.me/biocidech/119" target="_blank">
         <button
                 class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-500 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-blue">
             Donate
@@ -295,8 +295,8 @@ include 'includ/header.php';
 >
     <div class="py-4 text-gray-500 dark:text-gray-400">
         <div class="ml-2 flex justify-start items-center ">
-            <img width="40px" src="./icons/wizwiz.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > WizWiz <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <img width="40px" src="./icons/biocide.png">
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
         </div>
         <ul class="mt-6">
             <li class="relative px-6 py-3">
@@ -493,7 +493,7 @@ include 'includ/header.php';
                   ></span>
                 <a
                         class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
-                        href="wizwizbackup.php">
+                        href="biocidebackup.php">
                     <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="21" height="21"><path d="M18.4,7.379a1.128,1.128,0,0,1-.769-.754h0a8,8,0,1,0-15.1,5.237A1.046,1.046,0,0,1,2.223,13.1,5.5,5.5,0,0,0,.057,18.3,5.622,5.622,0,0,0,5.683,23H11a1,1,0,0,0,1-1h0a1,1,0,0,0-1-1H5.683a3.614,3.614,0,0,1-3.646-2.981,3.456,3.456,0,0,1,1.376-3.313A3.021,3.021,0,0,0,4.4,11.141a6.113,6.113,0,0,1-.073-4.126A5.956,5.956,0,0,1,9.215,3.05,6.109,6.109,0,0,1,9.987,3a5.984,5.984,0,0,1,5.756,4.28,2.977,2.977,0,0,0,2.01,1.99,5.934,5.934,0,0,1,.778,11.09.976.976,0,0,0-.531.888h0a.988.988,0,0,0,1.388.915c4.134-1.987,6.38-7.214,2.88-12.264A6.935,6.935,0,0,0,18.4,7.379Z"/><path d="M18.707,16.707a1,1,0,0,0,0-1.414l-1.586-1.586a3,3,0,0,0-4.242,0l-1.586,1.586a1,1,0,0,0,1.414,1.414L14,15.414V23a1,1,0,0,0,2,0V15.414l1.293,1.293a1,1,0,0,0,1.414,0Z"/></svg>
                     <span class="ml-4">Backup</span>
                 </a>
@@ -513,9 +513,9 @@ include 'includ/header.php';
             </li>
         </ul>
         <div class="px-6 mt-3">
-            <a href="https://t.me/wizwizch" target="_blank">
+            <a href="https://t.me/biocidech" target="_blank">
                 <button class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-blue-500 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
-                    Telegram wizwiz
+                    Telegram biocide
                     <span class="ml-2" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                                fill="#fff" width="15" height="15"><g
                                     id="_01_align_center" data-name="01 align center"><path
@@ -542,7 +542,7 @@ include 'includ/header.php';
             </a>
         </div>
         <div class="px-6 my-2">
-            <a href="https://t.me/wizwizch/119" target="_blank">
+            <a href="https://t.me/biocidech/119" target="_blank">
                 <button class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-500 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-blue">
                     Donate
                     <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" fill="#fff"
@@ -575,7 +575,7 @@ include 'includ/header.php';
                         <img src="icons/add.svg" width="30px">
                     </button>
                     </span>
-                <?php session_notif_wizwiz() ?>
+                <?php session_notif_biocide() ?>
             </a>
 
             <div style='margin-top:40px' class=" w-full flex justify-center items-center grid gap-6 mb-8 xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-2">
@@ -601,15 +601,15 @@ include 'includ/header.php';
                     ?>
                     <?php
                     echo '<div class="flex items-center justify-center w-full gap-4 mt-2">
-                    <a href="wizwizbackup.php?delete=' . $row_servers['id'] . '">
+                    <a href="biocidebackup.php?delete=' . $row_servers['id'] . '">
                     <svg class="m-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" fill="#ff758f"><g id="_01_align_center" data-name="01 align center"><path d="M18.965,8.464l5.029-5.029L22.565,2.006,17.519,7.051,15.313,4.895a2.011,2.011,0,0,0-2.724-.073A19.71,19.71,0,0,1,6.226,8.687L-.006,10.514v.756A12.892,12.892,0,0,0,13.006,24.006h1.241l.261-.182a14.98,14.98,0,0,0,6.886-12.081,2.013,2.013,0,0,0-.611-1.5ZM13.9,6.34l5.477,5.341a12.652,12.652,0,0,1-.456,3.015L11.941,7.9A24.691,24.691,0,0,0,13.9,6.34Zm-.294,15.645h-.6a11.153,11.153,0,0,1-4.293-.859,11.55,11.55,0,0,0,4.348-3.8l.518-.76L11.91,15.43l-.518.761A9.539,9.539,0,0,1,7.8,19.324l-1.229.618a10.9,10.9,0,0,1-2.585-2.563,11.632,11.632,0,0,0,4.357-2.657L6.932,13.277a9.611,9.611,0,0,1-3.974,2.317,10.4,10.4,0,0,1-.921-3.575l4.755-1.394a15.234,15.234,0,0,0,3.423-1.59l7.911,7.7A14.1,14.1,0,0,1,13.608,21.985Z"/></g></svg>
                     </a>';
                     if ($row_servers['status'] == '1') {
-                        echo '<a href="wizwizbackup.php?off=' . $row_servers['id'] . '">
+                        echo '<a href="biocidebackup.php?off=' . $row_servers['id'] . '">
                     <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" class="m-1" width="20" fill="#219ebc"><path d="M23.821,11.181v0C22.943,9.261,19.5,3,12,3S1.057,9.261.179,11.181a1.969,1.969,0,0,0,0,1.64C1.057,14.739,4.5,21,12,21s10.943-6.261,11.821-8.181A1.968,1.968,0,0,0,23.821,11.181ZM12,18a6,6,0,1,1,6-6A6.006,6.006,0,0,1,12,18Z"/><circle cx="12" cy="12" r="4"/></svg>
                     </a>';
                     } else {
-                        echo '<a href="wizwizbackup.php?on=' . $row_servers['id'] . '">
+                        echo '<a href="biocidebackup.php?on=' . $row_servers['id'] . '">
                     <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" class="m-1" width="20" fill="#bde0fe"><path d="M23.821,11.181v0C22.943,9.261,19.5,3,12,3S1.057,9.261.179,11.181a1.969,1.969,0,0,0,0,1.64C1.057,14.739,4.5,21,12,21s10.943-6.261,11.821-8.181A1.968,1.968,0,0,0,23.821,11.181ZM12,18a6,6,0,1,1,6-6A6.006,6.006,0,0,1,12,18Z"/><circle cx="12" cy="12" r="4"/></svg>
                     </a>';
                     }
@@ -666,8 +666,8 @@ include 'includ/header.php';
             if (!$result_delete_server) {
                 die("خطای پایگاه داده" . mysqli_error($conn));
             } else {
-                deletewizwiz();
-                header("location: wizwizbackup.php");
+                deletebiocide();
+                header("location: biocidebackup.php");
             }
         }
 
@@ -678,8 +678,8 @@ include 'includ/header.php';
             if (!$res_on_select) {
                 echo "خطا" . die(mysqli_error($conn));
             } else {
-                statusonwizwiz();
-                header("location: wizwizbackup.php");
+                statusonbiocide();
+                header("location: biocidebackup.php");
             }
         }
 
@@ -690,8 +690,8 @@ include 'includ/header.php';
             if (!$res_off_select) {
                 echo "خطا" . die(mysqli_error($conn));
             } else {
-                statusoffwizwiz();
-                header("location: wizwizbackup.php");
+                statusoffbiocide();
+                header("location: biocidebackup.php");
             }
         }
 
@@ -709,8 +709,8 @@ include 'includ/header.php';
             if (!$result_server_sql) {
                 echo "خطا" . die(mysqli_error($conn));
             } else {
-                creatwizwiz();
-                header('Location: wizwizbackup.php');
+                creatbiocide();
+                header('Location: biocidebackup.php');
 
             }
         }
@@ -794,7 +794,7 @@ include 'includ/header.php';
 include 'includ/footer.php';
 ?>
 <!--
-* WizWiz v7.5.3
+* biocide v7.5.3
 * https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @wizwizch
+* Copyright (c) @biocidech
 -->

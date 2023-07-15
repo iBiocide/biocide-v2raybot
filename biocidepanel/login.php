@@ -1,7 +1,7 @@
 <!--
-* WizWiz v7.5.3
+* biocide v7.5.3
 * https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @wizwizch
+* Copyright (c) @biocidech
 -->
 <?php
 session_start();
@@ -39,7 +39,7 @@ include 'includ/session.php';
 <body style="background-color: #ecf0f1;">
 
 <?php
-session_notif_wizwiz();
+session_notif_biocide();
 if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= 5) {
     if (time() - $_SESSION['last_login_attempt'] < 300) {
         die('
@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //        }
 
-        welcomwizwiz();
+        welcombiocide();
         header('Location: index.php');
     } else {
         // Login failed
@@ -148,7 +148,7 @@ function input($data)
             <div class="flex items-center justify-center p-6">
                 <div class="" style="width: 65%">
                     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                        <img src="icons/wizwiz.png" class="mx-auto">
+                        <img src="icons/biocide.png" class="mx-auto">
                         <br>
                         <br>
                         <label class="block text-sm">
@@ -177,7 +177,7 @@ function input($data)
                                 <path d="M5.972,22.285a1,1,0,0,1-.515-1.857C9,18.3,9,13.73,9,11a3,3,0,0,1,6,0,1,1,0,0,1-2,0,1,1,0,0,0-2,0c0,2.947,0,8.434-4.514,11.143A1,1,0,0,1,5.972,22.285Zm4.963,1.421c2.282-2.3,3.615-5.534,3.961-9.621A1,1,0,0,0,13.985,13a.983.983,0,0,0-1.081.911c-.311,3.657-1.419,6.4-3.388,8.381a1,1,0,0,0,1.419,1.41Zm5.2-.186a17.793,17.793,0,0,0,1.508-3.181,1,1,0,0,0-1.881-.678,15.854,15.854,0,0,1-1.338,2.821,1,1,0,0,0,1.711,1.038ZM18.5,17.191A31.459,31.459,0,0,0,19,11,7,7,0,0,0,6.787,6.333,1,1,0,1,0,8.276,7.667,5,5,0,0,1,17,11a29.686,29.686,0,0,1-.462,5.809,1,1,0,0,0,.79,1.172.979.979,0,0,0,.193.019A1,1,0,0,0,18.5,17.191ZM7,11a5,5,0,0,1,.069-.833A1,1,0,1,0,5.1,9.833,6.971,6.971,0,0,0,5,11c0,4.645-1.346,7-4,7a1,1,0,0,0,0,2C4.869,20,7,16.8,7,11ZM20.7,23.414A29.76,29.76,0,0,0,23,11a10.865,10.865,0,0,0-1.1-4.794,1,1,0,1,0-1.8.875A8.9,8.9,0,0,1,21,11a27.91,27.91,0,0,1-2.119,11.586,1,1,0,0,0,.5,1.324.984.984,0,0,0,.413.09A1,1,0,0,0,20.7,23.414ZM3,14V11a9.01,9.01,0,0,1,9-9,8.911,8.911,0,0,1,5.4,1.8,1,1,0,0,0,1.2-1.6A10.9,10.9,0,0,0,12,0,11.013,11.013,0,0,0,1,11v3a1,1,0,0,0,2,0Z"/>
                             </svg>
                         </button>
-                        <p style="font-size: 14px">wizwiz <span style="color:red;">
+                        <p style="font-size: 14px">biocide <span style="color:red;">
                                 <svg class="inline-block" xmlns="http://www.w3.org/2000/svg" fill="#d8315b" id="Layer_1"
                                      data-name="Layer 1" viewBox="0 0 24 24" width="15" height="15"><path
                                             d="M17.5.917a6.4,6.4,0,0,0-5.5,3.3A6.4,6.4,0,0,0,6.5.917,6.8,6.8,0,0,0,0,7.967c0,6.775,10.956,14.6,11.422,14.932l.578.409.578-.409C13.044,22.569,24,14.742,24,7.967A6.8,6.8,0,0,0,17.5.917Z"/></svg>
@@ -193,11 +193,11 @@ function input($data)
     </div>
 
 </div>
-<script src="assets/wizwiz.js"></script>
+<script src="assets/biocide.js"></script>
 </body>
 </html>
 <!--
-* WizWiz v7.5.3
+* biocide v7.5.3
 * https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @wizwizch
+* Copyright (c) @biocidech
 -->

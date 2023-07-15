@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Written By: wizwiz
+# Written By: biocide
 
 if [ "$(id -u)" -ne 0 ]; then
     echo -e "\033[33mPlease run as root\033[0m"
@@ -53,7 +53,7 @@ do
 			
 			bot_value=$(cat $filepath | grep '$admin =' | sed 's/.*= //' | sed 's/;//')
 			
-			MESSAGE="🤖 WizWiz robot has been successfully updated!"
+			MESSAGE="🤖 biocide robot has been successfully updated!"
 			
 			curl -s -X POST "https://api.telegram.org/bot${bot_token}/sendMessage" -d chat_id="${bot_value}" -d text="$MESSAGE"
 			
@@ -98,13 +98,13 @@ do
 			    mkdir "/var/www/html/biocidepanel"
 			    echo "Directory created: biocidepanel"
 			    echo "Folder created successfully!"
-			    sudo mkdir /root/updatewizwiz
+			    sudo mkdir /root/updatebiocide
    			    sleep 1
-			    touch /root/updatewizwiz/wizup.txt
-			    sudo chmod -R 777 /root/updatewizwiz/wizup.txt
+			    touch /root/updatebiocide/wizup.txt
+			    sudo chmod -R 777 /root/updatebiocide/wizup.txt
 			    sleep 1
 			    ASAS="$"
-			    echo "${ASAS}path = '${RANDOM_NUMBER}';" >> /root/updatewizwiz/wizup.txt
+			    echo "${ASAS}path = '${RANDOM_NUMBER}';" >> /root/updatebiocide/wizup.txt
 			else
 			    echo "Folder already exists."
 			fi
@@ -139,7 +139,7 @@ do
 			
 			bot_value=$(cat $filepath | grep '$admin =' | sed 's/.*= //' | sed 's/;//')
 			
-			MESSAGE="🕹 WizWiz panel has been successfully updated!"
+			MESSAGE="🕹 biocide panel has been successfully updated!"
 
 			curl -s -X POST "https://api.telegram.org/bot${bot_token}/sendMessage" -d chat_id="${bot_value}" -d text="$MESSAGE"
 			curl -s -X POST "https://api.telegram.org/bot${bot_token2}/sendMessage" -d chat_id="${bot_value}" -d text="$MESSAGE"
@@ -174,8 +174,8 @@ do
 			
 # 			DOMAIN_NAME="$domainname"
 			
-# 			PATHS=$(cat /root/updatewizwiz/wizup.txt | grep '$path' | cut -d"'" -f2)
-# 			PATHS=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$path' | cut -d"'" -f2)
+# 			PATHS=$(cat /root/updatebiocide/wizup.txt | grep '$path' | cut -d"'" -f2)
+# 			PATHS=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
 # 			(crontab -l | grep -v "backupnutif.php") | crontab -
 			
 # 			(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
@@ -187,9 +187,9 @@ do
 			echo -e ' '
 
 			
-# 			PATHS2=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$path' | cut -d"'" -f2)
-# 			PATHS3=$(cat /root/updatewizwiz/wizup.txt | grep '$path' | cut -d"'" -f2)
-# 			if [ -d "/root/confwizwiz/dbrootwizwiz.txt" ]; then
+# 			PATHS2=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
+# 			PATHS3=$(cat /root/updatebiocide/wizup.txt | grep '$path' | cut -d"'" -f2)
+# 			if [ -d "/root/confbiocide/dbrootbiocide.txt" ]; then
 #                             echo -e "\e[92mPanel: \e[31mhttps://${DOMAIN_NAME}/biocidepanel${PATHS}\033[0m\n"
 # 			    (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 # 			else
@@ -231,45 +231,45 @@ do
 			ASAS="$"
 			if [ $? -eq 0 ]; then
 
-			touch /var/www/html/biocide-v2raybot/backup-wizwiz.php
+			touch /var/www/html/biocide-v2raybot/backup-biocide.php
 
-			chmod -R 777 /var/www/html/biocide-v2raybot/backup-wizwiz.php
+			chmod -R 777 /var/www/html/biocide-v2raybot/backup-biocide.php
 
-			echo " " >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "<?php" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "include 'settings/jdf.php';" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "function sendDocument(${ASAS}username, ${ASAS}document_path, ${ASAS}caption = null, ${ASAS}parse_mode = 'HTML') {" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "${ASAS}url = 'https://api.telegram.org/bot${BOT_TOKEN}/sendDocument';" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "${ASAS}wizwiz = ['chat_id' => ${ASAS}username,'document' => new CURLFile(${ASAS}document_path),'caption' => ${ASAS}caption,'parse_mode' => ${ASAS}parse_mode];" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "${ASAS}ch = curl_init();" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "curl_setopt_array(${ASAS}ch, [CURLOPT_URL => ${ASAS}url,CURLOPT_RETURNTRANSFER => true,CURLOPT_POSTFIELDS => ${ASAS}wizwiz]);" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "${ASAS}result = curl_exec(${ASAS}ch);curl_close(${ASAS}ch);return ${ASAS}result;}" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "date_default_timezone_set('Asia/Tehran');${ASAS}date = jdate('Y-m-d | H:i:s');" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "sendDocument('${ADMIN_ID}', '/var/www/html/biocide-v2raybot/wizwiz.sql', '❤️ db '.${ASAS}date);" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo "?>" >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			echo " " >> /var/www/html/biocide-v2raybot/backup-wizwiz.php
+			echo " " >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "<?php" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "include 'settings/jdf.php';" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "function sendDocument(${ASAS}username, ${ASAS}document_path, ${ASAS}caption = null, ${ASAS}parse_mode = 'HTML') {" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "${ASAS}url = 'https://api.telegram.org/bot${BOT_TOKEN}/sendDocument';" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "${ASAS}biocide = ['chat_id' => ${ASAS}username,'document' => new CURLFile(${ASAS}document_path),'caption' => ${ASAS}caption,'parse_mode' => ${ASAS}parse_mode];" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "${ASAS}ch = curl_init();" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "curl_setopt_array(${ASAS}ch, [CURLOPT_URL => ${ASAS}url,CURLOPT_RETURNTRANSFER => true,CURLOPT_POSTFIELDS => ${ASAS}biocide]);" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "${ASAS}result = curl_exec(${ASAS}ch);curl_close(${ASAS}ch);return ${ASAS}result;}" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "date_default_timezone_set('Asia/Tehran');${ASAS}date = jdate('Y-m-d | H:i:s');" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "sendDocument('${ADMIN_ID}', '/var/www/html/biocide-v2raybot/biocide.sql', '❤️ db '.${ASAS}date);" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo "?>" >> /var/www/html/biocide-v2raybot/backup-biocide.php
+			echo " " >> /var/www/html/biocide-v2raybot/backup-biocide.php
 
-			DB_NAME=wizwiz
+			DB_NAME=biocide
 			backup_path="/var/www/html/biocide-v2raybot/"
 			backup_filesql="$backup_path$DB_NAME.sql"
-			mysqldump --user=$ROOT_USER --password=$ROOT_PASSWORD --host=localhost wizwiz > $backup_filesql
+			mysqldump --user=$ROOT_USER --password=$ROOT_PASSWORD --host=localhost biocide > $backup_filesql
 			
 			clear
 			
 			sleep 0.5
 			
-			url="${BOT_URL}backup-wizwiz.php"
+			url="${BOT_URL}backup-biocide.php"
 			curl $url
 			
-			url2="${BOT_URL2}backup-wizwiz.php"
+			url2="${BOT_URL2}backup-biocide.php"
 			curl $url2
 			
 			clear
 			
 			sleep 1
 						
-			rm /var/www/html/biocide-v2raybot/backup-wizwiz.php
-			rm /var/www/html/biocide-v2raybot/wizwiz.sql
+			rm /var/www/html/biocide-v2raybot/backup-biocide.php
+			rm /var/www/html/biocide-v2raybot/biocide.sql
 			
 			
 			echo -e "\e[92m The backup settings have been successfully completed.\033[0m\n"
@@ -284,14 +284,14 @@ do
 			
 			wait
 			
-			passs=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$pass' | cut -d"'" -f2)
-   			userrr=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$user' | cut -d"'" -f2)
-			pathsss=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$path' | cut -d"'" -f2)
-			pathsss=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$path' | cut -d"'" -f2)
+			passs=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$pass' | cut -d"'" -f2)
+   			userrr=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$user' | cut -d"'" -f2)
+			pathsss=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
+			pathsss=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
 			passsword=$(cat /var/www/html/biocide-v2raybot/baseInfo.php | grep '$dbPassword' | cut -d"'" -f2)
    			userrrname=$(cat /var/www/html/biocide-v2raybot/baseInfo.php | grep '$dbUserName' | cut -d"'" -f2)
 			
-			mysql -u $userrr -p$passs -e "DROP DATABASE wizwiz;" -e "DROP USER '$userrrname'@'localhost';" -e "DROP USER '$userrrname'@'%';"
+			mysql -u $userrr -p$passs -e "DROP DATABASE biocide;" -e "DROP USER '$userrrname'@'localhost';" -e "DROP USER '$userrrname'@'%';"
 
 			sudo rm -r /var/www/html/biocidepanel${pathsss}
 			sudo rm -r /var/www/html/biocide-v2raybot
@@ -300,7 +300,7 @@ do
 			
 			sleep 1
 			
-			(crontab -l | grep -v "messagewizwiz.php") | crontab -
+			(crontab -l | grep -v "messagebiocide.php") | crontab -
 			(crontab -l | grep -v "rewardReport.php") | crontab -
 			(crontab -l | grep -v "warnusers.php") | crontab -
 			(crontab -l | grep -v "backupnutif.php") | crontab -

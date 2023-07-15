@@ -1,8 +1,8 @@
 /**
- * wizwiz v7.5.3
+ * biocide v7.5.3
  * https://github.com/ibiocide/biocide-v2raybot
  *
- * Copyright (c) @wizwizch
+ * Copyright (c) @biocidech
  */
 function fadeOut() {
     var myDiv = document.getElementById("myDiv");
@@ -204,7 +204,7 @@ $(document).ready(function () {
         event.preventDefault();
         var formData = $(this).serialize();
         $.ajax({
-            url: "wizwizbackup.php",
+            url: "biocidebackup.php",
             type: "POST",
             data: $(this).serialize() + "&action=insert_server_backup",
             success: function (response) {

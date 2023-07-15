@@ -76,7 +76,7 @@ $arrays = [
 
 
 function updateBot(){
-    global $arrays, $connection, $walletwizwiz, $nowPaymentKey, $zarinpalId;
+    global $arrays, $connection, $walletbiocide, $nowPaymentKey, $zarinpalId;
     
     foreach($arrays as $query){
         try{
@@ -102,7 +102,7 @@ function updateBot(){
 
 
     $paymentKeys = array();
-    $paymentKeys['bankAccount'] = $walletwizwiz;
+    $paymentKeys['bankAccount'] = $walletbiocide;
     $paymentKeys['holderName'] = "";
     $paymentKeys['nowpayment'] = $nowPaymentKey;
     $paymentKeys['zarinpal'] = $zarinpalId;

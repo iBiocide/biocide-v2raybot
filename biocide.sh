@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Written By: wizwiz
+# Written By: biocide
 
 if [ "$(id -u)" -ne 0 ]; then
     echo -e "\033[33mPlease run as root\033[0m"
@@ -16,10 +16,10 @@ echo -e "\e[32m
 ██ ███ ██ ██  ███    ██ ███ ██ ██  ███         ██ ██  ██    ██ ██ 
  ███ ███  ██ ███████  ███ ███  ██ ███████     ██   ██  ██████  ██ 
 \033[0m"
-echo -e "    \e[31mTelegram Channel: \e[34m@wizwizch\033[0m | \e[31mTelegram Group: \e[34m@ibiocide\033[0m\n"
+echo -e "    \e[31mTelegram Channel: \e[34m@biocidech\033[0m | \e[31mTelegram Group: \e[34m@ibiocide\033[0m\n"
 
 #sleep
-echo -e "\e[32mInstalling WizWiz script ... \033[0m\n"
+echo -e "\e[32mInstalling biocide script ... \033[0m\n"
 sleep 5
 
 sudo apt update && apt upgrade -y
@@ -56,9 +56,9 @@ done
 echo -e "\n\e[92mPackages Installed Continuing ...\033[0m\n"
 
 echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections
-echo 'phpmyadmin phpmyadmin/app-password-confirm password wizwizhipass' | debconf-set-selections
-echo 'phpmyadmin phpmyadmin/mysql/admin-pass password wizwizhipass' | debconf-set-selections
-echo 'phpmyadmin phpmyadmin/mysql/app-pass password wizwizhipass' | debconf-set-selections
+echo 'phpmyadmin phpmyadmin/app-password-confirm password biocidehipass' | debconf-set-selections
+echo 'phpmyadmin phpmyadmin/mysql/admin-pass password biocidehipass' | debconf-set-selections
+echo 'phpmyadmin phpmyadmin/mysql/app-pass password biocidehipass' | debconf-set-selections
 echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf-set-selections
 sudo apt-get install phpmyadmin -y
 sudo ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf-available/phpmyadmin.conf
@@ -105,7 +105,7 @@ wait
 git clone https://github.com/ibiocide/biocide-v2raybot.git /var/www/html/biocide-v2raybot
 sudo chown -R www-data:www-data /var/www/html/biocide-v2raybot/
 sudo chmod -R 755 /var/www/html/biocide-v2raybot/
-echo -e "\n\033[33mWizWiz config and script have been installed successfully\033[0m"
+echo -e "\n\033[33mbiocide config and script have been installed successfully\033[0m"
 
 wait
     
@@ -140,28 +140,28 @@ fi
 wait
 
 
-if [ ! -d "/root/confwizwiz" ]; then
+if [ ! -d "/root/confbiocide" ]; then
 
-    sudo mkdir /root/confwizwiz
+    sudo mkdir /root/confbiocide
     
     sleep 1
     
-    touch /root/confwizwiz/dbrootwizwiz.txt
-    sudo chmod -R 777 /root/confwizwiz/dbrootwizwiz.txt
+    touch /root/confbiocide/dbrootbiocide.txt
+    sudo chmod -R 777 /root/confbiocide/dbrootbiocide.txt
     sleep 1
     
     randomdbpasstxt=$(openssl rand -base64 10 | tr -dc 'a-zA-Z0-9' | cut -c1-8)
 
     ASAS="$"
 
-    echo "${ASAS}user = 'root';" >> /root/confwizwiz/dbrootwizwiz.txt
-    echo "${ASAS}pass = '${randomdbpasstxt}';" >> /root/confwizwiz/dbrootwizwiz.txt
-    echo "${ASAS}path = '${RANDOM_NUMBER}';" >> /root/confwizwiz/dbrootwizwiz.txt
+    echo "${ASAS}user = 'root';" >> /root/confbiocide/dbrootbiocide.txt
+    echo "${ASAS}pass = '${randomdbpasstxt}';" >> /root/confbiocide/dbrootbiocide.txt
+    echo "${ASAS}path = '${RANDOM_NUMBER}';" >> /root/confbiocide/dbrootbiocide.txt
     
     sleep 1
 
-    passs=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$pass' | cut -d"'" -f2)
-    userrr=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$user' | cut -d"'" -f2)
+    passs=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$pass' | cut -d"'" -f2)
+    userrr=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$user' | cut -d"'" -f2)
 
     sudo mysql -u $userrr -p$passs -e "alter user '$userrr'@'localhost' identified with mysql_native_password by '$passs';FLUSH PRIVILEGES;"
 
@@ -199,8 +199,8 @@ DOMAIN_NAME="$domainname"
 # WILDCARD_DOMAIN="*.$wildcarddomain"
 
 # update cron
-PATHS=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$path' | cut -d"'" -f2)
-(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/messagewizwiz.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+PATHS=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
+(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/messagebiocide.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/rewardReport.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/warnusers.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
@@ -245,7 +245,7 @@ wait
 
 echo " "
 
-ROOT_PASSWORD=$(cat /root/confwizwiz/dbrootwizwiz.txt | grep '$pass' | cut -d"'" -f2)
+ROOT_PASSWORD=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$pass' | cut -d"'" -f2)
 ROOT_USER="root"
 echo "SELECT 1" | mysql -u$ROOT_USER -p$ROOT_PASSWORD 2>/dev/null
 
@@ -258,11 +258,11 @@ wait
 
     randomdbdb=$(openssl rand -base64 10 | tr -dc 'a-zA-Z' | cut -c1-8)
 
-    if [[ $(mysql -u root -p$ROOT_PASSWORD -e "SHOW DATABASES LIKE 'wizwiz'") ]]; then
+    if [[ $(mysql -u root -p$ROOT_PASSWORD -e "SHOW DATABASES LIKE 'biocide'") ]]; then
         clear
         echo -e "\n\e[91mYou have already created the database\033[0m\n"
     else
-        dbname=wizwiz
+        dbname=biocide
         clear
         echo -e "\n\e[32mPlease enter the database username!\033[0m"
         printf "[+] Default user name is \e[91m${randomdbdb}\e[0m ( let it blank to use this user name ): "
@@ -328,7 +328,7 @@ wait
         sleep 1
 
         curl -F "url=https://${YOUR_DOMAIN}/biocide-v2raybot/bot.php" "https://api.telegram.org/bot${YOUR_BOT_TOKEN}/setWebhook"
-        MESSAGE="✅ The wizwiz bot has been successfully installed! @wizwizch"
+        MESSAGE="✅ The biocide bot has been successfully installed! @biocidech"
         curl -s -X POST "https://api.telegram.org/bot${YOUR_BOT_TOKEN}/sendMessage" -d chat_id="${YOUR_CHAT_ID}" -d text="$MESSAGE"
         
         
@@ -352,7 +352,7 @@ wait
         echo -e "\e[33mDatabase username: \e[36m${dbuser}\033[0m"
         echo -e "\e[33mDatabase password: \e[36m${dbpass}\033[0m"
         echo " "
-        echo -e "\e[100mwizwiz panel:\033[0m"
+        echo -e "\e[100mbiocide panel:\033[0m"
         echo -e "\e[33maddres: \e[36mhttps://${YOUR_DOMAIN}/biocidepanel\033[0m"
         echo -e "\e[33musername panel: \e[36madmin\033[0m"
         echo -e "\e[33mpassword panel: \e[36madmin\033[0m\n"
