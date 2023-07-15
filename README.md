@@ -41,7 +41,7 @@
 <div align=center>
 
 [![Telegram Channel](https://img.shields.io/endpoint?label=Channel&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fbiocidech&color=blue)](https://telegram.dog/biocidech)
-[![Telegram Group](https://img.shields.io/endpoint?color=neon&label=Support%20Group&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fibiocide)](https://telegram.dog/ibiocide)
+[![Telegram Group](https://img.shields.io/endpoint?color=neon&label=Support%20Group&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fibiocide)](https://telegram.dog/biocidegp)
 <img src="https://img.shields.io/github/license/ibiocide/biocide-v2raybot?style=flat-square" />
 <img src="https://img.shields.io/github/v/release/ibiocide/biocide-v2raybot.svg" />
 <!-- <img src="https://visitor-badge.glitch.me/badge?page_id=ibiocide.ibiocide" />
@@ -51,7 +51,7 @@
 <br>
 <br>
     <a align="center">
-        <img src="https://user-images.githubusercontent.com/27927279/246836890-f6635ea5-ab26-4c64-a7b8-952203f79763.png" />
+        <img src="https://raw.githubusercontent.com/iBiocide/biocide-v2raybot/main/assets/main.PNG" />
     </a>     
 <br>
 <br>
@@ -270,6 +270,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 
 ## Contact Developer
 💎 Telegram: https://t.me/ibiocide
+💎 Group: https://t.me/biocidegp 💎 Channel: https://t.me/biocidech
 
 <br>
 <br>
