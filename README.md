@@ -1,8 +1,8 @@
 <p align="center">
   <a href="https://github.com/ibiocide/biocide-v2raybot" target="_blank" rel="noopener noreferrer">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/iBiocide/biocide-v2raybot/4b33a60abce10eff1db3ca52fc3ae5ba915fbe00/assets/logo.png">
-      <img width="200" height="200" src="https://raw.githubusercontent.com/iBiocide/biocide-v2raybot/4b33a60abce10eff1db3ca52fc3ae5ba915fbe00/assets/logo.png">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/iBiocide/biocide-v2raybot/main/assets/logos.png">
+      <img width="200" height="200" src="https://raw.githubusercontent.com/iBiocide/biocide-v2raybot/main/assets/logos.png">
     </picture>
   </a>
 </p>
