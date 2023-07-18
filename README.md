@@ -60,8 +60,7 @@
 
 
 
-# آموزش نصب روی هاست : 
-https://youtu.be/loouK6h_KDA
+# آموزش نصب روی هاست : <iframe width="560" height="315" src="https://www.youtube.com/embed/loouK6h_KDA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 # آموزش و دستور نصب روی سرور لینوکس Ubuntu :
 
