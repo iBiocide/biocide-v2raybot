@@ -77,7 +77,7 @@ $botUrl = $fileAddress . "bot.php";
         updateBot();
         
         
-        form("ربات با موفقیت آپدیت شد نسخه 7.5.3 می باشد",false);
+        form("ربات با موفقیت آپدیت شد نسخه 8.1.1 می باشد",false);
     }
     else{
         showForm("unknown");
