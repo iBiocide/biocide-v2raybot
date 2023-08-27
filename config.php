@@ -1,5 +1,7 @@
 <?php
-
+include_once "settings/values.php";
+include_once 'settings/jdf.php';
+include_once 'baseInfo.php';
 
 $connection = new mysqli('localhost',$dbUserName,$dbPassword,$dbName);
 if($connection->connect_error){
@@ -30,6 +32,17 @@ function sendMessage($txt, $key = null, $parse ="MarkDown", $ci= null, $msg = nu
         'reply_to_message_id'=>$msg,
         'reply_markup'=>$key,
         'parse_mode'=>$parse
+    ]);
+}
+function editKeys($keys = null, $msgId = null, $ci = null){
+    global $from_id,$message_id;
+    $ci = $ci??$from_id;
+    $msgId = $msgId??$message_id;
+   
+    bot('editMessageReplyMarkup',[
+		'chat_id' => $ci,
+		'message_id' => $msgId,
+		'reply_markup' => $keys
     ]);
 }
 function editText($msgId, $txt, $key = null, $parse = null, $ci = null){
@@ -217,23 +230,51 @@ if ($update->message->document->file_id) {
     $fileid = $update->message->video->file_id;
 }
 
-$cancelText = ' منصرف شدم بیخیال';
 $cancelKey=json_encode(['keyboard'=>[
-    [['text'=>$cancelText]]
+    [['text'=>$buttonValues['cancel']]]
 ],'resize_keyboard'=>true]);
 $removeKeyboard = json_encode(['remove_keyboard'=>true]);
 
-if ($from_id == $admin || $userInfo['isAdmin'] == true) {
+function getMainKeys(){
+    global $connection, $userInfo, $from_id, $admin, $botState, $buttonValues;
     $mainKeys = array();
     $temp = array();
-    $mainKeys[] = [['text'=>'🛒  خرید اشتراک جدید','callback_data'=>"buySubscription"]];
-    $mainKeys[] = [['text'=>"👨🏻‍💻 حساب من",'callback_data'=>"myInfo"]];
-    $mainKeys[] = [['text'=>"🎁 دریافت اکانت تست ",'callback_data'=>"getTestAccount"],['text'=>'♾️  اشتراک های من','callback_data'=>'mySubscriptions']];
-    // $mainKeys[] = [['text'=>"▫️ موجودی سرورها ▫️",'callback_data'=>"availableServers"]];
-    // $mainKeys[] = [['text'=>"❕ موجودی اشتراکی ",'callback_data'=>"availableServers"],['text'=>"❗️ موجودی اختصاصی ",'callback_data'=>"availableServers2"]];
-    $mainKeys[] = [['text'=>'🔗 دانلود افزار ها','callback_data'=>"reciveApplications"]];
-    $temp[] = ['text'=>"🔋 مشاهده حجم باقیمانده اکانت",'callback_data'=>"showUUIDLeft"];
-    
+
+    $mainKeys = [
+        (
+            ($botState['agencyState'] == "on" && $userInfo['is_agent'] == 0)?[
+                ['text'=>$buttonValues['request_agency'],'callback_data'=>"requestAgency"]
+                ]:
+                []
+            ),
+        (
+            ($botState['agencyState'] == "on" && $userInfo['is_agent'] == 1)?[
+                ['text'=>$buttonValues['agency_setting'],'callback_data'=>"agencySettings"]
+                ]:
+                []
+            ),
+        (
+            ($botState['testAccount'] == "on")?[['text'=>$buttonValues['test_account'],'callback_data'=>"getTestAccount"]]:
+                []
+            ),
+        (($botState['sellState'] == "on" || $from_id == $admin || $userInfo['isAdmin'] == true)?
+        [['text'=>$buttonValues['my_subscriptions'],'callback_data'=>'mySubscriptions'],['text'=>$buttonValues['buy_subscriptions'],'callback_data'=>"buySubscription"]]
+        :
+        [['text'=>$buttonValues['my_subscriptions'],'callback_data'=>'mySubscriptions']]
+            ),
+        [['text'=>$buttonValues['invite_friends'],'callback_data'=>"inviteFriends"],['text'=>$buttonValues['my_info'],'callback_data'=>"myInfo"]],
+        (($botState['sharedExistence'] == "on" && $botState['individualExistence'] == "on")?
+        [['text'=>$buttonValues['shared_existence'],'callback_data'=>"availableServers"],['text'=>$buttonValues['individual_existence'],'callback_data'=>"availableServers2"]]:[]),
+        (($botState['sharedExistence'] == "on" && $botState['individualExistence'] != "on")?
+            [['text'=>$buttonValues['shared_existence'],'callback_data'=>"availableServers"]]:[]),
+        (($botState['sharedExistence'] != "on" && $botState['individualExistence'] == "on")?
+            [['text'=>$buttonValues['individual_existence'],'callback_data'=>"availableServers2"]]:[]
+        ),
+        [['text'=>$buttonValues['application_links'],'callback_data'=>"reciveApplications"],['text'=>$buttonValues['my_tickets'],'callback_data'=>"supportSection"]],
+        (($botState['searchState']=="on" || $from_id == $admin || $userInfo['isAdmin'] == true)?
+            [['text'=>$buttonValues['search_config'],'callback_data'=>"showUUIDLeft"]]
+            :[]),
+    ];
     $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` LIKE '%MAIN_BUTTONS%'");
     $stmt->execute();
     $buttons = $stmt->get_result();
@@ -244,77 +285,166 @@ if ($from_id == $admin || $userInfo['isAdmin'] == true) {
             $title = str_replace("MAIN_BUTTONS","",$row['type']);
             
             $temp[] =['text'=>$title,'callback_data'=>"showMainButtonAns" . $rowId];
-            if(count($temp)==2){
+            if(count($temp)>=2){
                 array_push($mainKeys,$temp);
                 $temp = array();
             }
         }
     }
     array_push($mainKeys,$temp);
-
-    $mainKeys[] = [['text'=>"مدیریت ربات ⚙️",'callback_data'=>"managePanel"]];
-    $mainKeys = json_encode(['inline_keyboard'=>$mainKeys]); 
-
-    $adminKeys = array();
-    $adminKeys[] = [['text'=>"📉 آمار کلی ربات",'callback_data'=>"botReports"],['text'=>"📞 پیام خصوصی ",'callback_data'=>"messageToSpeceficUser"]];
-    $adminKeys[] = [['text'=>"🔑 اطلاعات کاربر ",'callback_data'=>"userReports"]];
-    if($from_id == $admin){
-        $adminKeys[] = [['text'=>"👤 لیست ادمین ها",'callback_data'=>"adminsList"]];
-    }
-    $adminKeys[] = [['text'=>"💸 افزایش موجودی",'callback_data'=>"increaseUserWallet"],['text'=>"🚸 ساخت اکانت",'callback_data'=>"createMultipleAccounts"]];
-    $adminKeys[] = [['text'=>"❌ مسدود کردن کاربر",'callback_data'=>"banUser"],['text'=>"✅ آزاد کردن کاربر",'callback_data'=>"unbanUser"]];
-    $adminKeys[] = [['text'=>'♻️ تنظیمات سرور','callback_data'=>"serversSetting"]];
-    $adminKeys[] = [['text'=>'🔅 مدیریت دسته ها','callback_data'=>"categoriesSetting"]];
-    $adminKeys[] = [['text'=>'〽️ مدیریت پلن ها','callback_data'=>"backplan"]];
-    $adminKeys[] = [['text'=>"🎁 مدیریت تخفیف ها",'callback_data'=>"discount_codes"],['text'=>"🕹 مدیریت دکمه ها ",'callback_data'=>"mainMenuButtons"]];
-    $adminKeys[] = [['text'=>'💳 تنظیمات درگاه و کانال','callback_data'=>"gateWays_Channels"],['text'=>'⚙️ تنظیمات ربات','callback_data'=>'botSettings']];
-    $adminKeys[] = [['text'=>'📪 تیکت ها','callback_data'=>"ticketsList"],['text'=>"📨 ارسال پیام همگانی",'callback_data'=>"message2All"]];
-    $adminKeys[] = [['text'=>'⤵️ برگرد به منوی اصلی ','callback_data'=>"mainMenu"]];
-    $adminKeys = json_encode(['inline_keyboard'=>$adminKeys]);
-		
-}else{
-    $keys=array();
-    $temp=array();
-    
-    $keys[] = [['text'=>'🛒  خرید کانفیگ جدید','callback_data'=>"buySubscription"]];
-    $keys[] = [['text'=>"🏃‍♂️ دعوت از دوستان",'callback_data'=>"inviteFriends"],['text'=>"🧑‍💼 حساب من",'callback_data'=>"myInfo"]];
-    if($botState['sellState']=="on"){
-        $keys[]= [['text'=>'📦  کانفیگ های من','callback_data'=>'mySubscriptions'],['text'=>"🎁 دریافت اکانت تست ",'callback_data'=>"getTestAccount"]];
-    }
-    // $keys[] = [['text'=>"▫️ موجودی سرورها ▫️",'callback_data'=>"availableServers"]];
-    // $keys[] = [['text'=>"❕ موجودی اشتراکی ",'callback_data'=>"availableServers"],['text'=>"❗️ موجودی اختصاصی ",'callback_data'=>"availableServers2"]];
-    // $temp[] =['text'=>"📨 تیکت های من",'callback_data'=>"supportSection"];
-    if($botState['searchState']=="on"){
-        $temp[] = ['text'=>"🪫 مشاهده حجم باقیمانده اکانت",'callback_data'=>"showUUIDLeft"];
-        array_push($keys,$temp);
-        $temp = array();
-    }
-    $temp[] =['text'=>'🔗 لینک نرم افزار ها','callback_data'=>"reciveApplications"];
-    
-    
-    $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` LIKE '%MAIN_BUTTONS%'");
-    $stmt->execute();
-    $buttons = $stmt->get_result();
-    $stmt->close();
-    if($buttons->num_rows >0){
-        while($row = $buttons->fetch_assoc()){
-            $rowId = $row['id'];
-            $title = str_replace("MAIN_BUTTONS","",$row['type']);
-            
-            $temp[] =['text'=>$title,'callback_data'=>"showMainButtonAns" . $rowId];
-            if(count($temp)==2){
-                array_push($keys,$temp);
-                $temp = array();
-            }
-        }
-    }
-    array_push($keys,$temp);
-    
-    $mainKeys=json_encode(['inline_keyboard'=>$keys]);
+    if($from_id == $admin || $userInfo['isAdmin'] == true) array_push($mainKeys,[['text'=>"مدیریت ربات ⚙️",'callback_data'=>"managePanel"]]);
+    return json_encode(['inline_keyboard'=>$mainKeys]); 
 }
+function getAgentKeys(){
+    global $buttonValues, $mainValues, $from_id, $userInfo, $connection;
+    $agencyDate = jdate("Y-m-d H:i:s",$userInfo['agent_date']);
+    $joinedDate = jdate("Y-m-d H:i:s",$userInfo['date']);
+    $stmt = $connection->prepare("SELECT * FROM `orders_list` WHERE `userid` = ? AND `agent_bought` = 1");
+    $stmt->bind_param("i", $from_id);
+    $stmt->execute();
+    $boughtAccounts = $stmt->get_result()->num_rows;
+    $stmt->close();
+    
+    return json_encode(['inline_keyboard'=>[
+        [['text'=>$buttonValues['agent_one_buy'],'callback_data'=>"agentOneBuy"],['text'=>$buttonValues['agent_much_buy'],'callback_data'=>"agentMuchBuy"]],
+        [['text'=>$buttonValues['my_subscriptions'],'callback_data'=>"agentConfigsList"]],
+        [['text'=>$boughtAccounts,'callback_data'=>"biocidech"],['text'=>$buttonValues['agent_bought_accounts'],'callback_data'=>"biocidech"]],
+        [['text'=>$joinedDate,'callback_data'=>"biocidech"],['text'=>$buttonValues['agent_joined_date'],'callback_data'=>"biocidech"]],
+        [['text'=>$agencyDate,'callback_data'=>"biocidech"],['text'=>$buttonValues['agent_agency_date'],'callback_data'=>"biocidech"]],
+        [['text'=>$buttonValues['back_to_main'],'callback_data'=>"mainMenu"]],
+    ]]);
+}
+function getAdminKeys(){
+    global $buttonValues, $mainValues, $from_id, $admin;
+    
+    return json_encode(['inline_keyboard'=>[
+        [['text'=>$buttonValues['bot_reports'],'callback_data'=>"botReports"],['text'=>$buttonValues['message_to_user'],'callback_data'=>"messageToSpeceficUser"]],
+        [['text'=>$buttonValues['user_reports'],'callback_data'=>"userReports"]],
+        ($from_id == $admin?[['text'=>$buttonValues['admins_list'],'callback_data'=>"adminsList"]]:[]),
+        [['text'=>$buttonValues['increase_wallet'],'callback_data'=>"increaseUserWallet"],['text'=>$buttonValues['decrease_wallet'],'callback_data'=>"decreaseUserWallet"]],
+        [['text'=>$buttonValues['create_account'],'callback_data'=>"createMultipleAccounts"],
+        ['text'=>$buttonValues['gift_volume_day'],'callback_data'=>"giftVolumeAndDay"]],
+        [['text'=>$buttonValues['ban_user'],'callback_data'=>"banUser"],['text'=>$buttonValues['unban_user'],'callback_data'=>"unbanUser"]],
+        [['text'=>$buttonValues['search_admin_config'],'callback_data'=>"searchUsersConfig"]],
+        [['text'=>$buttonValues['server_settings'],'callback_data'=>"serversSetting"]],
+        [['text'=>$buttonValues['categories_settings'],'callback_data'=>"categoriesSetting"]],
+        [['text'=>$buttonValues['plan_settings'],'callback_data'=>"backplan"]],
+        [['text'=>$buttonValues['discount_settings'],'callback_data'=>"discount_codes"],['text'=>$buttonValues['main_button_settings'],'callback_data'=>"mainMenuButtons"]],
+        [['text'=>$buttonValues['gateways_settings'],'callback_data'=>"gateWays_Channels"],['text'=>$buttonValues['bot_settings'],'callback_data'=>'botSettings']],
+        [['text'=>$buttonValues['tickets_list'],'callback_data'=>"ticketsList"],['text'=>$buttonValues['message_to_all'],'callback_data'=>"message2All"]],
+        [
+            ['text'=>$buttonValues['agent_list'],'callback_data'=>"agentsList"],
+            ['text'=>'درخواست رد شده نماینده','callback_data'=>"rejectedAgentList"]
+            ],
+        [['text'=>$buttonValues['back_to_main'],'callback_data'=>"mainMenu"]],
+    ]]);
+    
+}
+function getRejectedAgentList(){
+    global $connection, $mainValues, $buttonValues;
+    
+    $stmt = $connection->prepare("SELECT * FROM `users` WHERE `is_agent` = -1");
+    $stmt->execute();
+    $list = $stmt->get_result();
+    $stmt->close();
+    
+    if($list->num_rows>0){
+        $keys = array();
+        $keys[] = [['text'=>"آزاد ساختن",'callback_data'=>"biocidech"],['text'=>"اسم کاربر",'callback_data'=>'biocidech'],['text'=>"آیدی عددی",'callback_data'=>"biocidech"]];
+        while($row = $list->fetch_assoc()){
+            $userId = $row['userid'];
+            
+            $userDetail = bot('getChat',['chat_id'=>$userId])->result;
+            $fullName = $userDetail->first_name . " " . $userDetail->last_name;
+            
+            $keys[] = [['text'=>"✅",'callback_data'=>"releaseRejectedAgent" . $userId],['text'=>$fullName,'callback_data'=>"biocidech"],['text'=>$userId,'callback_data'=>"biocidech"]];
+        }
+        $keys[] = [['text'=>$buttonValues['back_button'],'callback_data'=>"managePanel"]];
+        return json_encode(['inline_keyboard'=>$keys]);
+    }else return null;
+}
+function getAgentDetails($userId){
+    global $connection, $mainVAlues, $buttonValues;
+    
+    $stmt = $connection->prepare("SELECT * FROM `users` WHERE `userid` = ? AND `is_agent` = 1");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $agentDetail = $stmt->get_result();
+    $stmt->close();
 
-function NOWPayments($method, $endpoint, $datas = [])
-{
+
+    $today = strtotime("today");
+    $yesterday = strtotime("yesterday");
+    $lastWeek = strtotime("last week");
+    $lastMonth = strtotime("last month");
+
+    $stmt = $connection->prepare("SELECT COUNT(`id`) AS `count`, SUM(`amount`) AS `total` FROM `orders_list` WHERE `date` >= ? AND `agent_bought` = 1 AND `userid` = ?");
+    
+    $stmt->bind_param("ii", $today, $userId);
+    $stmt->execute();
+    $todayIncome = $stmt->get_result()->fetch_assoc();
+    
+    $stmt->bind_param("ii", $yesterday, $userId);
+    $stmt->execute();
+    $yesterdayIncome = $stmt->get_result()->fetch_assoc();
+    
+    $stmt->bind_param("ii", $lastWeek, $userId);
+    $stmt->execute();
+    $lastWeekIncome = $stmt->get_result()->fetch_assoc();
+    
+    $stmt->bind_param("ii", $lastMonth, $userId);
+    $stmt->execute();
+    $lastMonthIncome = $stmt->get_result()->fetch_assoc();
+    
+    $stmt->close();
+    
+    
+    return json_encode(['inline_keyboard'=>[
+        [
+            ['text'=>"(" . $todayIncome['count'] . ") " . number_format($todayIncome['total']),'callback_data'=>'biocidech'],
+            ['text'=>"درآمد امروز",'callback_data'=>'biocidech']
+            ],
+        [
+            ['text'=>"(" . $yesterdayIncome['count'] . ") " . number_format($yesterdayIncome['total']),'callback_data'=>"biocidech"],
+            ['text'=>"درآمد دیروز",'callback_data'=>"biocidech"]
+            ],
+        [
+            ['text'=>"(" . $lastWeekIncome['count'] . ") " . number_format($lastWeekIncome['total']),'callback_data'=>"biocidech"],
+            ['text'=>"درآمد یک هفته",'callback_data'=>"biocidech"]
+            ],
+        [
+            ['text'=>"(" . $lastMonthIncome['count'] . ") " . number_format($lastMonthIncome['total']),'callback_data'=>"biocidech"],
+            ['text'=>"درآمد یک ماه",'callback_data'=>"biocidech"]
+            ],
+        [['text' => $buttonValues['back_button'], 'callback_data' => "agentsList"]]
+        ]]);
+}
+function getAgentsList(){
+    global $connection, $mainValues, $buttonValues;
+    
+    $stmt = $connection->prepare("SELECT * FROM `users` WHERE `is_agent` = 1");
+    $stmt->execute();
+    $agentList = $stmt->get_result();
+    $stmt->close();
+    
+    $keys = array();
+    if($agentList->num_rows > 0){
+        $keys[] = [['text'=>"حذف",'callback_data'=>"biocidech"],['text'=>"درصد تخفیف",'callback_data'=>"biocidech"],['text'=>"تاریخ نمایندگی",'callback_data'=>"biocidech"],['text'=>"اسم نماینده",'callback_data'=>"biocidech"],['text'=>"آیدی عددی",'callback_data'=>"biocidech"]];
+        while($row = $agentList->fetch_assoc()){
+            $userId = $row['userid'];
+            
+            $userDetail = bot('getChat',['chat_id'=>$userId])->result;
+            $userUserName = $userDetail->username;
+            $fullName = $userDetail->first_name . " " . $userDetail->last_name;
+            $joinedDate = jdate("Y-m-d H:i",$row['agent_date']);
+
+            $keys[] = [['text'=>"❌",'callback_data'=>"removeAgent" . $userId],['text'=>$row['discount_percent'] . "%",'callback_data'=>"editAgentDiscount" . $userId],['text'=>$joinedDate,'callback_data'=>"biocidech"],['text'=>$fullName,'callback_data'=>"agentDetails" . $userId],['text'=>$userId,'callback_data'=>"agentDetails" . $userId]];
+        }
+        $keys[] = [['text' => $buttonValues['back_button'], 'callback_data' => "managePanel"]];
+        return json_encode(['inline_keyboard'=>$keys]);
+    } return null;
+}
+function NOWPayments($method, $endpoint, $datas = []){
     global $paymentKeys;
 
     $base_url = 'https://api.nowpayments.io/v1/';
@@ -357,7 +487,7 @@ function NOWPayments($method, $endpoint, $datas = [])
     else return json_decode($res);
 }
 function getServerConfigKeys($serverId,$offset = 0){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     $stmt = $connection->prepare("SELECT * FROM `server_info` WHERE `id`=?");
     $stmt->bind_param("i", $serverId);
     $stmt->execute();
@@ -375,7 +505,7 @@ function getServerConfigKeys($serverId,$offset = 0){
     $stmt->execute();
     $serverConfig= $stmt->get_result()->fetch_assoc();
     $stmt->close();
-    $reality = $serverConfig['reality']=="true"?"✅ فعال":"❌ غیر فعال";
+    $reality = $serverConfig['reality']=="true"?$buttonValues['active']:$buttonValues['deactive'];
     $panelUrl = $serverConfig['panel_url'];
     $sni = !empty($serverConfig['sni'])?$serverConfig['sni']:" ";
     $headerType = !empty($serverConfig['header_type'])?$serverConfig['header_type']:" ";
@@ -413,15 +543,15 @@ function getServerConfigKeys($serverId,$offset = 0){
             ],
         [
             ['text'=>$serverType??" ",'callback_data'=>"changeServerType$id"],
-            ['text'=>"🔅نوعیت سرور",'callback_data'=>"biocidech"]
+            ['text'=>"نوعیت سرور",'callback_data'=>"biocidech"]
             ],
         [
             ['text'=>$portType,'callback_data'=>"changePortType$id"],
-            ['text'=>"🔅نوعیت پورت",'callback_data'=>"biocidech"]
+            ['text'=>"نوعیت پورت",'callback_data'=>"biocidech"]
             ],
         [
             ['text'=>$ucount,'callback_data'=>"editServerMax$id"],
-            ['text'=>"🔅ظرفیت سرور",'callback_data'=>"biocidech"]
+            ['text'=>"ظرفیت سرور",'callback_data'=>"biocidech"]
             ],
         [
             ['text'=>$sni,'callback_data'=>"editsServersni$id"],
@@ -460,11 +590,11 @@ function getServerConfigKeys($serverId,$offset = 0){
         [
             ['text'=>"✂️ حذف سرور",'callback_data'=>"biocidedeleteserver$id"],
             ],
-        [['text' => "↪ برگشت", 'callback_data' => "nextServerPage" . $offset]]
+        [['text' => $buttonValues['back_button'], 'callback_data' => "nextServerPage" . $offset]]
         ]]);
 }
 function getServerListKeys($offset = 0){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     
     $limit = 15;
     
@@ -484,7 +614,7 @@ function getServerListKeys($offset = 0){
             $cname = $cty['title'];
             $flagbiocide = $cty['flag'];
             $remarkbiocide = $cty['remark'];
-            $state = $cty['state'] == "1"?"✅ فعال":"❌ غیر فعال";
+            $state = $cty['state'] == "1"?$buttonValues['active']:$buttonValues['deactive'];
             $ucount = $cty['ucount'];
             $stmt = $connection->prepare("SELECT * FROM `server_config` WHERE `id`=?");
             $stmt->bind_param("i", $id);
@@ -520,13 +650,13 @@ function getServerListKeys($offset = 0){
         $keys[] = [['text'=>" «« صفحه قبلی ««",'callback_data'=>"nextServerPage" . ($offset - $limit)]];
     }
     $keys[] = [['text'=>'🪙 ثبت سرور جدید','callback_data'=>"addNewServer"]];
-    $keys[] = [['text' => "↪ برگشت", 'callback_data' => "managePanel"]];
+    $keys[] = [['text' => $buttonValues['back_button'], 'callback_data' => "managePanel"]];
     return json_encode(['inline_keyboard'=>$keys]);
 }
 function getCategoriesKeys($offset = 0){
     $limit = 15;
     
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     $stmt = $connection->prepare("SELECT * FROM `server_categories` WHERE `active`=1 AND `parent`=0 LIMIT $limit OFFSET $offset");
     $stmt->execute();
     $cats = $stmt->get_result();
@@ -559,11 +689,11 @@ function getCategoriesKeys($offset = 0){
     }
     
     $keys[] = [['text'=>'➕ افزودن دسته جدید','callback_data'=>"addNewCategory"]];
-    $keys[] = [['text' => "↪ برگشت", 'callback_data' => "managePanel"]];
+    $keys[] = [['text' => $buttonValues['back_button'], 'callback_data' => "managePanel"]];
     return json_encode(['inline_keyboard'=>$keys]);
 }
 function getGateWaysKeys(){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     
     $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` = 'BOT_STATES'");
     $stmt->execute();
@@ -572,15 +702,15 @@ function getGateWaysKeys(){
     else $botState = array();
     $stmt->close();
     
-    $cartToCartState = $botState['cartToCartState']=="on"?"روشن ✅":"خاموش ❌";
-    $walletState = $botState['walletState']=="on"?"روشن ✅":"خاموش ❌";
-    $sellState = $botState['sellState']=="on"?"روشن ✅":"خاموش ❌";
-    $weSwapState = $botState['weSwapState']=="on"?"روشن ✅":"خاموش ❌";
-    $robotState = $botState['botState']=="on"?"روشن ✅":"خاموش ❌";
-    $nowPaymentWallet = $botState['nowPaymentWallet']=="on"?"روشن ✅":"خاموش ❌";
-    $nowPaymentOther = $botState['nowPaymentOther']=="on"?"روشن ✅":"خاموش ❌";
-    $zarinpal = $botState['zarinpal']=="on"?"روشن ✅":"خاموش ❌";
-    $nextpay = $botState['nextpay']=="on"?"روشن ✅":"خاموش ❌";
+    $cartToCartState = $botState['cartToCartState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $walletState = $botState['walletState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $sellState = $botState['sellState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $weSwapState = $botState['weSwapState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $robotState = $botState['botState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $nowPaymentWallet = $botState['nowPaymentWallet']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $nowPaymentOther = $botState['nowPaymentOther']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $zarinpal = $botState['zarinpal']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $nextpay = $botState['nextpay']=="on"?$buttonValues['on']:$buttonValues['off'];
     $rewaredChannel = $botState['rewardChannel']??" ";
     $lockChannel = $botState['lockChannel']??" ";
 
@@ -625,7 +755,7 @@ function getGateWaysKeys(){
         ],
         [
             ['text'=>$zarinpal,'callback_data'=>"changeGateWayszarinpal"],
-            ['text'=>"درگاه پرداخت زرینپال",'callback_data'=>"biocidech"]
+            ['text'=>"درگاه زرین پال",'callback_data'=>"biocidech"]
         ],
         [
             ['text'=>$nowPaymentWallet,'callback_data'=>"changeGateWaysnowPaymentWallet"],
@@ -647,12 +777,12 @@ function getGateWaysKeys(){
             ['text'=>$lockChannel,'callback_data'=>'editLockChannel'],
             ['text'=>"کانال قفل",'callback_data'=>'biocidech']
             ],
-        [['text'=>"↩️ برگشت",'callback_data'=>"managePanel"]]
+        [['text'=>$buttonValues['back_button'],'callback_data'=>"managePanel"]]
         ]]);
 
 }
 function getBotSettingKeys(){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     
     $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` = 'BOT_STATES'");
     $stmt->execute();
@@ -661,20 +791,28 @@ function getBotSettingKeys(){
     else $botState = array();
     $stmt->close();
 
-    $changeProtocole = $botState['changeProtocolState']=="on"?"روشن ✅":"خاموش ❌";
-    $renewAccount = $botState['renewAccountState']=="on"?"روشن ✅":"خاموش ❌";
-    $plandelkhahbio = $botState['plandelkhahState']=="on"?"روشن ✅":"خاموش ❌";
-    $switchLocation = $botState['switchLocationState']=="on"?"روشن ✅":"خاموش ❌";
-    $increaseTime = $botState['increaseTimeState']=="on"?"روشن ✅":"خاموش ❌";
-    $increaseVolume = $botState['increaseVolumeState']=="on"?"روشن ✅":"خاموش ❌";
-    $subLink = $botState['subLinkState']=="on"?"روشن ✅":"خاموش ❌";
-
-    $requirePhone = $botState['requirePhone']=="on"?"روشن ✅":"خاموش ❌";
-    $requireIranPhone = $botState['requireIranPhone']=="on"?"روشن ✅":"خاموش ❌";
-    $sellState = $botState['sellState']=="on"?"روشن ✅":"خاموش ❌";
-    $robotState = $botState['botState']=="on"?"روشن ✅":"خاموش ❌";
-    $searchState = $botState['searchState']=="on"?"روشن ✅":"خاموش ❌";
+    $changeProtocole = $botState['changeProtocolState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $renewAccount = $botState['renewAccountState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $plandelkhahbio = $botState['plandelkhahState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $switchLocation = $botState['switchLocationState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $increaseTime = $botState['increaseTimeState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $increaseVolume = $botState['increaseVolumeState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $subLink = $botState['subLinkState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $renewConfigLink = $botState['renewConfigLinkState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $updateConfigLink = $botState['updateConfigLinkState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $individualExistence = $botState['individualExistence']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $sharedExistence = $botState['sharedExistence']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $testAccount = $botState['testAccount']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $agency = $botState['agencyState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    
+    $requirePhone = $botState['requirePhone']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $requireIranPhone = $botState['requireIranPhone']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $sellState = $botState['sellState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $robotState = $botState['botState']=="on"?$buttonValues['on']:$buttonValues['off'];
+    $searchState = $botState['searchState']=="on"?$buttonValues['on']:$buttonValues['off'];
     $rewaredTime = ($botState['rewaredTime']??0) . " ساعت";
+    $remarkType = $botState['remark']=="digits"?"عدد رندم 5 حرفی"
+                                                        :"آیدی و عدد رندوم";
     
     $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` = 'PAYMENT_KEYS'");
     $stmt->execute();
@@ -686,6 +824,22 @@ function getBotSettingKeys(){
         [
             ['text'=>"🎗 بنر بازاریابی 🎗",'callback_data'=>"inviteSetting"]
             ],
+        [
+            ['text'=> $agency,'callback_data'=>"changeBotagencyState"],
+            ['text'=>"نمایندگی",'callback_data'=>"biocidech"]
+            ],
+        [
+            ['text'=>$individualExistence,'callback_data'=>"changeBotindividualExistence"],
+            ['text'=>"موجودی اختصاصی",'callback_data'=>"biocidech"]
+        ],
+        [
+            ['text'=>$sharedExistence,'callback_data'=>"changeBotsharedExistence"],
+            ['text'=>"موجودی اشتراکی",'callback_data'=>"biocidech"]
+        ],
+        [
+            ['text'=>$testAccount,'callback_data'=>"changeBottestAccount"],
+            ['text'=>"اکانت تست",'callback_data'=>"biocidech"]
+        ],
         [
             ['text'=>$changeProtocole,'callback_data'=>"changeBotchangeProtocolState"],
             ['text'=>"تغییر پروتکل",'callback_data'=>"biocidech"]
@@ -735,15 +889,27 @@ function getBotSettingKeys(){
             ['text'=>"مشخصات کانفیگ",'callback_data'=>"biocidech"]
         ],
         [
+            ['text'=>$renewConfigLink,'callback_data'=>"changeBotrenewConfigLinkState"],
+            ['text'=>"دریافت لینک جدید",'callback_data'=>"biocidech"]
+        ],
+        [
+            ['text'=>$updateConfigLink,'callback_data'=>"changeBotupdateConfigLinkState"],
+            ['text'=>"بروز رسانی لینک",'callback_data'=>"biocidech"]
+        ],
+        [
+            ['text'=>$remarkType,'callback_data'=>"changeConfigRemarkType"],
+            ['text'=>"نوع ریمارک",'callback_data'=>"biocidech"]
+        ],
+        [
             ['text'=>$rewaredTime,'callback_data'=>'editRewardTime'],
             ['text'=>"ارسال گزارش درآمد", 'callback_data'=>'biocidech']
             ],
-        [['text'=>"↩️ برگشت",'callback_data'=>"managePanel"]]
+        [['text'=>$buttonValues['back_button'],'callback_data'=>"managePanel"]]
         ]]);
 
 }
 function getBotReportKeys(){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     $stmt = $connection->prepare("SELECT * FROM `users`");
     $stmt->execute();
     $allUsers = $stmt->get_result()->num_rows;
@@ -806,7 +972,7 @@ function getBotReportKeys(){
         ]]);
 }
 function getAdminsKeys(){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     $keys = array();
     
     $stmt = $connection->prepare("SELECT * FROM `users` WHERE `isAdmin` = true");
@@ -821,11 +987,11 @@ function getAdminsKeys(){
         $keys[] = [['text'=>"لیست ادمین ها خالی است ❕",'callback_data'=>"biocidech"]];
     }
     $keys[] = [['text'=>"➕ افزودن ادمین",'callback_data'=>"addNewAdmin"]];
-    $keys[] = [['text'=>"↩️ برگشت",'callback_data'=>"managePanel"]];
+    $keys[] = [['text'=>$buttonValues['back_button'],'callback_data'=>"managePanel"]];
     return json_encode(['inline_keyboard'=>$keys]);
 }
 function getUserInfoKeys($userId){
-    global $connection; 
+    global $connection, $mainValues, $buttonValues; 
     $stmt = $connection->prepare("SELECT * FROM `users` WHERE `userid` = ?");
     $stmt->bind_param("i",$userId);
     $stmt->execute();
@@ -869,13 +1035,13 @@ function getUserInfoKeys($userId){
                 ['text'=>"موجودی کیف پول",'callback_data'=>"biocidech"]
                 ],
             [
-                ['text'=>"برگشت 🔙",'callback_data'=>"mainMenu"]
+                ['text'=>$buttonValues['back_button'],'callback_data'=>"mainMenu"]
                 ],
             ]]);
     }else return null;
 }
 function getDiscountCodeKeys(){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     $time = time();
     $stmt = $connection->prepare("SELECT * FROM `discounts` WHERE (`expire_date` > $time OR `expire_date` = 0) AND (`expire_count` > 0 OR `expire_count` = -1)");
     $stmt->execute();
@@ -883,7 +1049,7 @@ function getDiscountCodeKeys(){
     $stmt->close();
     $keys = array();
     if($list->num_rows > 0){
-        $keys[] = [['text'=>'حذف','callback_data'=>"biocidech"],['text'=>"تاریخ ختم",'callback_data'=>"biocidech"],['text'=>"تعداد استفاده",'callback_data'=>"biocidech"],['text'=>"مقدار تخفیف",'callback_data'=>"biocidech"],['text'=>"کد تخفیف",'callback_data'=>"biocidech"]];
+        $keys[] = [['text'=>'حذف','callback_data'=>"biocidech"],['text'=>"استفاده هر یوزر",'callback_data'=>"biocidech"],['text'=>"تاریخ ختم",'callback_data'=>"biocidech"],['text'=>"تعداد استفاده",'callback_data'=>"biocidech"],['text'=>"مقدار تخفیف",'callback_data'=>"biocidech"],['text'=>"کد تخفیف",'callback_data'=>"biocidech"]];
         while($row = $list->fetch_assoc()){
             $date = $row['expire_date']!=0?jdate("Y/n/j H:i", $row['expire_date']):"نامحدود";
             $count = $row['expire_count']!=-1?$row['expire_count']:"نامحدود";
@@ -891,19 +1057,20 @@ function getDiscountCodeKeys(){
             $amount = $row['type'] == 'percent'? $amount."%":$amount = number_format($amount) . " تومان";
             $hashId = $row['hash_id'];
             $rowId = $row['id'];
+            $canUse = $row['can_use'];
             
-            $keys[] = [['text'=>'❌','callback_data'=>"delDiscount" . $rowId],['text'=>$date,'callback_data'=>"biocidech"],['text'=>$count,'callback_data'=>"biocidech"],['text'=>$amount,'callback_data'=>"biocidech"],['text'=>$hashId,'callback_data'=>'copyHash' . $hashId]];
+            $keys[] = [['text'=>'❌','callback_data'=>"delDiscount" . $rowId],['text'=>$canUse, 'callback_data'=>"biocidech"],['text'=>$date,'callback_data'=>"biocidech"],['text'=>$count,'callback_data'=>"biocidech"],['text'=>$amount,'callback_data'=>"biocidech"],['text'=>$hashId,'callback_data'=>'copyHash' . $hashId]];
         }
     }else{
         $keys[] = [['text'=>"کد تخفیفی یافت نشد",'callback_data'=>"biocidech"]];
     }
     
     $keys[] = [['text'=>"افزودن کد تخفیف",'callback_data'=>"addDiscountCode"]];
-    $keys[] = [['text'=>"برگشت 🔙",'callback_data'=>"managePanel"]];
+    $keys[] = [['text'=>$buttonValues['back_button'],'callback_data'=>"managePanel"]];
     return json_encode(['inline_keyboard'=>$keys]);
 }
 function getMainMenuButtonsKeys(){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     
     $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` LIKE '%MAIN_BUTTONS%'");
     $stmt->execute();
@@ -924,11 +1091,11 @@ function getMainMenuButtonsKeys(){
         $keys[] = [['text'=>"دکمه ای یافت نشد ❕",'callback_data'=>"biocidech"]];
     }
     $keys[] = [['text'=>"افزودن دکمه جدید ➕",'callback_data'=>"addNewMainButton"]];
-    $keys[] = [['text'=>"برگشت 🔙",'callback_data'=>"managePanel"]];
+    $keys[] = [['text'=>$buttonValues['back_button'],'callback_data'=>"managePanel"]];
     return json_encode(['inline_keyboard'=>$keys]);
 }
 function getPlanDetailsKeys($planId){
-    global $connection;
+    global $connection, $mainValues, $buttonValues;
     $stmt = $connection->prepare("SELECT * FROM `server_plans` WHERE `id`=?");
     $stmt->bind_param("i", $planId);
     $stmt->execute();
@@ -953,10 +1120,13 @@ function getPlanDetailsKeys($planId){
         $price=$pd['price'];
         $acount =$pd['acount'];
         $rahgozar = $pd['rahgozar'];
+        $customPath = $pd['custom_path']==true?$buttonValues['on']:$buttonValues['off'];
         $dest = $pd['dest']??" ";
         $spiderX = $pd['spiderX']??" ";
         $serverName = $pd['serverNames']??" ";
         $flow = $pd['flow'];
+        $customPort = $pd['custom_port'];
+        $customSni = $pd['custom_sni']??" ";
 
         $stmt = $connection->prepare("SELECT * FROM `orders_list` WHERE `status`=1 AND `fileid`=?");
         $stmt->bind_param("i", $id);
@@ -967,6 +1137,18 @@ function getPlanDetailsKeys($planId){
         $srvid= $pd['server_id'];
         $keyboard = [
             ($rahgozar==true?[['text'=>"* نوع پلن: رهگذر *",'callback_data'=>'biocidech']]:[]),
+            ($rahgozar==true?[
+                ['text'=>$customPath,'callback_data'=>'changeCustomPath' . $id],
+                ['text'=>"Path Custom",'callback_data'=>'biocidech'],
+                ]:[]),
+            ($rahgozar==true?[
+                ['text'=>$customPort,'callback_data'=>'changeCustomPort' . $id],
+                ['text'=>"پورت دلخواه",'callback_data'=>'biocidech'],
+                ]:[]),
+            ($rahgozar==true?[
+                ['text'=>$customSni,'callback_data'=>'changeCustomSni' . $id],
+                ['text'=>"sni دلخواه",'callback_data'=>'biocidech'],
+                ]:[]),
             [['text'=>$name,'callback_data'=>"biocideplanname$id"],['text'=>"🔮 نام پلن",'callback_data'=>"biocidech"]],
             ($reality == "true"?[['text'=>$dest,'callback_data'=>"editDestName$id"],['text'=>"dest",'callback_data'=>"biocidech"]]:[]),
             ($reality == "true"?[['text'=>$serverName,'callback_data'=>"editServerNames$id"],['text'=>"serverNames",'callback_data'=>"biocidech"]]:[]),
@@ -979,24 +1161,26 @@ function getPlanDetailsKeys($planId){
             [['text'=>number_format($price) . " تومان",'callback_data'=>"biocideplanrial$id"],['text'=>"💰 قیمت پلن",'callback_data'=>"biocidech"]],
             [['text'=>"♻️ دریافت لیست اکانت ها",'callback_data'=>"biocideplanacclist$id"]],
             [['text'=>"✂️ حذف",'callback_data'=>"biocideplandelete$id"]],
-            [['text' => "↪ برگشت", 'callback_data' =>"plansList$srvid"]]
+            [['text' => $buttonValues['back_button'], 'callback_data' =>"plansList$srvid"]]
             ];
         return json_encode(['inline_keyboard'=>$keyboard]);
     }
 }
-function getOrderDetailKeys($from_id, $id){
-    global $connection, $botState;
-    $stmt = $connection->prepare("SELECT * FROM `orders_list` WHERE `userid`=? AND `id`=?");
-    $stmt->bind_param("ii", $from_id, $id);
+function getUserOrderDetailKeys($id){
+    global $connection, $botState, $mainValues, $buttonValues, $botUrl;
+    $stmt = $connection->prepare("SELECT * FROM `orders_list` WHERE `id`=?");
+    $stmt->bind_param("i", $id);
     $stmt->execute();
     $order = $stmt->get_result();
     $stmt->close();
-
+    
 
     if($order->num_rows==0){
         return null;
     }else {
         $order = $order->fetch_assoc();
+        $userId = $order['userid'];
+        $firstName = bot('getChat',['chat_id'=>$userId])->result->first_name ?? " ";
         $fid = $order['fileid']; 
     	$stmt = $connection->prepare("SELECT * FROM `server_plans` WHERE `id`=? AND `active`=1"); 
         $stmt->bind_param("i", $fid);
@@ -1004,7 +1188,8 @@ function getOrderDetailKeys($from_id, $id){
         $respd = $stmt->get_result();
         $stmt->close();
 	    $rahgozar = $order['rahgozar'];
-
+        $agentBought = $order['agent_bought'];
+        $isAgentBought = $agentBought == true?"بله":"نخیر";
 
     	if($respd){
     	    $respd = $respd->fetch_assoc(); 
@@ -1028,9 +1213,10 @@ function getOrderDetailKeys($from_id, $id){
         $remark = $order['remark'];
         $acc_link = json_decode($order['link']);
         $protocol = $order['protocol'];
+        $token = $order['token'];
         $server_id = $order['server_id'];
         $inbound_id = $order['inbound_id'];
-        $link_status = $order['expire_date'] > time()  ? 'فعال' : 'غیرفعال';
+        $link_status = $order['expire_date'] > time()  ? $buttonValues['active'] : $buttonValues['deactive'];
         $price = $order['amount'];
         
         $response = getJson($server_id)->obj;
@@ -1064,11 +1250,367 @@ function getOrderDetailKeys($from_id, $id){
             }
         }
         $leftgb = round( ($total - $up - $down) / 1073741824, 2) . " GB";
-        $msg = "🔮 نام کانفیگ : $remark\n";
+        $configLinks = "";
         foreach($acc_link as $acc_link){
-            $msg .= "\n <code>$acc_link</code>";
+            $configLinks .= "\n <code>$acc_link</code>";
         }
-        $msg .= "\n\n️";
+        $keyboard = array();
+        if($inbound_id == 0){
+            if($protocol == 'trojan') {
+                if($security == "xtls"){
+                    $keyboard = [
+                        [
+            			    ['text' => $userId, 'callback_data' => "biocidech"],
+                            ['text' => "آیدی کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $firstName, 'callback_data' => "biocidech"],
+                            ['text' => "اسم کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $isAgentBought, 'callback_data' => "biocidech"],
+                            ['text' => "خرید نماینده", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
+            			],
+                        [
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+                            ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => "biocidech"],
+                            ['text' => $protocol == 'vless' ? '☑️ vless' : 'vless', 'callback_data' => "biocidech"],
+                        ],
+                    ];
+                    
+                }else{
+                    $keyboard = [
+                        [
+            			    ['text' => $userId, 'callback_data' => "biocidech"],
+                            ['text' => "آیدی کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $firstName, 'callback_data' => "biocidech"],
+                            ['text' => "اسم کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $isAgentBought, 'callback_data' => "biocidech"],
+                            ['text' => "خرید نماینده", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
+            			],
+                        [
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+                            ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => "biocidech"],
+                            ['text' => $protocol == 'vmess' ? '☑️ vmess' : 'vmess', 'callback_data' => "biocidech"],
+                            ['text' => $protocol == 'vless' ? '☑️ vless' : 'vless', 'callback_data' => "biocidech"],
+                        ],
+                    ];
+                    
+                    
+                }
+            }else {
+                if($netType == "grpc"){
+                    $keyboard = [
+                        [
+            			    ['text' => $userId, 'callback_data' => "biocidech"],
+                            ['text' => "آیدی کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $firstName, 'callback_data' => "biocidech"],
+                            ['text' => "اسم کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $isAgentBought, 'callback_data' => "biocidech"],
+                            ['text' => "خرید نماینده", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
+            			],
+                        [
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+                            ['text' => $protocol == 'vmess' ? '☑️ vmess' : 'vmess', 'callback_data' => "biocidech"],
+                            ['text' => $protocol == 'vless' ? '☑️ vless' : 'vless', 'callback_data' => "biocidech"],
+                        ]
+                    ];
+                    
+                    
+                }
+                elseif($netType == "tcp" && $security == "xtls"){
+                    $keyboard = [
+                        [
+            			    ['text' => $userId, 'callback_data' => "biocidech"],
+                            ['text' => "آیدی کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $firstName, 'callback_data' => "biocidech"],
+                            ['text' => "اسم کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $isAgentBought, 'callback_data' => "biocidech"],
+                            ['text' => "خرید نماینده", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
+            			],
+                        [
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+                            ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => "biocidech"],
+                            ['text' => $protocol == 'vless' ? '☑️ vless' : 'vless', 'callback_data' => "biocidech"],
+                        ]
+                    ];
+                    
+                }
+                else{
+                    $keyboard = [
+                        [
+            			    ['text' => $userId, 'callback_data' => "biocidech"],
+                            ['text' => "آیدی کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $firstName, 'callback_data' => "biocidech"],
+                            ['text' => "اسم کاربر", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => $isAgentBought, 'callback_data' => "biocidech"],
+                            ['text' => "خرید نماینده", 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$name", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
+                        ],
+                        [
+            			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
+            			],
+                        [
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
+                        ],
+                        ($rahgozar == true?
+                        [
+                            ['text' => $protocol == 'vmess' ? '☑️ vmess' : 'vmess', 'callback_data' => "biocidech"],
+                            ['text' => $protocol == 'vless' ? '☑️ vless' : 'vless', 'callback_data' => "biocidech"],
+                        ]:
+                            [
+                            ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => "biocidech"],
+                            ['text' => $protocol == 'vmess' ? '☑️ vmess' : 'vmess', 'callback_data' => "biocidech"],
+                            ['text' => $protocol == 'vless' ? '☑️ vless' : 'vless', 'callback_data' => "biocidech"],
+                        ])
+                    ];
+                    
+                }
+            }
+        }else{
+            $keyboard = [
+                [
+    			    ['text' => $userId, 'callback_data' => "biocidech"],
+                    ['text' => "آیدی کاربر", 'callback_data' => "biocidech"],
+                ],
+                [
+    			    ['text' => $firstName, 'callback_data' => "biocidech"],
+                    ['text' => "اسم کاربر", 'callback_data' => "biocidech"],
+                ],
+                [
+    			    ['text' => $isAgentBought, 'callback_data' => "biocidech"],
+                    ['text' => "خرید نماینده", 'callback_data' => "biocidech"],
+                ],
+                [
+    			    ['text' => "$name", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
+                ],
+                [
+    			    ['text' => "$date ", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
+                ],
+                [
+    			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
+                ],
+                [
+    			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
+    			],
+    			[
+                    ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
+                ],
+                [
+                    ['text' => " $protocol ☑️", 'callback_data' => "biocidech"],
+                ]
+            ];
+            
+
+        }
+
+
+        $stmt= $connection->prepare("SELECT * FROM `server_info` WHERE `id`=?");
+        $stmt->bind_param("i", $server_id);
+        $stmt->execute();
+        $server_info = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        
+        $subLink = $botState['subLinkState']=="on"?"<code>" . $botUrl . "settings/subLink.php?token=" . $token . "</code>":"";
+
+        $msg = str_replace(['NAME','CONNECT-LINK', 'SUB-LINK'], [$remark, $configLinks, $subLink], $mainValues['config_details_message']);
+    
+        $keyboard[] = [['text' => $buttonValues['back_button'], 'callback_data' => "managePanel"]];
+        return ["keyboard"=>json_encode([
+                    'inline_keyboard' => $keyboard
+                ]),
+                "msg"=>$msg];
+    }
+}
+function getOrderDetailKeys($from_id, $id){
+    global $connection, $botState, $mainValues, $buttonValues, $botUrl;
+    $stmt = $connection->prepare("SELECT * FROM `orders_list` WHERE `userid`=? AND `id`=?");
+    $stmt->bind_param("ii", $from_id, $id);
+    $stmt->execute();
+    $order = $stmt->get_result();
+    $stmt->close();
+
+
+    if($order->num_rows==0){
+        return null;
+    }else {
+        $order = $order->fetch_assoc();
+        $fid = $order['fileid']; 
+    	$stmt = $connection->prepare("SELECT * FROM `server_plans` WHERE `id`=? AND `active`=1"); 
+        $stmt->bind_param("i", $fid);
+        $stmt->execute();
+        $respd = $stmt->get_result();
+        $stmt->close();
+	    $rahgozar = $order['rahgozar'];
+        $agentBought = $order['agent_bought'];
+
+    	if($respd){
+    	    $respd = $respd->fetch_assoc(); 
+    	    
+    	    $stmt = $connection->prepare("SELECT * FROM `server_categories` WHERE `id`=?");
+            $stmt->bind_param("i", $respd['catid']);
+            $stmt->execute();
+            $cadquery = $stmt->get_result();
+            $stmt->close();
+
+
+    	    if($cadquery) {
+    	        $catname = $cadquery->fetch_assoc()['title'];
+        	    $name = $catname." ".$respd['title'];
+    	    }else $name = "$id";
+        	
+    	}else $name = "$id";
+    	
+        $date = jdate("Y-m-d H:i",$order['date']);
+        $expire_date = jdate("Y-m-d H:i",$order['expire_date']);
+        $remark = $order['remark'];
+        $acc_link = json_decode($order['link']);
+        $protocol = $order['protocol'];
+        $token = $order['token'];
+        $server_id = $order['server_id'];
+        $inbound_id = $order['inbound_id'];
+        $link_status = $order['expire_date'] > time()  ? $buttonValues['active'] : $buttonValues['deactive'];
+        $price = $order['amount'];
+        
+        $response = getJson($server_id)->obj;
+        if($inbound_id == 0) {
+            foreach($response as $row){
+                if($row->remark == $remark) {
+                    $total = $row->total;
+                    $up = $row->up;
+                    $down = $row->down; 
+                    $netType = json_decode($row->streamSettings)->network;
+                    $security = json_decode($row->streamSettings)->security;
+                    break;
+                }
+            }
+        }else {
+            foreach($response as $row){
+                if($row->id == $inbound_id) {
+                    $netType = json_decode($row->streamSettings)->network;
+                    $security = json_decode($row->streamSettings)->security;
+                    $clients = $row->clientStats;
+                    foreach($clients as $client) {
+                        if($client->email == $remark) {
+                            $total = $client->total;
+                            $up = $client->up;
+                            $down = $client->down; 
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        $leftgb = round( ($total - $up - $down) / 1073741824, 2) . " GB";
+        $configLinks = "";
+        foreach($acc_link as $acc_link){
+            $configLinks .= "\n <code>$acc_link</code>";
+        }
         $keyboard = array();
         if($inbound_id == 0){
             if($protocol == 'trojan') {
@@ -1076,25 +1618,22 @@ function getOrderDetailKeys($from_id, $id){
                     $keyboard = [
                         [
             			    ['text' => "$name", 'callback_data' => "biocidech"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
             			],
-            // 			[
-            //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => "cantEditTrojan"],
-            //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
                         ],
                         [
                             ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => ($botState['changeProtocolState']=="on"?"changeAccProtocol{$fid}_{$id}_trojan":"changeProtocolIsDisable")],
@@ -1104,35 +1643,30 @@ function getOrderDetailKeys($from_id, $id){
                     
                     $temp = array();
                     if($price != 0){
-                        if($botState['renewAccountState']=="on") $temp[] = ['text' => '♻ تمدید سرویس', 'callback_data' => "renewAccount$id" ];
-                        if($botState['switchLocationState']=="on") $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date']];
-                    }else{
-                        if($botState['switchLocationState']=="on") $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
+                        if($botState['renewAccountState']=="on") $temp[] = ['text' => $buttonValues['renew_config'], 'callback_data' => "renewAccount$id" ];
+                        if($botState['switchLocationState']=="on") $temp[] = ['text' => $buttonValues['change_config_location'], 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date']];
                     }
                     if(count($temp)>0) array_push($keyboard, $temp);
                 }else{
                     $keyboard = [
                         [
             			    ['text' => "$name", 'callback_data' => "biocidech"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
             			],
-            // 			[
-            //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => "cantEditTrojan"],
-            //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
                         ],
                         [
                             ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => ($botState['changeProtocolState']=="on"?"changeAccProtocol{$fid}_{$id}_trojan":"changeProtocolIsDisable")],
@@ -1144,10 +1678,8 @@ function getOrderDetailKeys($from_id, $id){
                     
                     $temp = array();
                     if($price != 0){
-                        if($botState['renewAccountState']=="on") $temp[] = ['text' => '♻ تمدید سرویس', 'callback_data' => "renewAccount$id" ];
-                        if($botState['switchLocationState']=="on") $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
-                    }else{
-                        if($botState['switchLocationState']=="on") $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
+                        if($botState['renewAccountState']=="on") $temp[] = ['text' => $buttonValues['renew_config'], 'callback_data' => "renewAccount$id" ];
+                        if($botState['switchLocationState']=="on") $temp[] = ['text' => $buttonValues['change_config_location'], 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
                     }
                     if(count($temp)>0) array_push($keyboard, $temp);
                 }
@@ -1156,25 +1688,22 @@ function getOrderDetailKeys($from_id, $id){
                     $keyboard = [
                         [
             			    ['text' => "$name", 'callback_data' => "biocidech"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
             			],
-            // 			[
-            //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => "cantEditGrpc"],
-            //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
                         ],
                         [
                             ['text' => $protocol == 'vmess' ? '☑️ vmess' : 'vmess', 'callback_data' => ($botState['changeProtocolState']=="on"?"changeAccProtocol{$fid}_{$id}_vmess":"changeProtocolIsDisable")],
@@ -1185,10 +1714,8 @@ function getOrderDetailKeys($from_id, $id){
                     
                     $temp = array();
                     if($price != 0){
-                        if($botState['renewAccountState']=="on") $temp[] = ['text' => '♻ تمدید سرویس', 'callback_data' => "renewAccount$id" ];
-                        if($botState['switchLocationState']=="on") $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
-                    }else{
-                        if($botState['switchLocationState']=="on") $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
+                        if($botState['renewAccountState']=="on") $temp[] = ['text' => $buttonValues['renew_config'], 'callback_data' => "renewAccount$id" ];
+                        if($botState['switchLocationState']=="on") $temp[] = ['text' => $buttonValues['change_config_location'], 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
                     }
                     if(count($temp)>0) array_push($keyboard, $temp);
                 }
@@ -1196,25 +1723,22 @@ function getOrderDetailKeys($from_id, $id){
                     $keyboard = [
                         [
             			    ['text' => "$name", 'callback_data' => "biocidech"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
             			],
-            // 			[
-            //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => ($security=="xtls"?"cantEditGrpc":"changeNetworkType{$fid}_{$id}")],
-            //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
                         ],
                         [
                             ['text' => $protocol == 'trojan' ? '☑️ trojan' : 'trojan', 'callback_data' => ($botState['changeProtocolState']=="on"?"changeAccProtocol{$fid}_{$id}_trojan":"changeProtocolIsDisable")],
@@ -1224,10 +1748,8 @@ function getOrderDetailKeys($from_id, $id){
                     
                     $temp = array();
                     if($price != 0){
-                        if($botState['renewAccountState']=="on") $temp[] = ['text' => '♻ تمدید سرویس', 'callback_data' => "renewAccount$id" ];
-                        if($botState['switchLocationState']=="on") $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
-                    }else{
-                        if($botState['switchLocationState']=="on") $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
+                        if($botState['renewAccountState']=="on") $temp[] = ['text' => $buttonValues['renew_config'], 'callback_data' => "renewAccount$id" ];
+                        if($botState['switchLocationState']=="on") $temp[] = ['text' => $buttonValues['change_config_location'], 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
                     }
                     if(count($temp)>0) array_push($keyboard, $temp);
 
@@ -1236,25 +1758,22 @@ function getOrderDetailKeys($from_id, $id){
                     $keyboard = [
                         [
             			    ['text' => "$name", 'callback_data' => "biocidech"],
-                            ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
-                            ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
                         ],
                         [
             			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
-                            ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
             			],
-            // 			[
-            //                 ['text' => $netType. " 🎛 نوع شبکه ", 'callback_data' => (($security=="xtls" || $rahgozar == true)?"cantEditGrpc":"changeNetworkType{$fid}_{$id}")],
-            //             ],
                         [
-                            ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
+                            ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
                         ],
                         ($rahgozar == true?
                         [
@@ -1270,10 +1789,8 @@ function getOrderDetailKeys($from_id, $id){
                     
                     $temp = array();
                     if($price != 0){
-                        if($botState['renewAccountState']=="on") $temp[] = ['text' => '♻ تمدید سرویس', 'callback_data' => "renewAccount$id" ];
-                        if($botState['switchLocationState']=="on" && $rahgozar != true) $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
-                    }else{
-                        if($botState['switchLocationState']=="on" && $rahgozar != true) $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
+                        if($botState['renewAccountState']=="on") $temp[] = ['text' => $buttonValues['renew_config'], 'callback_data' => "renewAccount$id" ];
+                        if($botState['switchLocationState']=="on" && $rahgozar != true) $temp[] = ['text' => $buttonValues['change_config_location'], 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
                     }
                     if(count($temp)>0) array_push($keyboard, $temp);
 
@@ -1283,34 +1800,32 @@ function getOrderDetailKeys($from_id, $id){
             $keyboard = [
                 [
     			    ['text' => "$name", 'callback_data' => "biocidech"],
-                    ['text' => " 🚀 نام پلن:", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['plan_name'], 'callback_data' => "biocidech"],
                 ],
                 [
     			    ['text' => "$date ", 'callback_data' => "biocidech"],
-                    ['text' => "⏰  تاریخ خرید: ", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['buy_date'], 'callback_data' => "biocidech"],
                 ],
                 [
     			    ['text' => "$expire_date ", 'callback_data' => "biocidech"],
-                    ['text' => "⏰  تاریخ انقضاء: ", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['expire_date'], 'callback_data' => "biocidech"],
                 ],
                 [
     			    ['text' => " $leftgb", 'callback_data' => "biocidech"],
-                    ['text' => "⏳ حجم باقیمانده:", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['volume_left'], 'callback_data' => "biocidech"],
     			],
     			[
-                    ['text' => "🚦 پروتکل انتخابی", 'callback_data' => "biocidech"],
+                    ['text' => $buttonValues['selected_protocol'], 'callback_data' => "biocidech"],
                 ],
                 [
-                    ['text' => " $protocol پروتکل ☑️", 'callback_data' => "biocidech"],
+                    ['text' => " $protocol ☑️", 'callback_data' => "biocidech"],
                 ]
             ];
             
             $temp = array();
             if($price != 0){
-                if($botState['renewAccountState']=="on") $temp[] = ['text' => '♻ تمدید سرویس', 'callback_data' => "renewAccount$id" ];
-                if($botState['switchLocationState']=="on" && $rahgozar != true) $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
-            }else{
-                if($botState['switchLocationState']=="on" && $rahgozar != true) $temp[] = ['text' => '🔌تغییر لوکیشن', 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
+                if($botState['renewAccountState']=="on") $temp[] = ['text' => $buttonValues['renew_config'], 'callback_data' => "renewAccount$id" ];
+                if($botState['switchLocationState']=="on" && $rahgozar != true) $temp[] = ['text' => $buttonValues['change_config_location'], 'callback_data' => "switchLocation{$id}_{$server_id}_{$leftgb}_".$order['expire_date'] ];
             }
             if(count($temp)>0) array_push($keyboard, $temp);
 
@@ -1322,13 +1837,23 @@ function getOrderDetailKeys($from_id, $id){
         $stmt->execute();
         $server_info = $stmt->get_result()->fetch_assoc();
         $stmt->close();
-    
+        
+        $subLink = $botState['subLinkState']=="on"?"<code>" . $botUrl . "settings/subLink.php?token=" . $token . "</code>":"";
+
+        $msg = str_replace(['NAME','CONNECT-LINK', 'SUB-LINK'], [$remark, $configLinks, $subLink], $mainValues['config_details_message']);
     
         $extrakey = [];
-        if($botState['increaseVolumeState']=="on") $extrakey[] = ['text' => "📥افزایش حجم سرویس", 'callback_data' => "increaseAVolume{$server_id}_{$inbound_id}_{$remark}"];
-        if($botState['increaseTimeState']=="on") $extrakey[] = ['text' => "افزایش زمان سرویس✨", 'callback_data' => "increaseADay{$server_id}_{$inbound_id}_{$remark}"];
+        if($botState['increaseVolumeState']=="on" && $price != 0) $extrakey[] = ['text' => $buttonValues['increase_config_volume'], 'callback_data' => "increaseAVolume{$id}"];
+        if($botState['increaseTimeState']=="on" && $price != 0) $extrakey[] = ['text' => $buttonValues['increase_config_days'], 'callback_data' => "increaseADay{$id}"];
         $keyboard[] = $extrakey;
-        $keyboard[] = [['text' => "↪ برگشت", 'callback_data' => "mySubscriptions"]];
+        
+         
+        if($botState['renewConfigLinkState'] == "on" && $botState['updateConfigLinkState'] == "on") $keyboard[] = [['text'=>$buttonValues['renew_connection_link'],'callback_data'=>'changAccountConnectionLink' . $id],['text'=>$buttonValues['update_config_connection'],'callback_data'=>'updateConfigConnectionLink' . $id]];
+        elseif($botState['renewConfigLinkState'] == "on") $keyboard[] = [['text'=>$buttonValues['renew_connection_link'],'callback_data'=>'changAccountConnectionLink' . $id]];
+        elseif($botState['updateConfigLinkState'] == "on") $keyboard[] = [['text'=>$buttonValues['update_config_connection'],'callback_data'=>'updateConfigConnectionLink' . $id]];
+
+        $keyboard[] = [['text' => $buttonValues['delete_config'], 'callback_data' => "deleteMyConfig" . $id]];
+        $keyboard[] = [['text' => $buttonValues['back_button'], 'callback_data' => ($agentBought == true?"agentConfigsList":"mySubscriptions")]];
         return ["keyboard"=>json_encode([
                     'inline_keyboard' => $keyboard
                 ]),
@@ -1370,6 +1895,7 @@ function generateUID(){
 }
 function checkStep($table){
     global $connection;
+    
     $sql = "SELECT * FROM `" . $table . "` WHERE `active`=0";
     $stmt = $connection->prepare("SELECT * FROM `$table` WHERE `active` = 0");
     $stmt->execute();
@@ -1423,7 +1949,7 @@ function addBorderImage($add){
 function sumerize($amount){
     $gb = $amount / (1024 * 1024 * 1024);
     if($gb > 1){
-       return round($gb,2) . " گیگابایت"; 
+      return round($gb,2) . " گیگابایت"; 
     }
     else{
         $gb *= 1024;
@@ -1552,7 +2078,89 @@ function deleteClient($server_id, $inbound_id, $remark, $delete = 0){
     return ['id' => $old_data->id,'expiryTime' => $old_data->expiryTime, 'limitIp' => $old_data->limitIp, 'flow' => $old_data->flow, 'total' => $total, 'up' => $up, 'down' => $down,];
 
 }
-function editInboundTraffic($server_id, $remark, $volume, $days){
+function editInboundRemark($server_id, $remark, $newRemark){
+    global $connection;
+    $stmt = $connection->prepare("SELECT * FROM server_config WHERE id=?");
+    $stmt->bind_param("i", $server_id);
+    $stmt->execute();
+    $server_info = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    $panel_url = $server_info['panel_url'];
+    $cookie = 'Cookie: session='.$server_info['cookie'];
+    $serverType = $server_info['type'];
+
+    $response = getJson($server_id);
+    if(!$response) return null;
+    $response = $response->obj;
+    foreach($response as $row){
+        if($row->remark == $remark) {
+            $inbound_id = $row->id;
+            $total = $row->total;
+            $up = $row->up;
+            $down = $row->down;
+            $expiryTime = $row->expiryTime;
+            $port = $row->port;
+            $netType = json_decode($row->streamSettings)->network;
+            break;
+        }
+    }
+
+
+    $dataArr = array('up' => $up,'down' => $down,'total' => $total,'remark' => $newRemark,'enable' => 'true',
+        'expiryTime' => $row->expiryTime, 'listen' => '','port' => $row->port,'protocol' => $row->protocol,'settings' => $row->settings,
+        'streamSettings' => $row->streamSettings, 'sniffing' => $row->sniffing);
+
+
+    $serverName = $server_info['username'];
+    $serverPass = $server_info['password'];
+    
+    $loginUrl = $panel_url . '/login';
+    
+    $postFields = array(
+        "username" => $serverName,
+        "password" => $serverPass
+        );
+        
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $loginUrl);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_POST, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 3); 
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postFields));
+    curl_setopt($curl, CURLOPT_COOKIEJAR, dirname(__FILE__) . '/tempCookie.txt');
+    $loginResponse = json_decode(curl_exec($curl),true);
+    if(!$loginResponse['success']){
+        curl_close($curl);
+        return $loginResponse;
+    }
+
+    if($serverType == "sanaei") $url = "$panel_url/panel/inbound/update/$inbound_id";
+    else $url = "$panel_url/xui/inbound/update/$inbound_id";
+
+    $phost = str_ireplace('https://','',str_ireplace('http://','',$panel_url));
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_CONNECTTIMEOUT => 15,      // timeout on connect
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $dataArr,
+        CURLOPT_COOKIEJAR => dirname(__FILE__) . '/tempCookie.txt',
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    unlink("tempCookie.txt");
+    return $response = json_decode($response);
+}
+function editInboundTraffic($server_id, $remark, $volume, $days, $editType = null){
     global $connection;
     $stmt = $connection->prepare("SELECT * FROM server_config WHERE id=?");
     $stmt->bind_param("i", $server_id);
@@ -1582,13 +2190,19 @@ function editInboundTraffic($server_id, $remark, $volume, $days){
     if($days != 0) {
         $now_microdate = floor(microtime(true) * 1000);
         $extend_date = (864000 * $days * 100);
-        $expire_microdate = ($now_microdate > $expiryTime) ? $now_microdate + $extend_date : $expiryTime + $extend_date;
+        if($editType == "renew") $expire_microdate = $now_microdate + $extend_date;
+        else $expire_microdate = ($now_microdate > $expiryTime) ? $now_microdate + $extend_date : $expiryTime + $extend_date;
     }
 
     if($volume != 0){
-        $leftGB = $total;// - $up - $down;
+        $leftGB = $total - $up - $down;
         $extend_volume = floor($volume * 1073741824);
-        $total = ($leftGB > 0) ? $leftGB + $extend_volume : $extend_volume;
+        if($editType == "renew"){
+            $total = $extend_volume;
+            $up = 0;
+            $down = 0;
+        }
+        else $total = ($leftGB > 0) ? $leftGB + $extend_volume : $extend_volume;
     }
 
 
@@ -1646,7 +2260,102 @@ function editInboundTraffic($server_id, $remark, $volume, $days){
     return $response = json_decode($response);
 
 }
-function editClientTraffic($server_id, $inbound_id, $remark, $volume, $days){
+function renewInboundUuid($server_id, $remark){
+    global $connection;
+    $stmt = $connection->prepare("SELECT * FROM server_config WHERE id=?");
+    $stmt->bind_param("i", $server_id);
+    $stmt->execute();
+    $server_info = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    $panel_url = $server_info['panel_url'];
+    $cookie = 'Cookie: session='.$server_info['cookie'];
+    $serverType = $server_info['type'];
+
+    $response = getJson($server_id);
+    if(!$response) return null;
+    $response = $response->obj;
+    foreach($response as $row){
+        if($row->remark == $remark) {
+            $settings = json_decode($row->settings, true);
+            $inbound_id = $row->id;
+            $total = $row->total;
+            $up = $row->up;
+            $down = $row->down;
+            $expiryTime = $row->expiryTime;
+            $port = $row->port;
+            $netType = json_decode($row->streamSettings)->network;
+            break;
+        }
+    }
+
+    $newUuid = generateUID();
+    $settings['clients'][0]['id'] = $newUuid;
+
+    $editedClient = $settings['clients'][$client_key];
+    $settings['clients'] = array_values($settings['clients']);
+    $settings = json_encode($settings);
+
+
+    $dataArr = array('up' => $row->up,'down' => $row->down,'total' => $row->total,'remark' => $row->remark,'enable' => 'true',
+        'expiryTime' => $row->expiryTime, 'listen' => '','port' => $row->port,'protocol' => $row->protocol,'settings' => $settings,
+        'streamSettings' => $row->streamSettings, 'sniffing' => $row->sniffing);
+
+
+    $serverName = $server_info['username'];
+    $serverPass = $server_info['password'];
+    
+    $loginUrl = $panel_url . '/login';
+    
+    $postFields = array(
+        "username" => $serverName,
+        "password" => $serverPass
+        );
+        
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $loginUrl);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_POST, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 3); 
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postFields));
+    curl_setopt($curl, CURLOPT_COOKIEJAR, dirname(__FILE__) . '/tempCookie.txt');
+    $loginResponse = json_decode(curl_exec($curl),true);
+    if(!$loginResponse['success']){
+        curl_close($curl);
+        return $loginResponse;
+    }
+
+    if($serverType == "sanaei") $url = "$panel_url/panel/inbound/update/$inbound_id";
+    else $url = "$panel_url/xui/inbound/update/$inbound_id";
+
+    $phost = str_ireplace('https://','',str_ireplace('http://','',$panel_url));
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_CONNECTTIMEOUT => 15,      // timeout on connect
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $dataArr,
+        CURLOPT_COOKIEJAR => dirname(__FILE__) . '/tempCookie.txt',
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    unlink("tempCookie.txt");
+
+    $response = json_decode($response);
+    $response->newUuid = $newUuid;
+
+    return $response;
+
+}
+function renewClientUuid($server_id, $inbound_id, $remark){
     global $connection;
     $stmt = $connection->prepare("SELECT * FROM server_config WHERE id=?");
     $stmt->bind_param("i", $server_id);
@@ -1673,35 +2382,13 @@ function editClientTraffic($server_id, $inbound_id, $remark, $volume, $days){
                     break;
                 }
             }
-
-            $clientStats = $row->clientStats;
-            foreach($clientStats as $key => $clientStat) {
-                if($clientStat->email == $remark) {
-                    $total = $clientStat->total;
-                    $up = $clientStat->up;
-                    $down = $clientStat->down;
-                    break;
-                }
-            }
             break;
         }
     }
-    if($volume != 0){
-        $client_total = $settings['clients'][$client_key]['totalGB'];// - $up - $down;
-        $extend_volume = floor($volume * 1073741824);
-        $volume = ($client_total > 0) ? $client_total + $extend_volume : $extend_volume;
-        /*if($serverType == "sanaei") resetClientTraffic($server_id, $remark, $inbound_id);
-        else resetClientTraffic($server_id, $remark);*/
-        $settings['clients'][$client_key]['totalGB'] = $volume;
-    }
+    
+    $newUuid = generateUID();
+    $settings['clients'][$client_key]['id'] = $newUuid;
 
-    if($days != 0){
-        $expiryTime = $settings['clients'][$client_key]['expiryTime'];
-        $now_microdate = floor(microtime(true) * 1000);
-        $extend_date = (864000 * $days * 100);
-        $expire_microdate = ($now_microdate > $expiryTime) ? $now_microdate + $extend_date : $expiryTime + $extend_date;
-        $settings['clients'][$client_key]['expiryTime'] = $expire_microdate;
-    }
     $editedClient = $settings['clients'][$client_key];
     $settings['clients'] = array_values($settings['clients']);
     $settings = json_encode($settings);
@@ -1782,6 +2469,280 @@ function editClientTraffic($server_id, $inbound_id, $remark, $volume, $days){
 
     $response = curl_exec($curl);
     unlink("tempCookie.txt");
+    $response = json_decode($response);
+    $response->newUuid = $newUuid;
+
+    curl_close($curl);
+    return $response;
+
+}
+function editClientRemark($server_id, $inbound_id, $remark, $newRemark){
+    global $connection;
+    $stmt = $connection->prepare("SELECT * FROM server_config WHERE id=?");
+    $stmt->bind_param("i", $server_id);
+    $stmt->execute();
+    $server_info = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    $panel_url = $server_info['panel_url'];
+    $cookie = 'Cookie: session='.$server_info['cookie'];
+    $serverType = $server_info['type'];
+
+    $response = getJson($server_id);
+    if(!$response) return null;
+    $response = $response->obj;
+    $client_key = 0;
+    $uuid = "";
+    foreach($response as $row){
+        if($row->id == $inbound_id) {
+            $settings = json_decode($row->settings, true);
+            $clients = $settings['clients'];
+            foreach($clients as $key => $client) {
+                if($client['email'] == $remark) {
+                    $client_key = $key;
+                    $uuid = $client['id'];
+                    break;
+                }
+            }
+
+            $clientStats = $row->clientStats;
+            foreach($clientStats as $key => $clientStat) {
+                if($clientStat->email == $remark) {
+                    $total = $clientStat->total;
+                    $up = $clientStat->up;
+                    $down = $clientStat->down;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    $settings['clients'][$client_key]['email'] = $newRemark;
+
+    $editedClient = $settings['clients'][$client_key];
+    $settings['clients'] = array_values($settings['clients']);
+    $settings = json_encode($settings);
+    $dataArr = array('up' => $row->up,'down' => $row->down,'total' => $row->total,'remark' => $row->remark,'enable' => 'true',
+        'expiryTime' => $row->expiryTime, 'listen' => '','port' => $row->port,'protocol' => $row->protocol,'settings' => $settings,
+        'streamSettings' => $row->streamSettings, 'sniffing' => $row->sniffing);
+
+    $serverName = $server_info['username'];
+    $serverPass = $server_info['password'];
+    
+    $loginUrl = $panel_url . '/login';
+    
+    $postFields = array(
+        "username" => $serverName,
+        "password" => $serverPass
+        );
+         
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $loginUrl);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_POST, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 3); 
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postFields));
+    curl_setopt($curl, CURLOPT_COOKIEJAR, dirname(__FILE__) . '/tempCookie.txt');
+    $loginResponse = json_decode(curl_exec($curl),true);
+    if(!$loginResponse['success']){
+        curl_close($curl);
+        return $loginResponse; 
+    } 
+
+    $phost = str_ireplace('https://','',str_ireplace('http://','',$panel_url));
+    if($serverType == "sanaei" || $serverType == "alireza"){
+        
+        $newSetting = array();
+        $newSetting['clients'][] = $editedClient;
+        $newSetting = json_encode($newSetting);
+
+        $dataArr = array(
+            "id"=>$inbound_id,
+            "settings" => $newSetting
+            );
+            
+        if($serverType == "sanaei") $url = "$panel_url/panel/inbound/updateClient/" . urlencode($uuid);
+        else $url = "$panel_url/xui/inbound/updateClient/" . urlencode($uuid);
+        
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_CONNECTTIMEOUT => 15,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $dataArr,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_COOKIEJAR => dirname(__FILE__) . '/tempCookie.txt',
+        ));
+    }else{
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "$panel_url/xui/inbound/update/$inbound_id",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_CONNECTTIMEOUT => 15,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $dataArr,
+            CURLOPT_COOKIEJAR => dirname(__FILE__) . '/tempCookie.txt',
+        ));
+    }
+
+    $response = curl_exec($curl);
+    unlink("tempCookie.txt");
+
+    curl_close($curl);
+    return $response = json_decode($response);
+
+}
+function editClientTraffic($server_id, $inbound_id, $remark, $volume, $days, $editType = null){
+    global $connection;
+    $stmt = $connection->prepare("SELECT * FROM server_config WHERE id=?");
+    $stmt->bind_param("i", $server_id);
+    $stmt->execute();
+    $server_info = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    $panel_url = $server_info['panel_url'];
+    $cookie = 'Cookie: session='.$server_info['cookie'];
+    $serverType = $server_info['type'];
+
+    $response = getJson($server_id);
+    if(!$response) return null;
+    $response = $response->obj;
+    $client_key = 0;
+    $uuid = "";
+    foreach($response as $row){
+        if($row->id == $inbound_id) {
+            $settings = json_decode($row->settings, true);
+            $clients = $settings['clients'];
+            foreach($clients as $key => $client) {
+                if($client['email'] == $remark) {
+                    $client_key = $key;
+                    $uuid = $client['id'];
+                    break;
+                }
+            }
+
+            $clientStats = $row->clientStats;
+            foreach($clientStats as $key => $clientStat) {
+                if($clientStat->email == $remark) {
+                    $total = $clientStat->total;
+                    $up = $clientStat->up;
+                    $down = $clientStat->down;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    if($volume != 0){
+        $client_total = $settings['clients'][$client_key]['totalGB'];// - $up - $down;
+        $extend_volume = floor($volume * 1073741824);
+        $volume = ($client_total > 0) ? $client_total + $extend_volume : $extend_volume;
+        if($editType == "renew"){
+            $volume = $extend_volume;
+            if($serverType == "sanaei") resetClientTraffic($server_id, $remark, $inbound_id);
+            else resetClientTraffic($server_id, $remark);
+        }
+        $settings['clients'][$client_key]['totalGB'] = $volume;
+    }
+
+    if($days != 0){
+        $expiryTime = $settings['clients'][$client_key]['expiryTime'];
+        $now_microdate = floor(microtime(true) * 1000);
+        $extend_date = (864000 * $days * 100);
+        if($editType == "renew") $expire_microdate = $now_microdate + $extend_date;
+        else $expire_microdate = ($now_microdate > $expiryTime) ? $now_microdate + $extend_date : $expiryTime + $extend_date;
+        $settings['clients'][$client_key]['expiryTime'] = $expire_microdate;
+    }
+    $editedClient = $settings['clients'][$client_key];
+    $settings['clients'] = array_values($settings['clients']);
+    $settings = json_encode($settings);
+    $dataArr = array('up' => $row->up,'down' => $row->down,'total' => $row->total,'remark' => $row->remark,'enable' => 'true',
+        'expiryTime' => $row->expiryTime, 'listen' => '','port' => $row->port,'protocol' => $row->protocol,'settings' => $settings,
+        'streamSettings' => $row->streamSettings, 'sniffing' => $row->sniffing);
+
+    $serverName = $server_info['username'];
+    $serverPass = $server_info['password'];
+    
+    $loginUrl = $panel_url . '/login';
+    
+    $postFields = array(
+        "username" => $serverName,
+        "password" => $serverPass
+        );
+         
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $loginUrl);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_POST, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 3); 
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postFields));
+    curl_setopt($curl, CURLOPT_COOKIEJAR, dirname(__FILE__) . '/tempCookie.txt');
+    $loginResponse = json_decode(curl_exec($curl),true);
+    if(!$loginResponse['success']){
+        curl_close($curl);
+        return $loginResponse; 
+    } 
+
+    $phost = str_ireplace('https://','',str_ireplace('http://','',$panel_url));
+    if($serverType == "sanaei" || $serverType == "alireza"){
+        
+        $newSetting = array();
+        $newSetting['clients'][] = $editedClient;
+        $newSetting = json_encode($newSetting);
+
+        $dataArr = array(
+            "id"=>$inbound_id,
+            "settings" => $newSetting
+            );
+            
+        if($serverType == "sanaei") $url = "$panel_url/panel/inbound/updateClient/" . urlencode($uuid);
+        else $url = "$panel_url/xui/inbound/updateClient/" . urlencode($uuid);
+        
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_CONNECTTIMEOUT => 15,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $dataArr,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_COOKIEJAR => dirname(__FILE__) . '/tempCookie.txt',
+        ));
+    }else{
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "$panel_url/xui/inbound/update/$inbound_id",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_CONNECTTIMEOUT => 15,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $dataArr,
+            CURLOPT_COOKIEJAR => dirname(__FILE__) . '/tempCookie.txt',
+        ));
+    }
+
+    $response = curl_exec($curl);
+    unlink("tempCookie.txt");
 
     curl_close($curl);
     return $response = json_decode($response);
@@ -1811,7 +2772,7 @@ function deleteInbound($server_id, $remark, $delete = 0){
                 'total' => $row->total,
                 'up' => $row->up,
                 'down' => $row->down,
-                'volume' => $row->total - $row->up - $row->down,
+                'volume' => ((int)$row->total - (int)$row->up - (int)$row->down),
                 'port' => $row->port,
                 'protocol' => $protocol,
                 'expiryTime' => $row->expiryTime,
@@ -1910,11 +2871,9 @@ function resetClientTraffic($server_id, $remark, $inboundId = null){
         return $loginResponse;
     }
     $phost = str_ireplace('https://','',str_ireplace('http://','',$panel_url));
-
     if($serverType == "sanaei") $url = "$panel_url/panel/inbound/$inboundId/resetClientTraffic/" . urlencode($remark);
     elseif($inboundId == null) $url = "$panel_url/xui/inbound/resetClientTraffic/" . urlencode($remark);
     else $url = "$panel_url/xui/inbound/$inboundId/resetClientTraffic/" . urlencode($remark);
-    
     curl_setopt_array($curl, array(
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
@@ -1976,19 +2935,23 @@ function addInboundAccount($server_id, $client_id, $inbound_id, $expiryTime, $re
                 
                 $newClient = [
                     "$id_label" => $client_id,
+                    "enable" => true,
                     "email" => $remark,
                     "limitIp" => $limitip,
                     "flow" => $flow,
                     "totalGB" => $volume,
-                    "expiryTime" => $expiryTime
+                    "expiryTime" => $expiryTime,
+                    "subId" => RandomString(16)
                 ];
 		    }else{
                 $newClient = [
                     "$id_label" => $client_id,
+                    "enable" => true,
                     "email" => $remark,
                     "limitIp" => $limitip,
                     "totalGB" => $volume,
-                    "expiryTime" => $expiryTime
+                    "expiryTime" => $expiryTime,
+                    "subId" => RandomString(16)
                 ];
 		    }
     	}else{
@@ -2145,7 +3108,7 @@ function getNewHeaders($netType, $request_header, $response_header, $type){
     return $headers;
 
 }
-function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netType, $inbound_id = 0, $rahgozar = false){
+function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netType, $inbound_id = 0, $rahgozar = false, $customPath = false, $customPort = 0, $customSni = null){
     global $connection;
     $stmt = $connection->prepare("SELECT * FROM server_config WHERE id=?");
     $stmt->bind_param("i", $server_id);
@@ -2161,7 +3124,7 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
     $response_header = $server_info['response_header'];
     $cookie = 'Cookie: session='.$server_info['cookie'];
     $serverType = $server_info['type'];
-    
+    preg_match("/^Host:(.*)/i",$request_header,$hostMatch);
 
     $panel_url = str_ireplace('http://','',$panel_url);
     $panel_url = str_ireplace('https://','',$panel_url);
@@ -2201,7 +3164,7 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                     $path = json_decode($row->streamSettings)->wsSettings->path;
                     $host = json_decode($row->streamSettings)->wsSettings->headers->Host;
                 }
-                if($header_type == 'http'){
+                if($header_type == 'http' && empty($host)){
                     $request_header = explode(':', $request_header);
                     $host = $request_header[1];
                 }
@@ -2210,6 +3173,15 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                         $alpn = $tlsSetting->certificates->alpn;
                         if(isset($tlsSetting->settings->serverName)) $sni = $tlsSetting->settings->serverName;
                     } 
+                    elseif($tlsStatus == "reality"){
+                        $realitySettings = json_decode($row->streamSettings)->realitySettings;
+                        $fp = $realitySettings->settings->fingerprint;
+                        $spiderX = $realitySettings->settings->spiderX;
+                        $pbk = $realitySettings->settings->publicKey;
+                        $sni = $realitySettings->serverNames[0];
+                        $flow = $settings['clients'][0]['flow'];
+                        $sid = $realitySettings->shortIds[0];
+                    }
                     $serviceName = json_decode($row->streamSettings)->grpcSettings->serviceName;
                     $grpcSecurity = json_decode($row->streamSettings)->security;
                 }
@@ -2227,7 +3199,7 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                     $kcpType = $kcpSettings->header->type;
                     $kcpSeed = $kcpSettings->seed;
                 }
-
+                
                 break;
             }
         }else{
@@ -2271,6 +3243,14 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                         $alpn = $tlsSetting->alpn;
                         if(isset($tlsSetting->settings->serverName)) $sni = $tlsSetting->settings->serverName;
                     }
+                    elseif($tlsStatus == "reality"){
+                        $realitySettings = json_decode($row->streamSettings)->realitySettings;
+                        $fp = $realitySettings->settings->fingerprint;
+                        $spiderX = $realitySettings->settings->spiderX;
+                        $pbk = $realitySettings->settings->publicKey;
+                        $sni = $realitySettings->serverNames[0];
+                        $sid = $realitySettings->shortIds[0];
+                    }
                     $grpcSecurity = json_decode($row->streamSettings)->security;
                     $serviceName = json_decode($row->streamSettings)->grpcSettings->serviceName;
                 }elseif($netType == 'kcp'){
@@ -2301,27 +3281,32 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
         if($inbound_id == 0) {
             if($protocol == 'vless'){
                 if($rahgozar == true){
-                    $parseAdd = parse_url($server_ip);
-                    $parseAdd = $parseAdd['host']??$parseAdd['path'];
-                    $explodeAdd = explode(".", $parseAdd);
-                    $subDomain = RandomString(4,"domain");
-                    if(count($explodeAdd) >= 3) $sni = "{$uniqid}.{$explodeAdd[1]}.{$explodeAdd[2]}";
-                    else $sni = "{$uniqid}.$server_ip";
-                    if(empty($host)) $host = $server_ip;
+                    if(empty($host) && isset($hostMatch[1])) $host = $hostMatch[1];
+                    
+                    if(!empty($host)){
+                        $parseAdd = parse_url($host);
+                        $parseAdd = $parseAdd['host']??$parseAdd['path'];
+                        $explodeAdd = explode(".", $parseAdd);
+                        $subDomain = RandomString(4,"domain");
+                        if($customSni != null) $sni = $customSni;
+                        else{
+                            if(count($explodeAdd) >= 3) $sni = $uniqid . "." . $explodeAdd[1] . "." . $explodeAdd[2];
+                            else $sni = $uniqid . "." . $host;
+                        }
+                    }
                 }
-                
                 $psting = '';
-                if($header_type == 'http' && $rahgozar != true) $psting .= "&path=/&host=$host"; else $psting .= '';
+                if($header_type == 'http' && $rahgozar != true && $netType != "grpc") $psting .= "&path=/&host=$host"; else $psting .= '';
                 if($netType == 'tcp' and $header_type == 'http') $psting .= '&headerType=http';
                 if(strlen($sni) > 1 && $tlsStatus != "reality") $psting .= "&sni=$sni";
                 if(strlen($serverName)>1 && $tlsStatus=="xtls") $server_ip = $serverName;
                 if($tlsStatus == "xtls" && $netType == "tcp") $psting .= "&flow=xtls-rprx-direct";
                 if($tlsStatus=="reality") $psting .= "&fp=$fp&pbk=$pbk&sni=$sni" . ($flow != ""?"&flow=$flow":"") . "&sid=$sid&spx=$spiderX";
-                if($rahgozar == true) $psting .= "&path=" . urlencode("$path?ed=2048") . "&encryption=none&host=$host";
-                $outputlink = "$protocol://$uniqid@$server_ip:" . ($rahgozar == true?"443":$port) . "?type=$netType&security=" . ($rahgozar==true?"tls":$tlsStatus) . "{$psting}#$remark";
-                if($netType == 'grpc'){
+                if($rahgozar == true) $psting .= "&path=" . urlencode($path . ($customPath == true?"?ed=2048":"")) . "&encryption=none&host=$host";
+                $outputlink = "$protocol://$uniqid@$server_ip:" . ($rahgozar == true?($customPort!="0"?$customPort:"443"):$port) . "?type=$netType&security=" . ($rahgozar==true?"tls":$tlsStatus) . "{$psting}#$remark";
+                if($netType == 'grpc' && $tlsStatus != "reality"){
                     if($tlsStatus == 'tls'){
-                        $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName&sni=$serverName#$remark";
+                        $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName&sni=$sni#$remark";
                     }else{
                         $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName#$remark";
                     }
@@ -2349,25 +3334,32 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                     "v"=> "2",
                     "ps"=> $remark,
                     "add"=> $server_ip,
-                    "port"=> $rahgozar == true?443:$port,
+                    "port"=> $rahgozar == true?($customPort!=0?$customPort:443):$port,
                     "id"=> $uniqid,
                     "aid"=> 0,
                     "net"=> $netType,
                     "type"=> $kcpType ? $kcpType : "none",
                     "host"=> ($rahgozar == true && empty($host))? $server_ip:(is_null($host) ? '' : $host),
-                    "path"=> ($rahgozar == true)?("$path?ed=2048"):((is_null($path) and $path != '') ? '/' : (is_null($path) ? '' : $path)),
+                    "path"=> ($rahgozar == true)?($path . ($customPath == true?"?ed=2048":"")):((is_null($path) and $path != '') ? '/' : (is_null($path) ? '' : $path)),
                     "tls"=> $rahgozar == true?"tls":((is_null($tlsStatus)) ? 'none' : $tlsStatus)
                 ];
                 
                 if($rahgozar == true){
-                    $parseAdd = parse_url($server_ip);
-                    $parseAdd = $parseAdd['host']??$parseAdd['path'];
-                    $explodeAdd = explode(".", $parseAdd);
-                    $subDomain = RandomString(4,"domain");
-                    if(count($explodeAdd) >= 3) $sni = "{$uniqid}.{$explodeAdd[1]}.{$explodeAdd[2]}";
-                    else $sni = "{$uniqid}.$server_ip";
-
-                    $vmessArr['alpn'] = 'http/1.1';
+                    if(empty($host) && isset($hostMatch[1])) $host = $hostMatch[1];
+                    
+                    if(!empty($host)){
+                        $parseAdd = parse_url($host);
+                        $parseAdd = $parseAdd['host']??$parseAdd['path'];
+                        $explodeAdd = explode(".", $parseAdd);
+                        $subDomain = RandomString(4,"domain");
+                        if($customSni != null) $sni = $customSni;
+                        else{
+                            if(count($explodeAdd) >= 3) $sni = $uniqid . "." . $explodeAdd[1] . "." . $explodeAdd[2];
+                            else $sni = $uniqid . "." . $host;
+                        }
+    
+                        $vmessArr['alpn'] = 'http/1.1';
+                    }
                 }
                 if($header_type == 'http' && $rahgozar != true){
                     $vmessArr['path'] = "/";
@@ -2390,14 +3382,19 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
         }else { 
             if($protocol == 'vless'){
                 if($rahgozar == true){
-                    $parseAdd = parse_url($server_ip);
-                    $parseAdd = $parseAdd['host']??$parseAdd['path'];
-                    $explodeAdd = explode(".", $parseAdd);
-                    $subDomain = RandomString(4,"domain");
-                    if(count($explodeAdd) >= 3) $sni = "{$uniqid}.{$explodeAdd[1]}.{$explodeAdd[2]}";
-                    else $sni = "{$uniqid}.$server_ip";
+                    if(empty($host) && isset($hostMatch[1])) $host = $hostMatch[1];
                     
-                    if(empty($host)) $host = $server_ip;
+                    if(!empty($host)){
+                        $parseAdd = parse_url($host);
+                        $parseAdd = $parseAdd['host']??$parseAdd['path'];
+                        $explodeAdd = explode(".", $parseAdd);
+                        $subDomain = RandomString(4,"domain");
+                        if($customSni != null) $sni = $customSni;
+                        else{
+                            if(count($explodeAdd) >= 3) $sni = $uniqid . "." . $explodeAdd[1] . "." . $explodeAdd[2];
+                            else $sni = $uniqid . "." .$host;
+                        }
+                    }
                 }
                 
                 if(strlen($sni) > 1 && $tlsStatus != "reality") $psting = "&sni=$sni"; else $psting = '';
@@ -2408,7 +3405,7 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                     if($header_type == "http") $psting .= "&path=/&host=$host";
                     $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus{$psting}#$remark";
                 }elseif($netType == 'ws'){
-                    if($rahgozar == true)$outputlink = "$protocol://$uniqid@$server_ip:443?type=$netType&security=tls&path=" . urlencode("$path?ed=2048") . "&encryption=none&host=$server_ip{$psting}#$remark";
+                    if($rahgozar == true)$outputlink = "$protocol://$uniqid@$server_ip:" . ($customPort!=0?$customPort:"443") . "?type=$netType&security=tls&path=" . urlencode($path . ($customPath == true?"?ed=2048":"")) . "&encryption=none&host=$server_ip{$psting}#$remark";
                     else $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&path=/&host=$host{$psting}#$remark";
                 }
                 elseif($netType == 'kcp')
@@ -2416,7 +3413,11 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                 elseif($netType == 'grpc'){
                     if($tlsStatus == 'tls'){
                         $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName&sni=$serverName#$remark";
-                    }else{
+                    }
+                    elseif($tlsStatus=="reality"){
+                        $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName&fp=$fp&pbk=$pbk&sni=$sni" . ($flow != ""?"&flow=$flow":"") . "&sid=$sid&spx=$spiderX#$remark";
+                    }
+                    else{
                         $outputlink = "$protocol://$uniqid@$server_ip:$port?type=$netType&security=$tlsStatus&serviceName=$serviceName#$remark";
                     }
                 }
@@ -2440,24 +3441,31 @@ function getConnectionLink($server_id, $uniqid, $protocol, $remark, $port, $netT
                     "v"=> "2",
                     "ps"=> $remark,
                     "add"=> $server_ip,
-                    "port"=> $rahgozar == true?443:$port,
+                    "port"=> $rahgozar == true?($customPort!=0?$customPort:443):$port,
                     "id"=> $uniqid,
                     "aid"=> 0,
                     "net"=> $netType,
                     "type"=> ($headerType) ? $headerType : ($kcpType ? $kcpType : "none"),
                     "host"=> ($rahgozar == true && empty($host))?$server_ip:(is_null($host) ? '' : $host),
-                    "path"=> ($rahgozar == true)?("$path?ed=2048") :((is_null($path) and $path != '') ? '/' : (is_null($path) ? '' : $path)),
+                    "path"=> ($rahgozar == true)?($path . ($customPath == true?"?ed=2048":"")) :((is_null($path) and $path != '') ? '/' : (is_null($path) ? '' : $path)),
                     "tls"=> $rahgozar == true?"tls":((is_null($tlsStatus)) ? 'none' : $tlsStatus)
                 ];
                 if($rahgozar == true){
-                    $subDomain = RandomString(4, "domain");
-                    $parseAdd = parse_url($server_ip);
-                    $parseAdd = $parseAdd['host']??$parseAdd['path'];
-                    $explodeAdd = explode(".", $parseAdd);
-                    if(count($explodeAdd) >= 3) $sni = "{$uniqid}.{$explodeAdd[1]}.{$explodeAdd[2]}";
-                    else $sni = "{$uniqid}.$server_ip";
-
-                    $vmessArr['alpn'] = 'http/1.1';
+                    if(empty($host) && isset($hostMatch[1])) $host = $hostMatch[1];
+                    
+                    if(!empty($host)){
+                        $subDomain = RandomString(4, "domain");
+                        $parseAdd = parse_url($host);
+                        $parseAdd = $parseAdd['host']??$parseAdd['path'];
+                        $explodeAdd = explode(".", $parseAdd);
+                        if($customSni != null) $sni = $customSni;
+                        else{
+                            if(count($explodeAdd) >= 3) $sni = $uniqid . "." . $explodeAdd[1] . "." .$explodeAdd[2];
+                            else $sni = $uniqid . "." . $host;
+                        }
+                        
+                        $vmessArr['alpn'] = 'http/1.1';
+                    }
                 }
                 if($netType == 'grpc'){
                     if(!is_null($alpn) and json_encode($alpn) != '[]' and $alpn != '') $vmessArr['alpn'] = $alpn;
@@ -2543,10 +3551,12 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
         	  "clients": [
         		{
         		  "id": "'.$uniqid.'",
+                  "enable": true,
         		  "email": "' . $remark. '",
                   "limitIp": 0,
                   "totalGB": 0,
-                  "expiryTime": 0
+                  "expiryTime": 0,
+                  "subId": "' . RandomString(16) . '"
         		}
         	  ],
         	  "decryption": "none",
@@ -2618,10 +3628,12 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
 		  "clients": [
 			{
 			  "password": "'.$uniqid.'",
+              "enable": true,
 			  "email": "' . $remark. '",
               "limitIp": 0,
               "totalGB": 0,
-              "expiryTime": 0
+              "expiryTime": 0,
+              "subId": "' . RandomString(16) . '"
 			}
 		  ],
 		  "fallbacks": []
@@ -2697,10 +3709,12 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
             	  "clients": [
             		{
             		  "id": "'.$client_id.'",
+                      "enable": true,
             		  "email": "' . $remark. '",
                       "limitIp": 0,
                       "totalGB": 0,
                       "expiryTime": 0
+                      "subId": "' . RandomString(16) . '"
             		}
             	  ],
             	  "decryption": "none",
@@ -2743,11 +3757,12 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
                   "clients": [
                     {
                       "id": "'.$uniqid.'",
-                      "alterId": 0,
+                      "enable": true,
                       "email": "' . $remark. '",
                       "limitIp": 0,
                       "totalGB": 0,
-                      "expiryTime": 0
+                      "expiryTime": 0,
+                      "subId": "' . RandomString(16) . '"
                     }
                   ],
                   "decryption": "none",
@@ -2789,10 +3804,12 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
                   "clients": [
                     {
                       "id": "'.$uniqid.'",
+                      "enable": true,
                       "email": "' . $remark. '",
                       "limitIp": 0,
                       "totalGB": 0,
-                      "expiryTime": 0
+                      "expiryTime": 0,
+                      "subId": "' . RandomString(16) . '"
                     }
                   ],
                   "decryption": "none",
@@ -2832,10 +3849,12 @@ function editInbound($server_id, $uniqid, $remark, $protocol, $netType = 'tcp', 
             	  "clients": [
             		{
             		  "id": "'.$uniqid.'",
+                      "enable": true,
             		  "email": "' . $remark. '",
                       "limitIp": 0,
                       "totalGB": 0,
-                      "expiryTime": 0
+                      "expiryTime": 0,
+                      "subId": "' . RandomString(16) . '"
             		}
             	  ],
             	  "decryption": "none",
@@ -3086,7 +4105,7 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
         	}';
             $wsSettings = '{
               "network": "ws",
-              "security": "'.$security.'",
+              "security": "'.$security.'", 
         	  "tlsSettings": '.$tlsSettings.',
               "wsSettings": {
                 "path": "/",
@@ -3099,10 +4118,12 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
         	  "clients": [
         		{
         		  "id": "'.$client_id.'",
+                  "enable": true,
                   "email": "' . $remark. '",
                   "limitIp": 0,
                   "totalGB": 0,
-                  "expiryTime": 0
+                  "expiryTime": 0,
+                  "subId": "' . RandomString(16) . '"
         		}
         	  ],
         	  "decryption": "none",
@@ -3174,10 +4195,12 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
 		  "clients": [
 			{
 			  "password": "'.$client_id.'",
+              "enable": true,
               "email": "' . $remark. '",
               "limitIp": 0,
               "totalGB": 0,
-              "expiryTime": 0
+              "expiryTime": 0,
+              "subId": "' . RandomString(16) . '"
 			}
 		  ],
 		  "fallbacks": []
@@ -3262,10 +4285,12 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
         	  "clients": [
         		{
         		  "id": "'.$client_id.'",
+                  "enable": true,
         		  "email": "' . $remark. '",
                   "limitIp": 0,
                   "totalGB": 0,
-                  "expiryTime": 0
+                  "expiryTime": 0,
+                  "subId": "' . RandomString(16) . '"
         		}
         	  ],
         	  "decryption": "none",
@@ -3307,11 +4332,12 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
               "clients": [
                 {
                   "id": "'.$client_id.'",
-                  "alterId": 0,
+                  "enable": true,
                   "email": "' . $remark. '",
                   "limitIp": 0,
                   "totalGB": 0,
-                  "expiryTime": 0
+                  "expiryTime": 0,
+                  "subId": "' . RandomString(16) . '"
                 }
               ],
               "disableInsecureEncryption": false
@@ -3375,10 +4401,12 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
         	  "clients": [
         		{
         		  "id": "'.$client_id.'",
+        		  "enable": true,
         		  "email": "' . $remark. '",
                   "limitIp": 0,
                   "totalGB": 0,
-                  "expiryTime": 0
+                  "expiryTime": 0,
+                  "subId": "' . RandomString(16) . '"
         		}
         	  ],
         	  "decryption": "none",
@@ -3411,70 +4439,105 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
                 
                     $dest = !empty($file_detail['dest'])?$file_detail['dest']:"yahoo.com";
                     $serverNames = !empty($file_detail['serverNames'])?$file_detail['serverNames']:
-'[
-    "yahoo.com",
-    "www.yahoo.com"
-]';
+                                '[
+                                    "yahoo.com",
+                                    "www.yahoo.com"
+                                ]';
                     $spiderX = !empty($file_detail['spiderX'])?$file_detail['spiderX']:"";
                     $flow = isset($file_detail['flow']) && $file_detail['flow'] != "None" ? $file_detail['flow'] : "";
                     
 
-		            $netType = "tcp";
+
 		            $certInfo = getNewCert($server_id)->obj;
 		            $publicKey = $certInfo->publicKey;
 		            $privateKey = $certInfo->privateKey;
 		            $shortId = RandomString(8, "small");
 		            $serverName = json_decode($tlsSettings,true)['serverName'];
-		            $tcpSettings = '{
-                              "network": "tcp",
-                              "security": "reality",
-                              "realitySettings": {
-                                "show": false,
-                                "xver": 0,
-                                "dest": "' . $dest . '",
-                                "serverNames":' . $serverNames . ',
-                                "privateKey": "' . $privateKey . '",
-                                "minClient": "",
-                                "maxClient": "",
-                                "maxTimediff": 0,
-                                "shortIds": [
-                                  "' . $shortId .'"
-                                ],
-                                "settings": {
-                                  "publicKey": "' . $publicKey . '",
-                                  "fingerprint": "firefox",
-                                  "serverName": "' . $serverName . '",
-                                  "spiderX": "' . $spiderX . '"
-                                }
-                              },
-                              "tcpSettings": {
-                                "acceptProxyProtocol": false,
-                        		"header": '.$headers.'
-                              }
-                            }';
+		            if($netType == "grpc"){
+    		            $tcpSettings = '{
+                          "network": "grpc",
+                          "security": "reality",
+                          "realitySettings": {
+                            "show": false,
+                            "xver": 0,
+                            "dest": "' . $dest . '",
+                            "serverNames":' . $serverNames . ',
+                            "privateKey": "' . $privateKey . '",
+                            "minClient": "",
+                            "maxClient": "",
+                            "maxTimediff": 0,
+                            "shortIds": [
+                              "' . $shortId .'"
+                            ],
+                            "settings": {
+                              "publicKey": "' . $publicKey . '",
+                              "fingerprint": "firefox",
+                              "serverName": "' . $serverName . '",
+                              "spiderX": "' . $spiderX . '"
+                            }
+                          },
+                          "grpcSettings": {
+                            "serviceName": "",
+                    		"multiMode": false
+                          }
+                        }';
+		            }else{
+    		            $tcpSettings = '{
+                          "network": "tcp",
+                          "security": "reality",
+                          "realitySettings": {
+                            "show": false,
+                            "xver": 0,
+                            "dest": "' . $dest . '",
+                            "serverNames":' . $serverNames . ',
+                            "privateKey": "' . $privateKey . '",
+                            "minClient": "",
+                            "maxClient": "",
+                            "maxTimediff": 0,
+                            "shortIds": [
+                              "' . $shortId .'"
+                            ],
+                            "settings": {
+                              "publicKey": "' . $publicKey . '",
+                              "fingerprint": "firefox",
+                              "serverName": "' . $serverName . '",
+                              "spiderX": "' . $spiderX . '"
+                            }
+                          },
+                          "tcpSettings": {
+                            "acceptProxyProtocol": false,
+                    		"header": '.$headers.'
+                          }
+                        }';
+		            }
     			    $settings = '{
         			  "clients": [
         				{
         				  "id": "'.$client_id.'",
+        				  "enable": true,
                           "email": "' . $remark. '",
                           "flow": "' . $flow .'",
                           "limitIp": 0,
                           "totalGB": 0,
-                          "expiryTime": 0
+                          "expiryTime": 0,
+                          "subId": "' . RandomString(16) . '"
         				}
         			  ],
         			  "decryption": "none",
         			  "fallbacks": []
         			}';
+		            $netType = "tcp";
 		        }else{
     			    $settings = '{
         			  "clients": [
         				{
         				  "id": "'.$client_id.'",
+        				  "enable": true,
                           "email": "' . $remark. '",
                           "limitIp": 0,
                           "totalGB": 0,
-                          "expiryTime": 0
+                          "expiryTime": 0,
+                          "subId": "' . RandomString(16) . '"
         				}
         			  ],
         			  "decryption": "none",
@@ -3496,7 +4559,7 @@ function addUser($server_id, $client_id, $protocol, $port, $expiryTime, $remark,
 		}
 
         $streamSettings = ($netType == 'tcp') ? $tcpSettings : $wsSettings;
-		if($netType == 'grpc'){
+		if($netType == 'grpc' && $reality != "true"){
 			if($security == 'tls') {
 				$streamSettings = '{
   "network": "grpc",

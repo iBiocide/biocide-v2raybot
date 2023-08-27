@@ -22,7 +22,7 @@ do
 			echo " "
 			if [ "$answer" != "${answer#[Yy]}" ]; then
 			mv /var/www/html/biocide-v2raybot/baseInfo.php /root/
-			mv /var/www/html/biocide-v2raybot/userInfo.json /root/
+      			mv /var/www/html/biocide-v2raybot/settings/values.php /root/
 			sudo apt-get install -y git
 			sudo apt-get install -y wget
 			sudo apt-get install -y unzip
@@ -32,12 +32,12 @@ do
 			rm -r /var/www/html/biocide-v2raybot/
 			echo -e "\n\e[92mWait a few seconds ...\033[0m\n"
 			sleep 3
-			git clone https://github.com/ibiocide/biocide-v2raybot.git /var/www/html/biocide-v2raybot
+			git clone https://github.com/iBiocide/biocide-v2raybot.git /var/www/html/biocide-v2raybot
 			sudo chown -R www-data:www-data /var/www/html/biocide-v2raybot/
 			sudo chmod -R 755 /var/www/html/biocide-v2raybot/
 			sleep 3
 			mv /root/baseInfo.php /var/www/html/biocide-v2raybot/
-			mv /root/userInfo.json /var/www/html/biocide-v2raybot/
+      			mv /root/values.php /var/www/html/biocide-v2raybot/settings/
 # 			if [ $? -ne 0 ]; then
 # 			echo -e "\n\e[41mError: The update failed!\033[0m\n"
 # 			exit 1
@@ -95,8 +95,8 @@ do
 
 			if [ -z "$destination_dir" ]; then
 			    RANDOM_NUMBER=$(( RANDOM % 10000000 + 1000000 ))
-			    mkdir "/var/www/html/biocidepanel"
-			    echo "Directory created: biocidepanel"
+			    mkdir "/var/www/html/biocidepanel${RANDOM_NUMBER}"
+			    echo "Directory created: biocidepanel${RANDOM_NUMBER}"
 			    echo "Folder created successfully!"
 			    sudo mkdir /root/updatebiocide
    			    sleep 1
@@ -114,7 +114,7 @@ do
 			 destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
 
 			 cd /var/www/html/
-			 wget -O biocidepanel.zip https://github.com/ibiocide/biocide-v2raybot/releases/download/7.5.3/biocidepanel.zip
+			 wget -O biocidepanel.zip https://github.com/iBiocide/biocide-v2raybot/releases/download/8.1.1/biocidepanel.zip
 
 			 file_to_transfer="/var/www/html/biocidepanel.zip"
 			 destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)

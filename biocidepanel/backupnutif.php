@@ -1,7 +1,7 @@
 <?php
 include 'includ/db.php';
 include 'includ/jdf.php';
-include '../biocide/baseInfo.php';
+include '../biocide-v2raybot/baseInfo.php';
 
 $sql_servers = "SELECT * FROM servers where status=1";
 $result_servers = $conn->query($sql_servers);

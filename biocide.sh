@@ -10,7 +10,6 @@ fi
 wait
 
 echo -e "\e[32m
-
 ██████╗░██╗░█████╗░░█████╗░██╗██████╗░███████╗
 ██╔══██╗██║██╔══██╗██╔══██╗██║██╔══██╗██╔════╝
 ██████╦╝██║██║░░██║██║░░╚═╝██║██║░░██║█████╗░░
@@ -18,7 +17,7 @@ echo -e "\e[32m
 ██████╦╝██║╚█████╔╝╚█████╔╝██║██████╔╝███████╗
 ╚═════╝░╚═╝░╚════╝░░╚════╝░╚═╝╚═════╝░╚══════╝
 \033[0m"
-echo -e "    \e[31mTelegram Channel: \e[34m@biocidech\033[0m | \e[31mTelegram Group: \e[34m@ibiocide\033[0m\n"
+echo -e "    \e[31mTelegram Channel: \e[34m@biocidech\033[0m | \e[31mTelegram Group: \e[34m@iBiocide\033[0m\n"
 
 #sleep
 echo -e "\e[32mInstalling biocide script ... \033[0m\n"
@@ -104,7 +103,7 @@ sudo systemctl restart apache2.service
 
 wait
 
-git clone https://github.com/ibiocide/biocide-v2raybot.git /var/www/html/biocide-v2raybot
+git clone https://github.com/iBiocide/biocide-v2raybot.git /var/www/html/biocide-v2raybot
 sudo chown -R www-data:www-data /var/www/html/biocide-v2raybot/
 sudo chmod -R 755 /var/www/html/biocide-v2raybot/
 echo -e "\n\033[33mbiocide config and script have been installed successfully\033[0m"
@@ -116,8 +115,8 @@ destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
     
 if [ -z "$destination_dir" ]; then
     RANDOM_NUMBER=$(( RANDOM % 10000000 + 1000000 ))
-    mkdir "/var/www/html/biocidepanel"
-    echo "Directory created: biocidepanel"
+    mkdir "/var/www/html/biocidepanel${RANDOM_NUMBER}"
+    echo "Directory created: biocidepanel${RANDOM_NUMBER}"
     echo "Folder created successfully!"
 else
     echo "Folder already exists."
@@ -126,7 +125,7 @@ fi
  destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
 
  cd /var/www/html/
- wget -O biocidepanel.zip https://github.com/ibiocide/biocide-v2raybot/releases/download/7.5.3/biocidepanel.zip
+ wget -O biocidepanel.zip https://github.com/iBiocide/biocide-v2raybot/releases/download/8.1.1/biocidepanel.zip
 
  file_to_transfer="/var/www/html/biocidepanel.zip"
  destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
@@ -178,11 +177,12 @@ clear
 
 echo " "
 echo -e "\e[32m
-██     ██ ██ ███████ ██     ██ ██ ███████     ███████ ███████ ██      
-██     ██ ██    ███  ██     ██ ██    ███      ██      ██      ██      
-██  █  ██ ██   ███   ██  █  ██ ██   ███       ███████ ███████ ██      
-██ ███ ██ ██  ███    ██ ███ ██ ██  ███             ██      ██ ██      
- ███ ███  ██ ███████  ███ ███  ██ ███████     ███████ ███████ ███████ 
+██████╗░██╗░█████╗░░█████╗░██╗██████╗░███████╗
+██╔══██╗██║██╔══██╗██╔══██╗██║██╔══██╗██╔════╝
+██████╦╝██║██║░░██║██║░░╚═╝██║██║░░██║█████╗░░
+██╔══██╗██║██║░░██║██║░░██╗██║██║░░██║██╔══╝░░
+██████╦╝██║╚█████╔╝╚█████╔╝██║██████╔╝███████╗
+╚═════╝░╚═╝░╚════╝░░╚════╝░╚═╝╚═════╝░╚══════╝
 \033[0m\n"
 
 read -p "Enter the domain: " domainname
@@ -205,6 +205,7 @@ PATHS=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
 (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/messagebiocide.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/rewardReport.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/warnusers.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/gift2all.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 (crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 
 echo -e "\n\e[92m Setting Up Cron...\033[0m\n"
@@ -349,13 +350,13 @@ wait
         
         echo " "
         
-        echo -e "\e[100mDatabase information:\033[0m"
+        echo -e "\e[100mDatabase information: https://${YOUR_DOMAIN}/phpmyadmin\033[0m"
         echo -e "\e[33mDatabase name: \e[36m${dbname}\033[0m"
         echo -e "\e[33mDatabase username: \e[36m${dbuser}\033[0m"
         echo -e "\e[33mDatabase password: \e[36m${dbpass}\033[0m"
         echo " "
         echo -e "\e[100mbiocide panel:\033[0m"
-        echo -e "\e[33maddres: \e[36mhttps://${YOUR_DOMAIN}/biocidepanel\033[0m"
+        echo -e "\e[33maddres: \e[36mhttps://${YOUR_DOMAIN}/biocidepanel${RANDOM_NUMBER}\033[0m"
         echo -e "\e[33musername panel: \e[36madmin\033[0m"
         echo -e "\e[33mpassword panel: \e[36madmin\033[0m\n"
         

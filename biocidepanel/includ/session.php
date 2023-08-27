@@ -1,8 +1,3 @@
-<!--
-* biocide v7.5.3
-* https://github.com/ibiocide/biocide-v2raybot
-* Copyright (c) @biocidech
--->
 <?php
 function session_notif_biocide(){
     if (isset($_SESSION['flash_message'])) {
