@@ -207,16 +207,6 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 <hr>
 <br>
 
-
-# حمایت
-
-- USDT (USDT-Tron): `TL5wd4r6gabsuW9HfcoAmgLBPXVTW8RfbE`
-- Tron (TRX): `TL5wd4r6gabsuW9HfcoAmgLBPXVTW8RfbE`
-- Bitcoin: `bc1qqlevnm4tlwyaermj5ldqlm730x7a9ytgd98hw8`
-- Dogecoin: `DFUNC9hQ3cgSMScD17UV6fFZ5pMDJMzsXR`
-
-
-
 <br>
 <hr>
 <br>
