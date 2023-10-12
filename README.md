@@ -20,7 +20,7 @@
 
 <h1 align="center"/>بایوساید</h1>
 <h1 align="center"/>برای مشاهده نمونه یا دمو ساخته شده به لینک زیر مراجعه کنید</h1>
-فروش آسان با <a href="https://github.com/ibiocide/biocide-v2raybot">https://github.com/iBiocide/WizWizXui</a> یک دستور
+<h1 align="center"/><a href="https://github.com/ibiocide/biocide-v2raybot">https://github.com/iBiocide/WizWizXui</a></h1>
 
 <p align="center">
 فروش آسان با <a href="https://github.com/ibiocide/biocide-v2raybot">بایوساید</a> نصب فقط با یک دستور
