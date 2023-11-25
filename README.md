@@ -66,11 +66,6 @@
 
 
 
-
-# آموزش نصب روی هاست :
-
-[![Video](https://img.youtube.com/vi/loouK6h_KDA/maxresdefault.jpg)](https://www.youtube.com/watch?v=loouK6h_KDA)
-
 # آموزش و دستور نصب روی سرور لینوکس Ubuntu :
 
 
