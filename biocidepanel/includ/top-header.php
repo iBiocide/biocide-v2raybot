@@ -1,6 +1,6 @@
 <!--
-* biocide v7.5.3
-* https://github.com/iBiocide/biocide-v2raybot
+* biocide v9.1.1
+* https://github.com/biocidedev/biocide
 * Copyright (c) @biocidech
 -->
 <header class="">
@@ -31,9 +31,9 @@
             <ul class="flex flex-shrink-0 space-x-1">
                 <li class="relative flex items-center">
                     <p>
-                        <a href="https://github.com/iBiocide/biocide-v2raybot">
+                        <a href="https://github.com/biocidedev/biocide">
                             <img width="85px" alt="GitHub biocide stars"
-                                 src="https://img.shields.io/github/stars/iBiocide/biocide-v2raybot?color=%23f3f4f8&label=star">
+                                 src="https://img.shields.io/github/stars/biocidedev/biocide?color=%23f3f4f8&label=star">
                         </a>
                     </p>
                 </li>
@@ -70,19 +70,6 @@
                             </svg>
                         </template>
                     </button>
-                </li>
-                <li class="relative">
-                    <a href="port/index.php" target="_blank">
-                        <button
-                                class="align-middle  focus:shadow-outline-purple rounded-md focus:outline-none border-2 p-1 dark:border-gray-700"
-                                @click="toggleProfileMenu"
-                                @keydown.escape="closeProfileMenu"
-                                aria-label="Account"
-                                aria-haspopup="true"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="gray" id="Outline" viewBox="0 0 24 24" width="20" height="20"><path d="M17,8H7V7a5,5,0,0,1,9.375-2.422,1,1,0,0,0,1.749-.971A7,7,0,0,0,5,7V8.424A5,5,0,0,0,2,13v6a5.006,5.006,0,0,0,5,5H17a5.006,5.006,0,0,0,5-5V13A5.006,5.006,0,0,0,17,8Zm3,11a3,3,0,0,1-3,3H7a3,3,0,0,1-3-3V13a3,3,0,0,1,3-3H17a3,3,0,0,1,3,3Z"/><path d="M12,14a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V15A1,1,0,0,0,12,14Z"/></svg>
-                        </button>
-                    </a>
                 </li>
                 <?php
                 $sql_admins = "SELECT * FROM admins";

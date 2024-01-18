@@ -251,7 +251,7 @@ if (file_exists($lang_file)) {
     </a>
 </div>
 <div class="px-6 my-2">
-    <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+    <a href="https://github.com/biocidedev/biocide" target="_blank">
         <button
                 class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-blue">
             Github
@@ -310,7 +310,7 @@ if (file_exists($lang_file)) {
     <div class="py-4 text-gray-500 dark:text-gray-400">
             <div class="ml-2 flex justify-start items-center ">
             <img width="40px" src="./icons/biocide.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 9.1.1</span></a>
             </div>
         <ul class="mt-6">
             <li class="relative px-6 py-3">
@@ -551,7 +551,7 @@ if (file_exists($lang_file)) {
             </a>
         </div>
         <div class="px-6 my-2">
-            <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+            <a href="https://github.com/biocidedev/biocide" target="_blank">
                 <button class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
                     Github
                     <span class="ml-2" aria-hidden="true">
@@ -610,7 +610,7 @@ if (file_exists($lang_file)) {
                     <div class="grid grid-cols-1 gap-6 mt-4 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 text-left">
                         <div class="mt-2">
                             <label class="text-gray-700 dark:text-gray-200 mt-2" for="volume_save"><?php echo $_LANG['volume_save']?></label>
-                            <input required name="volume_save" id="volume_save" type="number"
+                            <input required name="volume_save" id="volume_save" type="text"
                                    class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
                         </div>
                         <div class="mt-2">
@@ -646,7 +646,7 @@ if (file_exists($lang_file)) {
                     <div class="grid grid-cols-1 gap-6 mt-4 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 text-left">
                         <div class="mt-2">
                             <label class="text-gray-700 dark:text-gray-200 mt-2" for="days_save"><?php echo $_LANG['days_save']?></label>
-                            <input required name="days_save" id="days_save" type="number"
+                            <input required name="days_save" id="days_save" type="text"
                                    class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
                         </div>
                         <div class="mt-2">

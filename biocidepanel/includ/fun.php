@@ -138,6 +138,12 @@ function settingsave_state($conn) {
         $weSwapStates = $_POST["weSwapState"];
         $gbPriceStates = $_POST["gbPrice"];
         $dayPriceStates = $_POST["dayPrice"];
+        $renewConfigLinkState = $_POST["renewConfigLinkState"];
+        $updateConfigLinkState = $_POST["updateConfigLinkState"];
+        $individualExistence = $_POST["individualExistence"];
+        $sharedExistence = $_POST["sharedExistence"];
+        $testAccount = $_POST["testAccount"];
+        $agencyState = $_POST["agencyState"];
         $BOT_STATES_1 = 'BOT_STATES';
         $lockChannelschange = '@'.$lockChannels;
         $rewardChannelschange = '@'.$rewardChannels;
@@ -165,6 +171,12 @@ function settingsave_state($conn) {
             "dayPrice" => $dayPriceStates,
             "subLinkState" => $subLinkStates,
             "plandelkhahState" => $plandelkhahStates,
+            "renewConfigLinkState" => $renewConfigLinkState,
+            "updateConfigLinkState" => $updateConfigLinkState,
+            "individualExistence" => $individualExistence,
+            "sharedExistence" => $sharedExistence,
+            "testAccount" => $testAccount,
+            "agencyState" => $agencyState,
             "weSwapState" => $weSwapStates
         ));
 
@@ -288,8 +300,9 @@ function discounts_insert($conn){
         }else {
             $discounts_date = time() + ($discounts_date * 24 * 60 * 60);
         }
-        $insert_category_sql = "INSERT INTO discounts (hash_id,type,amount,expire_date,expire_count) 
-VALUES ('$hash_ids','$category_discountss','$percent_discounts','$discounts_date','$discounts_count')";
+        $can_use_discountss = $_POST['discounts_can_use'];
+        $insert_category_sql = "INSERT INTO discounts (hash_id,type,amount,expire_date,expire_count,can_use) 
+VALUES ('$hash_ids','$category_discountss','$percent_discounts','$discounts_date','$discounts_count','$can_use_discountss')";
         $result_category_sql = mysqli_query($conn, $insert_category_sql);
         if (!$result_category_sql) {
             echo "خطا" . die(mysqli_error($conn));
@@ -305,7 +318,7 @@ VALUES ('$hash_ids','$category_discountss','$percent_discounts','$discounts_date
 
 function users_insert($conn){
     if(isset($_POST['action']) && $_POST['action'] == 'insert_gift') {
-        include '../biocide-v2raybot/baseInfo.php';
+        include '../biocide/baseInfo.php';
         $chatId = $_POST["id_user"];
         $gifts = $_POST["gift"];
         $urls = $_POST["url"];
@@ -839,6 +852,9 @@ class rahgozar_insert {
             $step = 10;
             $dates = time();
             $rahgozar_status = 1;
+//            $custom_paths = 1;
+//            $custom_ports = 0;
+//            $custom_snis = null;
 
             if ($_POST['inbound_plan']) {
                 $inbound_plans = $_POST['inbound_plan'];
@@ -852,11 +868,32 @@ class rahgozar_insert {
                 $acount_plans = '0';
             }
 
+
+
+//            if ($_POST['custom_path_plan']) {
+//                $custom_paths = $_POST['custom_path_plan'];
+//            } else {
+//                $custom_paths = '1';
+//            }
+//            if ($_POST['custom_port_plan']) {
+//                $custom_ports = $_POST['custom_port_plan'];
+//            } else {
+//                $custom_ports = '0';
+//            }
+//            if ($_POST['custom_sni_plan']) {
+//                $custom_snis = $_POST['custom_sni_plan'];
+//            } else {
+//                $custom_snis = NULL;
+//            }
+
+//            $custom_snis = isset($_POST['custom_sni_plan']) ? $_POST['custom_sni_plan'] : null;
+
             $insert_plans_sql = "INSERT INTO server_plans (fileid, catid, server_id, inbound_id, acount,
             limitip, title, protocol, days, volume, type, price, descr, pic, active, step, date, rahgozar)
             VALUES ('$fileid', '$name_category_plans', '$name_servers_plans', '$inbound_plans', '$acount_plans',
             '$limitip_plans', '$title_plans', '$protocol_plans', '$days_plans', '$volume_plans', '$type_plans',
             '$price_plans', '$descriptions', '$pic', '$active', '$step', '$dates', '$rahgozar_status')";
+//            '$price_plans', '$descriptions', '$pic', '$active', '$step', '$dates', '$rahgozar_status','$custom_paths','$custom_ports',DEFAULT)";
 
             $result_plans_sql = mysqli_query($this->conn, $insert_plans_sql);
 

@@ -253,7 +253,7 @@ if (file_exists($lang_file)) {
     </a>
 </div>
 <div class="px-6 my-2">
-    <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+    <a href="https://github.com/biocidedev/biocide" target="_blank">
         <button
                 class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-blue">
             Github
@@ -313,7 +313,7 @@ if (file_exists($lang_file)) {
     <div class="py-4 text-gray-500 dark:text-gray-400">
         <div class="ml-2 flex justify-start items-center ">
             <img width="40px" src="./icons/biocide.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 9.1.1</span></a>
         </div>
         <ul class="mt-6">
             <li class="relative px-6 py-3">
@@ -554,7 +554,7 @@ if (file_exists($lang_file)) {
             </a>
         </div>
         <div class="px-6 my-2">
-            <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+            <a href="https://github.com/biocidedev/biocide" target="_blank">
                 <button class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
                     Github
                     <span class="ml-2" aria-hidden="true">
@@ -789,7 +789,7 @@ if (file_exists($lang_file)) {
                            class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
                            placeholder="" required/>
                 </div>
-            <label class="block mt-2 text-sm mx-auto" style="width: 97%">
+            <label class="block mt-2 text-sm mx-auto" style="width: 97%;line-height: 16px ">
                 <select required name="panel"
                         class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
                     <option value="/etc/x-ui/x-ui.db">Vaxilu</option>
@@ -798,6 +798,7 @@ if (file_exists($lang_file)) {
                     <option value="/etc/x-ui/x-ui.db">FranzKafkaYu</option>
                     <option value="/etc/x-ui/x-ui.db">Hossinasaadi</option>
                     <option value="/etc/x-ui/x-ui.db">HexaSoftwareTech</option>
+                    <option value="/etc/x-ui-english/x-ui-english.db">NidukaAkalanka</option>
                 </select>
             </label>
                 <footer class="mt-5 flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">

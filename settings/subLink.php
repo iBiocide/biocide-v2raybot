@@ -16,10 +16,10 @@ $token = $_GET['token'];
         $stmt->close();
         
         $remark = $info['remark'];
+        $uuid = $info['uuid']??"0";
         $server_id = $info['server_id'];
         $inbound_id = $info['inbound_id'];
         $protocol = $info['protocol'];
-        $server_id = $info['server_id'];
         $rahgozar = $info['rahgozar'];
         
         $file_id = $info['fileid'];
@@ -32,10 +32,20 @@ $token = $_GET['token'];
         $customPort = $file_detail['custom_port'];
         $customSni = $file_detail['custom_sni'];
 
+
+        $stmt = $connection->prepare("SELECT * FROM `server_config` WHERE id=?");
+        $stmt->bind_param("i", $server_id);
+        $stmt->execute();
+        $server_info = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        $serverType = $server_info['type'];
+
         $response = getJson($server_id)->obj;
         if($inbound_id == 0) {
             foreach($response as $row){
-                if($row->remark == $remark) {
+                $clientInbound = $row->id;
+                $clients = json_decode($row->settings)->clients;
+                if($clients[0]->id == $uuid || $clients[0]->password == $uuid) {
                     $total = $row->total;
                     $port = $row->port;
                     $up = $row->up;
@@ -48,19 +58,26 @@ $token = $_GET['token'];
         }else {
             foreach($response as $row){
                 if($row->id == $inbound_id) {
+                    $clientInbound = $row->id;
                     $port = $row->port;
                     $netType = json_decode($row->streamSettings)->network;
                     $security = json_decode($row->streamSettings)->security;
-                    $clients = $row->clientStats;
-                    foreach($clients as $client) {
-                        if($client->email == $remark) {
-                            $total = $client->total;
-                            $up = $client->up;
-                            $down = $client->down; 
+                    
+                    $clientsStates = $row->clientStats;
+                    $clients = json_decode($row->settings)->clients;
+                    foreach($clients as $key => $client){
+                        if($client->id == $uuid || $client->password == $uuid){
+                            $email = $client->email;
+                            $emails = array_column($clientsStates,'email');
+                            $emailKey = array_search($email,$emails);
+                            
+                            $total = $clientsStates[$emailKey]->total;
+                            $up = $clientsStates[$emailKey]->up;
+                            $enable = $clientsStates[$emailKey]->enable;
+                            $down = $clientsStates[$emailKey]->down; 
                             break;
                         }
                     }
-                    break;
                 }
             }
         }
@@ -83,9 +100,9 @@ $token = $_GET['token'];
 
 
         
-        $newRemark = preg_replace("/\(ðŸ“Š.+-.+\|ðŸ“†.+\)/","", $remark) . "(ðŸ“Š" . $totalUsed . " - " . $total . "|ðŸ“†" .  $daysLeft . ")";
-        if($inbound_id == 0) $res = editInboundRemark($server_id, $remark, $newRemark);
-        else $res = editClientRemark($server_id, $inbound_id, $remark, $newRemark);
+        $newRemark = preg_replace("/\(📊.+-.+\|📆.+\)/","", $remark) . "(📊" . $totalUsed . " - " . $total . "|📆" .  $daysLeft . ")";
+        if($inbound_id == 0) $res = editInboundRemark($server_id, $uuid, $newRemark);
+        else $res = editClientRemark($server_id, $clientInbound, $uuid, $newRemark);
 
         if($res->success){
             $vraylink = getConnectionLink($server_id, $uniqid, $protocol, $newRemark, $port, $netType, $inbound_id, $rahgozar, $customPath, $customPort, $customSni);

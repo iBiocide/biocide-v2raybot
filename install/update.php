@@ -1,13 +1,22 @@
 <?php
-
 require "../baseInfo.php";
 $connection = new mysqli('localhost',$dbUserName,$dbPassword,$dbName);
-
 $arrays = [
+    "CREATE TABLE  `send_list` (
+        `id` int(255) NOT NULL AUTO_INCREMENT,
+        `offset` int(255) NOT NULL DEFAULT 0,
+        `type` varchar(20) NOT NULL,
+        `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+        `chat_id` bigint(10),
+        `message_id` int(255),
+        `file_id` varchar(500),
+        `state` int(1) NOT NULL DEFAULT 0,
+        PRIMARY KEY (`id`)
+        );",
     "DROP TABLE `refered_users`;",
     "DROP TABLE `server_accounts`;",
     "ALTER TABLE `server_config` DROP `cookie`;",
-    "CREATE TABLE `discounts` (
+    "CREATE TABLE `discounts`  (
         `id` int(255) NOT NULL AUTO_INCREMENT,
         `hash_id` varchar(100) NOT NULL,
         `type` varchar(10) NOT NULL,
@@ -17,17 +26,17 @@ $arrays = [
         `used_by` text DEFAULT NULL,
         PRIMARY KEY (`id`)
         );",
-    "CREATE TABLE `admins` (
-      `id` int(10) NOT NULL AUTO_INCREMENT,
-      `username` varchar(200) NOT NULL,
-      `password` varchar(200) NOT NULL,
-      `backupchannel` varchar(200) CHARACTER SET utf8 NOT NULL,
+    "CREATE TABLE `admins`  (
+	  `id` int(10) NOT NULL AUTO_INCREMENT,
+	  `username` varchar(200) NOT NULL,
+	  `password` varchar(200) NOT NULL,
+	  `backupchannel` varchar(200) CHARACTER SET utf8 NOT NULL,
+	  `lang` varchar(10) CHARACTER SET utf8 NOT NULL,
       PRIMARY KEY (`id`)
     );",
-    "INSERT INTO `admins` (`id`, `username`, `password`, `backupchannel`) VALUES
-    (1, 'admin', 'admin', '-1002545458541');
-    ",   
-    "CREATE TABLE `servers` (
+    "INSERT INTO `admins` (`id`, `username`, `password`, `backupchannel`, `lang`) VALUES
+    (1, 'admin', 'admin', '-1002545458541', 'en');",
+    "CREATE TABLE  `servers` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `ip` varchar(200) NOT NULL,
       `port` int(10) NOT NULL,
@@ -38,13 +47,13 @@ $arrays = [
       `status` int(11) NOT NULL,
       PRIMARY KEY (`id`)
     );",
-    "CREATE TABLE `increase_day` (
+    "CREATE TABLE  `increase_day` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `volume` float NOT NULL,
         `price` int(11) NOT NULL,
         PRIMARY KEY (`id`)
         );",
-    "CREATE TABLE `increase_order` (
+    "CREATE TABLE  `increase_order`(
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `userid` varchar(30) NOT NULL,
         `server_id` int(11) NOT NULL,
@@ -54,7 +63,7 @@ $arrays = [
         `date` varchar(30) NOT NULL,
         PRIMARY KEY (`id`)
         );",
-    "CREATE TABLE `increase_plan` (
+    "CREATE TABLE  `increase_plan` (
         `id` int(255) NOT NULL AUTO_INCREMENT,
         `volume` float NOT NULL,
         `price` int(255) NOT NULL,
@@ -71,10 +80,37 @@ $arrays = [
     "ALTER TABLE `pays` CHANGE `payid` `payid` VARCHAR(500) NULL DEFAULT NULL;",
     "ALTER TABLE `setting` CHANGE `type` `type` VARCHAR(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL;",
     "ALTER TABLE `server_plans` ADD `spiderX` VARCHAR(500) NULL AFTER `serverNames`;",
-    "ALTER TABLE `server_plans` ADD `flow` VARCHAR(50) NOT NULL DEFAULT 'None' AFTER `spiderX`;"
+    "ALTER TABLE `server_plans` ADD `flow` VARCHAR(50) NOT NULL DEFAULT 'None' AFTER `spiderX`;",
+	"ALTER TABLE `admins` ADD `lang` varchar(10) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'en' AFTER `backupchannel`;",
+	"ALTER TABLE `pays` ADD `description` VARCHAR(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL AFTER `hash_id`;",
+	"ALTER TABLE `server_plans` ADD `custom_path` INT(10) NULL DEFAULT '1' AFTER `flow`;",
+	"ALTER TABLE `discounts` ADD `can_use` INT(255) NOT NULL DEFAULT '1' AFTER `used_by`;",
+	"ALTER TABLE `server_plans` ADD `custom_port` INT(255) NOT NULL DEFAULT '0' AFTER `custom_path`;",
+	"ALTER TABLE `server_plans` ADD `custom_sni` VARCHAR(500) NULL AFTER `custom_port`;",
+    "CREATE TABLE  `gift_list` (
+        `id` int(255) NOT NULL AUTO_INCREMENT,
+        `server_id` int(255) NOT NULL,
+        `volume` int(255) NOT NULL,
+        `day` int(255) NOT NULL,
+        `offset` int(255) DEFAULT 0,
+        `server_offset` int(255) DEFAULT 0,
+        PRIMARY KEY (`id`)
+        );",
+    "ALTER TABLE `users` ADD `temp` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL AFTER `first_start`;",
+    "ALTER TABLE `users` ADD `is_agent` INT(1) NOT NULL DEFAULT '0' AFTER `temp`, ADD `discount_percent` INT(255) NOT NULL DEFAULT '0' AFTER `is_agent`;",
+    "ALTER TABLE `users` ADD `agent_date` INT(255) NOT NULL DEFAULT '0' AFTER `discount_percent`;",
+    "ALTER TABLE `pays` ADD `agent_bought` INT(1) NOT NULL DEFAULT '0' AFTER `state`;",
+    "ALTER TABLE `orders_list` ADD `agent_bought` INT(1) NOT NULL DEFAULT '0' AFTER `rahgozar`;",
+    "ALTER TABLE `pays` ADD `agent_count` INT(255) NOT NULL DEFAULT '0' AFTER `agent_bought`;",
+    "ALTER TABLE `users` ADD `spam_info` VARCHAR(500) NULL AFTER `agent_date`;",
+    "ALTER TABLE `server_info` CHANGE `title` `title` VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL;",
+    "UPDATE `orders_list` SET `status` = 1",
+    "ALTER TABLE `orders_list` ADD `uuid` VARCHAR(100) NULL AFTER `remark`;",
+    "ALTER TABLE `pays` ADD `tron_price` DOUBLE(255,2) NOT NULL DEFAULT '0' AFTER `price`;",
+    "ALTER TABLE `gift_list` CHANGE `id` `id` INT(255) NOT NULL AUTO_INCREMENT;",
+    "ALTER TABLE `users` CHANGE `discount_percent` `discount_percent` VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL;",
+    "UPDATE `users` SET discount_percent = IF(discount_percent = 0, NULL, CONCAT('{\"normal\": ', discount_percent, '}')) WHERE discount_percent REGEXP '^[0-9]+$';"
     ];
-
-
 function updateBot(){
     global $arrays, $connection, $walletbiocide, $nowPaymentKey, $zarinpalId;
     
@@ -82,34 +118,100 @@ function updateBot(){
         try{
             $connection->query($query);
         }catch (exception $error){
-            
+
         }
     }
     
-    $usersInfo = json_decode(file_get_contents("../userInfo.json"),true);
-    foreach($usersInfo as $user => $value){
-        $query = "UPDATE `users` SET `step` = '" . $value['step'] . "'";
-        if(isset($value['first_start'])) $query .= ", `first_start` = '" . $value['first_start'] . "'";
-        if(isset($value['isAdmin'])) $query .= ", `isAdmin` = '" . $value['isAdmin'] . "'";
-        if(isset($value['freetrial'])) $query .= ", `freetrial` = '" . $value['freetrial'] . "'";
-        $query .= " WHERE `userid` = " . $user;
-        $connection->query($query);
+    if(file_exists("../userInfo.json")){
+        $usersInfo = json_decode(file_get_contents("../userInfo.json"),true);
+        foreach($usersInfo as $user => $value){
+            $query = "UPDATE `users` SET `step` = '" . $value['step'] . "'";
+            if(isset($value['first_start'])) $query .= ", `first_start` = '" . $value['first_start'] . "'";
+            if(isset($value['isAdmin'])) $query .= ", `isAdmin` = '" . $value['isAdmin'] . "'";
+            if(isset($value['freetrial'])) $query .= ", `freetrial` = '" . $value['freetrial'] . "'";
+            $query .= " WHERE `userid` = " . $user;
+            $connection->query($query);
+        }
+        
+        $newData = file_get_contents("../settings/botstate.json");
+        $checkExist = $connection->query("SELECT * FROM `setting` WHERE `type` = 'BOT_STATES'");
+        if(mysqli_num_rows($checkExist) == 0) $connection->query("INSERT INTO `setting` (`type`, `value`) VALUES ('BOT_STATES', '$newData')");
+    }
+    if(isset($nowPaymentKey) && isset($zarinpalId)){
+        $paymentKeys = array();
+        $paymentKeys['bankAccount'] = $walletbiocide;
+        $paymentKeys['holderName'] = "";
+        $paymentKeys['nowpayment'] = $nowPaymentKey;
+        $paymentKeys['zarinpal'] = $zarinpalId;
+        $paymentKeys['nextpay'] = "";
+        
+        $paymentKeys = json_encode($paymentKeys);
+        $checkExist = $connection->query("SELECT * FROM `setting` WHERE `type` = 'PAYMENT_KEYS'");
+        if(mysqli_num_rows($checkExist) == 0) $connection->query("INSERT INTO `setting` (`type`, `value`) VALUES ('PAYMENT_KEYS', '$paymentKeys')");    
+    }
+    $list = $connection->query("SELECT * FROM `orders_list` WHERE `uuid` IS NULL");
+    if(mysqli_num_rows($list) > 0){
+        while($row = $list->fetch_assoc()){
+            $id = $row['id'];
+            $link = json_decode($row['link'],true)[0];
+            if(!empty($link)){
+                if(preg_match('/^vmess:\/\/(.*)/',$link,$match)){
+                    $jsonDecode = json_decode(base64_decode($match[1]),true);
+                    $uuid = $jsonDecode['id'];
+                }elseif(preg_match('/^vless:\/\/(.*?)\@/',$link,$match)){
+                    $uuid = $match[1];
+                }elseif(preg_match('/^trojan:\/\/(.*?)\@/',$link,$match)){
+                    $uuid = $match[1];
+                }
+                if(isset($uuid)) $connection->query("UPDATE `orders_list` SET `uuid` = '$uuid' WHERE `id` = '$id'");
+            }
+        }
     }
     
-    $newData = file_get_contents("../settings/botstate.json");
-    $checkExist = $connection->query("SELECT * FROM `setting` WHERE `type` = 'BOT_STATES'");
-    if(mysqli_num_rows($checkExist) == 0) $connection->query("INSERT INTO `setting` (`type`, `value`) VALUES ('BOT_STATES', '$newData')");
+    $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` = 'BOT_STATES'");
+    $stmt->execute();
+    $isExists = $stmt->get_result();
+    $stmt->close();
+    if($isExists->num_rows>0){
+        
+        $botState = $isExists->fetch_assoc()['value'];
+        if(!is_null($botState)) $botState = json_decode($botState,true);
+        else $botState = array();
+        
+        if(!isset($botState['USDRate']) && !isset($botState['TRXRate'])){
+            $query = "UPDATE `setting` SET `value` = ? WHERE `type` = 'BOT_STATES'";
+            
+            $rate = json_decode(file_get_contents("https://api.changeto.technology/api/rate"),true)['result'];
+            if(!empty($rate['USD'])) $botState['USDRate'] = $rate['USD'];
+            if(!empty($rate['TRX'])) $botState['TRXRate'] = $rate['TRX'];
+            
+            $newData = json_encode($botState);
+            
+            $stmt = $connection->prepare($query);
+            $stmt->bind_param("s", $newData);
+            $stmt->execute();
+            $stmt->close();
+        }
+    }
+    else{
+        $query = "INSERT INTO `setting` (`type`, `value`) VALUES ('BOT_STATES', ?)";
 
-
-    $paymentKeys = array();
-    $paymentKeys['bankAccount'] = $walletbiocide;
-    $paymentKeys['holderName'] = "";
-    $paymentKeys['nowpayment'] = $nowPaymentKey;
-    $paymentKeys['zarinpal'] = $zarinpalId;
-    $paymentKeys['nextpay'] = "";
+        $botState = array();
+        
+        $rate = json_decode(file_get_contents("https://api.changeto.technology/api/rate"),true)['result'];
+        if(!empty($rate['USD'])) $botState['USDRate'] = $rate['USD'];
+        if(!empty($rate['TRX'])) $botState['TRXRate'] = $rate['TRX'];
+        
+        $newData = json_encode($botState);
+        
+        $stmt = $connection->prepare($query);
+        $stmt->bind_param("s", $newData);
+        $stmt->execute();
+        $stmt->close();
+    }
     
-    $paymentKeys = json_encode($paymentKeys);
-    $checkExist = $connection->query("SELECT * FROM `setting` WHERE `type` = 'PAYMENT_KEYS'");
-    if(mysqli_num_rows($checkExist) == 0) $connection->query("INSERT INTO `setting` (`type`, `value`) VALUES ('PAYMENT_KEYS', '$paymentKeys')");    
+    
+    if(file_exists(getcwd() . '/tempCookie.txt')) unlink('../tempCookie.txt');
+    if(file_exists(getcwd() . '/settings/messagebiocide.json')) unlink('../settings/messagebiocide.json');
 }
 ?>

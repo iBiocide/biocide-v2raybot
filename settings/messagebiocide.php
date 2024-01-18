@@ -1,78 +1,137 @@
 <?php 
-$msgInfo = json_decode(file_get_contents("messagebiocide.json"),true);
-$offset = $msgInfo['offset']??-1;
-$messageParam = json_decode($msgInfo['text']);
-
-if($offset == '-1') exit;
-
 include_once '../baseInfo.php';
 include_once '../config.php';
 include_once 'jdf.php';
-if($offset == '0'){
-    bot('sendMessage',[
-        'chat_id'=>$admin,
-        'text'=>"عملیات ارسال پیام همگانی شروع شد"
-        ]);
+
+$rateLimit = $botState['rateLimit']??0;
+if(time() > $rateLimit){
+    $rate = json_decode(file_get_contents("https://api.changeto.technology/api/rate"),true)['result'];
+    if(!empty($rate['USD'])) $botState['USDRate'] = $rate['USD'];
+    if(!empty($rate['TRX'])) $botState['TRXRate'] = $rate['TRX'];
+    $botState['rateLimit'] = strtotime("+1 hour");
+    
+    $stmt = $connection->prepare("SELECT * FROM `setting` WHERE `type` = 'BOT_STATES'");
+    $stmt->execute();
+    $isExists = $stmt->get_result();
+    $stmt->close();
+    if($isExists->num_rows>0) $query = "UPDATE `setting` SET `value` = ? WHERE `type` = 'BOT_STATES'";
+    else $query = "INSERT INTO `setting` (`type`, `value`) VALUES ('BOT_STATES', ?)";
+    $newData = json_encode($botState);
+    
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("s", $newData);
+    $stmt->execute();
+    $stmt->close();
 }
-$stmt = $connection->prepare("SELECT * FROM `users`ORDER BY `id` LIMIT 150 OFFSET ?");
-$stmt->bind_param("i", $offset);
+
+$stmt = $connection->prepare("SELECT * FROM `send_list` WHERE `state` = 1 LIMIT 1");
 $stmt->execute();
-$usersList = $stmt->get_result();
+$list = $stmt->get_result();
 $stmt->close();
 
-if( $usersList->num_rows > 1 ) {
-    while($user = $usersList->fetch_assoc()){
-        if($messageParam->type == 'text'){
-            sendMessage($messageParam->value,null,null,$user['userid']);
-        }else {
-            if($messageParam->type == 'music'){
+if($list->num_rows > 0){
+    $info = $list->fetch_assoc();
+    
+    $sendId = $info['id'];
+    $offset = $info['offset'];
+    $type = $info['type'];
+    $file_id = $info['file_id'];
+    $chat_id = $info['chat_id'];
+    $text = $info['text'];
+    $message_id = $info['message_id'];
+    
+    if($offset == '0'){
+        if($type == "forwardall") $msg = "عملیات هدایت همگانی شروع شد";
+        else $msg = "عملیات ارسال پیام همگانی شروع شد";
+        
+        bot('sendMessage',[
+            'chat_id'=>$admin,
+            'text'=>$msg
+            ]);
+    }
+    
+    $stmt = $connection->prepare("SELECT * FROM `users`ORDER BY `id` LIMIT 50 OFFSET ?");
+    $stmt->bind_param("i", $offset);
+    $stmt->execute();
+    $usersList = $stmt->get_result();
+    $stmt->close();
+    
+    $keys = json_encode([
+                'inline_keyboard' => [
+                    [['text'=>$buttonValues['start_bot'],'callback_data'=>"mainMenu"]]
+                    ]
+            ]);
+    if($usersList->num_rows > 1) {
+        while($user = $usersList->fetch_assoc()){
+            if($type == 'text'){
+                sendMessage($text,$keys,null,$user['userid']);
+            }elseif($type == 'music'){
                 bot('sendAudio',[
                     'chat_id' => $user['userid'],
-                    'audio' => $messageParam->value->fileid,
-                    'caption' => $messageParam->value->caption,
+                    'audio' => $file_id,
+                    'caption' => $text,
+                    'reply_markup'=>$keys
                 ]);
-            }elseif($messageParam->type == 'video'){
+            }elseif($type == 'video'){
                 bot('sendVideo',[
                     'chat_id' => $user['userid'],
-                    'video' => $messageParam->value->fileid,
-                    'caption' => $messageParam->value->caption,
+                    'video' => $file_id,
+                    'caption' => $text,
+                    'reply_markup'=>$keys
                 ]);
-            }elseif($messageParam->type == 'voice'){
+            }elseif($type == 'voice'){
                 bot('sendVoice',[
                     'chat_id' => $user['userid'],
-                    'voice' => $messageParam->value->fileid,
-                    'caption' => $messageParam->value->caption,
+                    'voice' => $file_id,
+                    'caption' => $text,
+                    'reply_markup'=>$keys
                 ]);
-            }elseif($messageParam->type == 'document'){
+            }elseif($type == 'document'){
                 bot('sendDocument',[
                     'chat_id' => $user['userid'],
-                    'document' => $messageParam->value->fileid,
-                    'caption' => $messageParam->value->caption,
+                    'document' => $file_id,
+                    'caption' => $text,
+                    'reply_markup'=>$kes
                 ]);
-            }elseif($messageParam->type == 'photo'){
+            }elseif($type == 'photo'){
                 bot('sendPhoto', [
                     'chat_id' => $user['userid'],
-                    'photo' => $messageParam->value->fileid,
-                    'caption' => $messageParam->value->caption,
+                    'photo' => $file_id,
+                    'caption' => $text,
+                    'reply_markup'=>$keys
                 ]); 
-            }else {
+            }elseif($type == "forwardall"){
+                forwardmessage($user['userid'], $chat_id, $message_id);
+            }
+            else {
                 bot('sendDocument',[
                     'chat_id' => $user['userid'],
-                    'document' => $messageParam->value->fileid,
-                    'caption' => $messageParam->value->caption,
+                    'document' => $file_id,
+                    'caption' => $text,
+                    'reply_markup'=>$keys
                 ]);
             }
+            $offset++;
         }
-        $offset++;
+        $stmt = $connection->prepare("UPDATE `send_list` SET `offset` = ? WHERE `id` = ?");
+        $stmt->bind_param("ii", $offset, $sendId);
+        $stmt->execute();
+        $stmt->close();
+    }else{
+        if($type == "forwardall") $msg = "عملیات هدایت همگانی با موفقیت انجام شد";
+        else $msg = "عملیات ارسال پیام همگانی با موفقیت انجام شد";
+        
+        bot('sendMessage',[
+            'chat_id'=>$admin,
+            'text'=>$msg . "\nبه " . $offset . " نفر پیامتو فرستادم"
+            ]);
+            
+        $stmt = $connection->prepare("DELETE FROM `send_list` WHERE `id` = ?");
+        $stmt->bind_param('i', $sendId);
+        $stmt->execute();
+        $stmt->close();
     }
-    $msgInfo['offset'] = $offset;
-    file_put_contents("messagebiocide.json",json_encode($msgInfo));
-}else{
-    bot('sendMessage',[
-        'chat_id'=>$admin,
-        'text'=>"عملیات ارسال پیام همگانی با موفقیت انجام شد\nبه " . $offset . " نفر پیامتو فرستادم"
-        ]);
-    $msgInfo['offset'] = -1;
-    file_put_contents("messagebiocide.json",json_encode($msgInfo));
 }
 
+
+?>

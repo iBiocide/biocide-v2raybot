@@ -251,7 +251,7 @@ if (file_exists($lang_file)) {
     </a>
 </div>
 <div class="px-6 my-2">
-    <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+    <a href="https://github.com/biocidedev/biocide" target="_blank">
         <button
                 class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-blue">
             Github
@@ -308,7 +308,7 @@ if (file_exists($lang_file)) {
     <div class="py-4 text-gray-500 dark:text-gray-400">
             <div class="ml-2 flex justify-start items-center ">
             <img width="40px" src="./icons/biocide.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 9.1.1</span></a>
             </div>
         <ul class="mt-6">
             <li class="relative px-6 py-3">
@@ -549,7 +549,7 @@ if (file_exists($lang_file)) {
             </a>
         </div>
         <div class="px-6 my-2">
-            <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+            <a href="https://github.com/biocidedev/biocide" target="_blank">
                 <button class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
                     Github
                     <span class="ml-2" aria-hidden="true">
@@ -635,6 +635,11 @@ if (file_exists($lang_file)) {
                     echo '<p class="mt-2" style="font-size: 13px">Expiry-count:<span style="color: #ef233c;"> 0</span></p>';
                 } else {
                     echo '<p class="mt-2" style="font-size: 13px">Expiry-count: <span style="color: #38b000;">' . $value["expire_count"] . '</span></p>';
+                }
+                if ($value["can_use"] == '0') {
+                    echo '<p class="mt-2" style="font-size: 13px">can_use:<span style="color: #ef233c;"> 0</span></p>';
+                } else {
+                    echo '<p class="mt-2" style="font-size: 13px">can_use: <span style="color: #38b000;">' . $value["can_use"] . '</span></p>';
                 }
                 if ($value["type"] == 'amount') {
                     echo '<p class="mt-2 " style="font-size: 13px">Price:<span style="color: #38b000;"> ' . $value["amount"] . 'T </span></p>';
@@ -763,6 +768,14 @@ if (file_exists($lang_file)) {
                         <?php echo $_LANG['expirecount']?>
                     </span>
                     <input required name="discounts_count" style="font-size: 14px;" type="number" id="with-email"
+                           class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-blue-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
+                           name="url" placeholder="Write a name for the category..."/>
+                </div>
+                <div class="flex relative mt-4">
+                    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
+                        <?php echo $_LANG['can_use']?>
+                    </span>
+                    <input required name="discounts_can_use" style="font-size: 14px;" type="number" id="with-email"
                            class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-blue-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
                            name="url" placeholder="Write a name for the category..."/>
                 </div>

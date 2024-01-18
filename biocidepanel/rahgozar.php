@@ -253,7 +253,7 @@ if (file_exists($lang_file)) {
     </a>
 </div>
 <div class="px-6 my-2">
-    <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+    <a href="https://github.com/biocidedev/biocide" target="_blank">
         <button
                 class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-blue">
             Github
@@ -313,7 +313,7 @@ if (file_exists($lang_file)) {
     <div class="py-4 text-gray-500 dark:text-gray-400">
             <div class="ml-2 flex justify-start items-center ">
             <img width="40px" src="./icons/biocide.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 9.1.1</span></a>
             </div>
         <ul class="mt-6">
             <li class="relative px-6 py-3">
@@ -542,7 +542,7 @@ if (file_exists($lang_file)) {
             </a>
         </div>
         <div class="px-6 my-2">
-            <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+            <a href="https://github.com/biocidedev/biocide" target="_blank">
                 <button class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
                     Github
                     <span class="ml-2" aria-hidden="true">
@@ -797,7 +797,7 @@ if (file_exists($lang_file)) {
                     <?php
                     echo '<div class="flex relative m-2">
     <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
-       Limitip
+       ' . $_LANG["limitip"] . '
     </span>
     <input required name="limitip_plan" style="font-size: 14px;" value="' . $value["limitip"] . '" type="text" id="with-email" class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-blue-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent" name="url" placeholder="www.google.com"/>
     </div>
@@ -811,7 +811,32 @@ if (file_exists($lang_file)) {
     </div>
     
   
-    <br>';
+    <br>
+    
+    <div class="flex relative m-2">
+    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
+       ' . $_LANG["custom_path"] . '
+    </span>
+    <input required name="custom_path_plan" style="font-size: 14px;" value="' . $value["custom_path"] . '" type="text" id="with-email" class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-blue-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent" name="url" placeholder="1"/>
+    </div>
+
+
+<div class="flex relative m-2">
+    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
+        ' . $_LANG["custom_port"] . '
+    </span>
+    <input name="custom_port_plan" style="font-size: 14px;" value="' . $value["custom_port"] . '" type="text" id="with-email" class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-blue-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent" name="url" placeholder="443"/>
+    </div>
+    
+    <div class="flex relative m-2">
+    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
+        ' . $_LANG["custom_sni"] . '
+    </span>
+    <input name="custom_sni_plan" style="font-size: 14px;" value="' . $value["custom_sni"] . '" type="text" id="with-email" class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-blue-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent" name="url" placeholder=""/>
+    </div>
+    
+    <br>
+    ';
                 ?>
                 <?php
                 if($value["acount"] == 0){
@@ -872,6 +897,11 @@ if (file_exists($lang_file)) {
                 $limitip_plans = $_POST["limitip_plan"];
                 $name_category_biocide_plans = $_POST["name_category_biocide"];
                 $name_server_biocide_plans = $_POST["name_server_biocide"];
+                $custom_path_planss = $_POST["custom_path_plan"];
+                $custom_port_planss = $_POST["custom_port_plan"];
+                $custom_sni_planss = $_POST["custom_sni_plan"];
+
+
                 if ($_POST['inbound_id_plan']) {
                     $inbound_id_plans = $_POST["inbound_id_plan"];
                 } else {
@@ -888,7 +918,8 @@ if (file_exists($lang_file)) {
                 $sql_server_plans = "UPDATE server_plans SET title='$title_plans',protocol='$protocol_plans',
                          type='$type_plans',price='$price_plans',days='$days_plans',
                          volume='$volume_plans',limitip='$limitip_plans',inbound_id='$inbound_id_plans',
-                         descr='$description_plans',catid='$name_category_biocide_plans',server_id='$name_server_biocide_plans',acount='$acount_plans' WHERE id = '" . $value['id'] . "'";
+                         descr='$description_plans',catid='$name_category_biocide_plans',server_id='$name_server_biocide_plans',acount='$acount_plans',
+                         custom_path='$custom_path_planss',custom_port='$custom_port_planss',custom_sni='$custom_sni_planss' WHERE id = '" . $value['id'] . "'";
                 $result_plan = mysqli_query($conn, $sql_server_plans);
 
                 if (!$result_plan) {
@@ -954,22 +985,21 @@ if (file_exists($lang_file)) {
                            class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
                            placeholder="" required/>
                 </div>
-                <div class="flex relative m-2">
-                    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
-                        <?php echo $_LANG['protocol6']?>
-                    </span>
-                    <input name="protocol_plan" style="font-size: 14px;" value="" type="text" id="with-email"
-                           class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
-                           placeholder="" required/>
-                </div>
-                <div class="flex relative m-2">
-                    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
-                       <?php echo $_LANG['type5']?>
-                    </span>
-                    <input name="type_plan" style="font-size: 14px;" value="" type="text" id="with-email"
-                           class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
-                           placeholder="" required/>
-                </div>
+                <label class="block mt-2 text-sm mx-auto" style="width: 97%;line-height: 16px;">
+                    <select required name="protocol_plan"
+                            class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                        <option value="vless">vless</option>
+                        <option value="vmess">vmess</option>
+                    </select>
+                </label>
+
+                <label class="block mt-2 text-sm mx-auto" style="width: 97%;line-height: 16px;">
+                    <select required name="type_plan"
+                            class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                        <option value="ws">ws</option>
+                        <option value="tcp">tcp</option>
+                    </select>
+                </label>
                 <div class="flex relative m-2">
                     <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
                         <?php echo $_LANG['days']?>
@@ -982,7 +1012,7 @@ if (file_exists($lang_file)) {
                     <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
                         <?php echo $_LANG['volume']?>
                     </span>
-                    <input name="volume_plan" style="font-size: 14px;" value="" type="number" id="with-email"
+                    <input name="volume_plan" style="font-size: 14px;" value="" type="text" id="with-email"
                            class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
                            placeholder="" required/>
                 </div>
@@ -994,6 +1024,30 @@ if (file_exists($lang_file)) {
                            class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
                            placeholder="" required/>
                 </div>
+<!--                <div class="flex relative m-2">-->
+<!--                    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">-->
+<!--                        --><?php //echo $_LANG['custom_path']?>
+<!--                    </span>-->
+<!--                    <input name="custom_path_plan" style="font-size: 14px;" value="" type="number" id="with-email"-->
+<!--                           class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"-->
+<!--                           placeholder="اگر پَس 2048 می باشد لطفا 1 وارد کنید" required/>-->
+<!--                </div>-->
+<!--                <div class="flex relative m-2">-->
+<!--                    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">-->
+<!--                        --><?php //echo $_LANG['custom_port']?>
+<!--                    </span>-->
+<!--                    <input name="custom_port_plan" style="font-size: 14px;" value="" type="number" id="with-email"-->
+<!--                           class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"-->
+<!--                           placeholder="اگر پورت پیشفرض 443 می باشد لطفا 0 وارد کنید" required/>-->
+<!--                </div>-->
+<!--                <div class="flex relative m-2">-->
+<!--                    <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">-->
+<!--                        --><?php //echo $_LANG['custom_sni']?>
+<!--                    </span>-->
+<!--                    <input name="custom_sni_plan" style="font-size: 14px;" value="" type="text" id="with-email"-->
+<!--                           class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-red-400 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"-->
+<!--                           placeholder=""/>-->
+<!--                </div>-->
                 <div class="flex relative m-2">
                     <span class="dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
                         <?php echo $_LANG['limitip']?>

@@ -42,7 +42,7 @@ $connection->query("CREATE TABLE `discounts` (
 )");
 
 $connection->query("CREATE TABLE `gift_list` (
-  `id` int(255) NOT NULL,
+  `id` int(255) NOT NULL AUTO_INCREMENT,
   `server_id` int(255) NOT NULL,
   `volume` int(255) NOT NULL,
   `day` int(255) NOT NULL,
@@ -107,6 +107,7 @@ $connection->query("CREATE TABLE `orders_list` (
   `server_id` int(11) NOT NULL,
   `inbound_id` int(11) NOT NULL DEFAULT 0,
   `remark` varchar(100) NOT NULL,
+  `uuid` varchar(100) NOT NULL,
   `protocol` varchar(20) NOT NULL,
   `expire_date` int(11) NOT NULL,
   `link` text NOT NULL,
@@ -170,7 +171,7 @@ $connection->query("CREATE TABLE `server_config` (
 
 $connection->query("CREATE TABLE `server_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(200) CHARACTER SET utf8 COLLATE utf8_persian_ci NOT NULL,
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `ucount` varchar(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `remark` varchar(100) NOT NULL,
   `flag` varchar(100) NOT NULL,
@@ -224,7 +225,7 @@ $connection->query("INSERT INTO `setting` (`id`, `type`, `value`) VALUES
 (2, 'INVITE_BANNER_AMOUNT', '3000'),
 (3, 'INVITE_BANNER_TEXT', '{\"type\":\"photo\",\"caption\":\"\\ud83d\\udd30\\u0628\\u0631\\u062a\\u0631\\u06cc\\u0646 \\u0648 \\u0628\\u0647\\u062a\\u0631\\u06cc\\u0646 \\u0631\\u0628\\u0627\\u062a vpn \\u0628\\u0627 \\u06a9\\u0627\\u0646\\u06a9\\u0634\\u0646 \\u0647\\u0627\\u06cc \\u0631\\u0627\\u06cc\\u06af\\u0627\\u0646\\n\\u2705 \\u062d\\u062a\\u0645\\u0627 \\u0639\\u0636\\u0648 \\u0631\\u0628\\u0627\\u062a \\u0628\\u0634\\u06cc\\u062f \\u0648 \\u0627\\u0632 \\u062a\\u062e\\u0641\\u06cc\\u0641 \\u0647\\u0627\\u06cc \\u0648\\u06cc\\u0698\\u0647 \\u0644\\u0630\\u062a \\u0628\\u0628\\u0631\\u06cc\\u0646\\n\\n\\ud83d\\udd17 LINK\",\"file_id\":\"AgACAgQAAxkBAAJRKWRtX3wObRa3qAR_gkJgyKDdkHZsAAKAuzEbRaBpU3QQ2kLLt7MVAQADAgADeAADLwQ\"}'),
 (4, 'PAYMENT_KEYS', '{\"nowpayment\":\"cccc-cccc-cccc-cccc\",\"zarinpal\":\"aaaa-aaaa-aaaa-aaaa\",\"nextpay\":\"bbbb-bbbb-bbbb-bbbb\",\"bankAccount\":\"6104-6104-6104-6104\",\"holderName\":\"\\u0648\\u06cc\\u0632\\u0648\\u06cc\\u0632\"}'),
-(5, 'BOT_STATES', '{\"requirePhone\":\"off\",\"requireIranPhone\":\"off\",\"sellState\":\"on\",\"botState\":\"on\",\"searchState\":\"on\",\"rewaredTime\":\"3\",\"cartToCartState\":\"on\",\"nextpay\":\"on\",\"zarinpal\":\"on\",\"nowPaymentWallet\":\"on\",\"nowPaymentOther\":\"on\",\"walletState\":\"on\",\"rewardChannel\":\"@iBiocide\",\"lockChannel\":\"@biocidech\",\"changeProtocolState\":null,\"renewAccountState\":null,\"switchLocationState\":\"on\",\"increaseTimeState\":\"on\",\"increaseVolumeState\":\"on\",\"gbPrice\":\"100\",\"dayPrice\":\"100\",\"subLinkState\":\"on\",\"plandelkhahState\":\"off\",\"weSwapState\":\"on\"}');
+(5, 'BOT_STATES', '{\"requirePhone\":\"off\",\"requireIranPhone\":\"off\",\"sellState\":\"on\",\"botState\":\"on\",\"searchState\":\"on\",\"rewaredTime\":\"3\",\"cartToCartState\":\"on\",\"nextpay\":\"on\",\"zarinpal\":\"on\",\"nowPaymentWallet\":\"on\",\"nowPaymentOther\":\"on\",\"walletState\":\"on\",\"rewardChannel\":\"@biocidedev\",\"lockChannel\":\"@biocidech\",\"changeProtocolState\":null,\"renewAccountState\":null,\"switchLocationState\":\"on\",\"increaseTimeState\":\"on\",\"increaseVolumeState\":\"on\",\"gbPrice\":\"100\",\"dayPrice\":\"100\",\"subLinkState\":\"on\",\"plandelkhahState\":\"off\",\"weSwapState\":\"on\"}');
 ");
 
 
@@ -245,8 +246,9 @@ $connection->query("CREATE TABLE `users` (
   `first_start` varchar(10) DEFAULT NULL,
   `temp` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `is_agent` int(1) NOT NULL DEFAULT 0,
-  `discount_percent` int(255) NOT NULL DEFAULT 0,
+  `discount_percent` VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
   `agent_date` int(255) NOT NULL DEFAULT 0,
+  `spam_info` varchar(500),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_persian_ci");
 
@@ -277,6 +279,18 @@ $connection->query("CREATE TABLE `servers` (
   `status` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_persian_ci");
+
+$connection->query("CREATE TABLE  `send_list` (
+        `id` int(255) NOT NULL AUTO_INCREMENT,
+        `offset` int(255) NOT NULL DEFAULT 0,
+        `type` varchar(20) NOT NULL,
+        `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+        `chat_id` bigint(10),
+        `message_id` int(255),
+        `file_id` varchar(500),
+        `state` int(1) NOT NULL DEFAULT 0,
+        PRIMARY KEY (`id`)
+        )");
 
 
 

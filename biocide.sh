@@ -10,14 +10,13 @@ fi
 wait
 
 echo -e "\e[32m
-██████╗░██╗░█████╗░░█████╗░██╗██████╗░███████╗
-██╔══██╗██║██╔══██╗██╔══██╗██║██╔══██╗██╔════╝
-██████╦╝██║██║░░██║██║░░╚═╝██║██║░░██║█████╗░░
-██╔══██╗██║██║░░██║██║░░██╗██║██║░░██║██╔══╝░░
-██████╦╝██║╚█████╔╝╚█████╔╝██║██████╔╝███████╗
-╚═════╝░╚═╝░╚════╝░░╚════╝░╚═╝╚═════╝░╚══════╝
+██     ██ ██ ███████ ██     ██ ██ ███████     ██   ██ ██    ██ ██ 
+██     ██ ██    ███  ██     ██ ██    ███       ██ ██  ██    ██ ██ 
+██  █  ██ ██   ███   ██  █  ██ ██   ███         ███   ██    ██ ██ 
+██ ███ ██ ██  ███    ██ ███ ██ ██  ███         ██ ██  ██    ██ ██ 
+ ███ ███  ██ ███████  ███ ███  ██ ███████     ██   ██  ██████  ██ 
 \033[0m"
-echo -e "    \e[31mTelegram Channel: \e[34m@biocidech\033[0m | \e[31mTelegram Group: \e[34m@iBiocide\033[0m\n"
+echo -e "    \e[31mTelegram Channel: \e[34m@biocidech\033[0m | \e[31mTelegram Group: \e[34m@biocidedev\033[0m\n"
 
 #sleep
 echo -e "\e[32mInstalling biocide script ... \033[0m\n"
@@ -103,32 +102,32 @@ sudo systemctl restart apache2.service
 
 wait
 
-git clone https://github.com/iBiocide/biocide-v2raybot.git /var/www/html/biocide-v2raybot
-sudo chown -R www-data:www-data /var/www/html/biocide-v2raybot/
-sudo chmod -R 755 /var/www/html/biocide-v2raybot/
+git clone https://github.com/biocidedev/biocide.git /var/www/html/biocide
+sudo chown -R www-data:www-data /var/www/html/biocide/
+sudo chmod -R 755 /var/www/html/biocide/
 echo -e "\n\033[33mbiocide config and script have been installed successfully\033[0m"
 
 wait
     
     
-destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
+destination_dir=$(find /var/www/html -type d -name "*biopanel*" | head -n 1)
     
 if [ -z "$destination_dir" ]; then
     RANDOM_NUMBER=$(( RANDOM % 10000000 + 1000000 ))
-    mkdir "/var/www/html/biocidepanel${RANDOM_NUMBER}"
-    echo "Directory created: biocidepanel${RANDOM_NUMBER}"
+    mkdir "/var/www/html/biopanel${RANDOM_NUMBER}"
+    echo "Directory created: biopanel${RANDOM_NUMBER}"
     echo "Folder created successfully!"
 else
     echo "Folder already exists."
 fi
    
- destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
+ destination_dir=$(find /var/www/html -type d -name "*biopanel*" | head -n 1)
 
  cd /var/www/html/
- wget -O biocidepanel.zip https://github.com/iBiocide/biocide-v2raybot/releases/download/8.1.1/biocidepanel.zip
+ wget -O biocidepanel.zip https://github.com/biocidedev/biocide/releases/download/9.1.2/biocidepanel.zip
 
  file_to_transfer="/var/www/html/biocidepanel.zip"
- destination_dir=$(find /var/www/html -type d -name "*biocidepanel*" | head -n 1)
+ destination_dir=$(find /var/www/html -type d -name "*biopanel*" | head -n 1)
 
  if [ -z "$destination_dir" ]; then
    echo "Error: Could not find directory containing 'bio' in '/var/www/html'"
@@ -177,12 +176,11 @@ clear
 
 echo " "
 echo -e "\e[32m
-██████╗░██╗░█████╗░░█████╗░██╗██████╗░███████╗
-██╔══██╗██║██╔══██╗██╔══██╗██║██╔══██╗██╔════╝
-██████╦╝██║██║░░██║██║░░╚═╝██║██║░░██║█████╗░░
-██╔══██╗██║██║░░██║██║░░██╗██║██║░░██║██╔══╝░░
-██████╦╝██║╚█████╔╝╚█████╔╝██║██████╔╝███████╗
-╚═════╝░╚═╝░╚════╝░░╚════╝░╚═╝╚═════╝░╚══════╝
+██     ██ ██ ███████ ██     ██ ██ ███████     ███████ ███████ ██      
+██     ██ ██    ███  ██     ██ ██    ███      ██      ██      ██      
+██  █  ██ ██   ███   ██  █  ██ ██   ███       ███████ ███████ ██      
+██ ███ ██ ██  ███    ██ ███ ██ ██  ███             ██      ██ ██      
+ ███ ███  ██ ███████  ███ ███  ██ ███████     ███████ ███████ ███████ 
 \033[0m\n"
 
 read -p "Enter the domain: " domainname
@@ -202,11 +200,12 @@ DOMAIN_NAME="$domainname"
 
 # update cron
 PATHS=$(cat /root/confbiocide/dbrootbiocide.txt | grep '$path' | cut -d"'" -f2)
-(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/messagebiocide.php >/dev/null 2>&1") | sort - | uniq - | crontab -
-(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/rewardReport.php >/dev/null 2>&1") | sort - | uniq - | crontab -
-(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/warnusers.php >/dev/null 2>&1") | sort - | uniq - | crontab -
-(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide-v2raybot/settings/gift2all.php >/dev/null 2>&1") | sort - | uniq - | crontab -
-(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocidepanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide/settings/messagebiocide.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide/settings/rewardReport.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide/settings/warnusers.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biocide/settings/gift2all.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+(crontab -l ; echo "*/3 * * * * curl https://${DOMAIN_NAME}/biocide/settings/tronChecker.php >/dev/null 2>&1") | sort - | uniq - | crontab -
+(crontab -l ; echo "* * * * * curl https://${DOMAIN_NAME}/biopanel${PATHS}/backupnutif.php >/dev/null 2>&1") | sort - | uniq - | crontab -
 
 echo -e "\n\e[92m Setting Up Cron...\033[0m\n"
 
@@ -306,7 +305,7 @@ wait
 
         sleep 1
         
-        file_path="/var/www/html/biocide-v2raybot/baseInfo.php"
+        file_path="/var/www/html/biocide/baseInfo.php"
         
         if [ -f "$file_path" ]; then
           rm "$file_path"
@@ -318,33 +317,41 @@ wait
         sleep 2
         
         # print file
-        echo -e "<?php" >> /var/www/html/biocide-v2raybot/baseInfo.php
-        echo -e "error_reporting(0);" >> /var/www/html/biocide-v2raybot/baseInfo.php
-        echo -e "${ASAS}botToken = '${YOUR_BOT_TOKEN}';" >> /var/www/html/biocide-v2raybot/baseInfo.php
-        echo -e "${ASAS}dbUserName = '${dbuser}';" >> /var/www/html/biocide-v2raybot/baseInfo.php
-        echo -e "${ASAS}dbPassword = '${dbpass}';" >> /var/www/html/biocide-v2raybot/baseInfo.php
-        echo -e "${ASAS}dbName = '${dbname}';" >> /var/www/html/biocide-v2raybot/baseInfo.php
-        echo -e "${ASAS}botUrl = 'https://${YOUR_DOMAIN}/biocide-v2raybot/';" >> /var/www/html/biocide-v2raybot/baseInfo.php
-        echo -e "${ASAS}admin = ${YOUR_CHAT_ID};" >> /var/www/html/biocide-v2raybot/baseInfo.php
-        echo -e "?>" >> /var/www/html/biocide-v2raybot/baseInfo.php
+        echo -e "<?php" >> /var/www/html/biocide/baseInfo.php
+        echo -e "error_reporting(0);" >> /var/www/html/biocide/baseInfo.php
+        echo -e "${ASAS}botToken = '${YOUR_BOT_TOKEN}';" >> /var/www/html/biocide/baseInfo.php
+        echo -e "${ASAS}dbUserName = '${dbuser}';" >> /var/www/html/biocide/baseInfo.php
+        echo -e "${ASAS}dbPassword = '${dbpass}';" >> /var/www/html/biocide/baseInfo.php
+        echo -e "${ASAS}dbName = '${dbname}';" >> /var/www/html/biocide/baseInfo.php
+        echo -e "${ASAS}botUrl = 'https://${YOUR_DOMAIN}/biocide/';" >> /var/www/html/biocide/baseInfo.php
+        echo -e "${ASAS}admin = ${YOUR_CHAT_ID};" >> /var/www/html/biocide/baseInfo.php
+        echo -e "?>" >> /var/www/html/biocide/baseInfo.php
 
         sleep 1
 
-        curl -F "url=https://${YOUR_DOMAIN}/biocide-v2raybot/bot.php" "https://api.telegram.org/bot${YOUR_BOT_TOKEN}/setWebhook"
+        curl -F "url=https://${YOUR_DOMAIN}/biocide/bot.php" "https://api.telegram.org/bot${YOUR_BOT_TOKEN}/setWebhook"
         MESSAGE="✅ The biocide bot has been successfully installed! @biocidech"
         curl -s -X POST "https://api.telegram.org/bot${YOUR_BOT_TOKEN}/sendMessage" -d chat_id="${YOUR_CHAT_ID}" -d text="$MESSAGE"
         
         
         sleep 1
         
-        url="https://${YOUR_DOMAIN}/biocide-v2raybot/createDB.php"
+        url="https://${YOUR_DOMAIN}/biocide/createDB.php"
         curl $url
         
         sleep 1
         
-        sudo rm -r /var/www/html/biocide-v2raybot/webpanel
-	    sudo rm -r /var/www/html/biocide-v2raybot/install
-	    sudo rm /var/www/html/biocide-v2raybot/createDB.php
+        sudo rm -r /var/www/html/biocide/webpanel
+        sudo rm -r /var/www/html/biocide/install
+        sudo rm /var/www/html/biocide/createDB.php
+	rm /var/www/html/biocide/updateShareConfig.php
+	rm /var/www/html/biocide/README.md
+	rm /var/www/html/biocide/README-fa.md
+	rm /var/www/html/biocide/LICENSE
+	rm /var/www/html/biocide/update.sh
+	rm /var/www/html/biocide/biocide.sh
+	rm /var/www/html/biocide/tempCookie.txt
+	rm /var/www/html/biocide/settings/messagebiocide.json
             
         clear
         
@@ -356,7 +363,7 @@ wait
         echo -e "\e[33mDatabase password: \e[36m${dbpass}\033[0m"
         echo " "
         echo -e "\e[100mbiocide panel:\033[0m"
-        echo -e "\e[33maddres: \e[36mhttps://${YOUR_DOMAIN}/biocidepanel${RANDOM_NUMBER}\033[0m"
+        echo -e "\e[33maddres: \e[36mhttps://${YOUR_DOMAIN}/biopanel${RANDOM_NUMBER}\033[0m"
         echo -e "\e[33musername panel: \e[36madmin\033[0m"
         echo -e "\e[33mpassword panel: \e[36madmin\033[0m\n"
         

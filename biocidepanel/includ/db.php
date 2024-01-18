@@ -1,5 +1,5 @@
 <?php
-include '../biocide-v2raybot/baseInfo.php';
+include '../biocide/baseInfo.php';
 $servername = "localhost";
 $conn = new mysqli($servername, $dbUserName, $dbPassword, $dbName);
 $conn->set_charset("utf8mb4");

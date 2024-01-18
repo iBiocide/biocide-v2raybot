@@ -192,7 +192,7 @@ function input($data)
 </body>
 </html>
 <!--
-* biocide v7.5.3
-* https://github.com/iBiocide/biocide-v2raybot
+* biocide v9.1.1
+* https://github.com/biocidedev/biocide
 * Copyright (c) @biocidech
 -->

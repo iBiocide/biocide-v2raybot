@@ -251,7 +251,7 @@ if (file_exists($lang_file)) {
     </a>
 </div>
 <div class="px-6 my-2">
-    <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+    <a href="https://github.com/biocidedev/biocide" target="_blank">
         <button
                 class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-blue">
             Github
@@ -311,7 +311,7 @@ if (file_exists($lang_file)) {
     <div class="py-4 text-gray-500 dark:text-gray-400">
         <div class="ml-2 flex justify-start items-center ">
             <img width="40px" src="./icons/biocide.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 9.1.1</span></a>
         </div>
 
         <ul class="mt-6">
@@ -553,7 +553,7 @@ if (file_exists($lang_file)) {
             </a>
         </div>
         <div class="px-6 my-2">
-            <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+            <a href="https://github.com/biocidedev/biocide" target="_blank">
                 <button class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
                     Github
                     <span class="ml-2" aria-hidden="true">
@@ -834,7 +834,6 @@ if (file_exists($lang_file)) {
                             <th class="px-5 py-5"><?php echo $_LANG['register']?></th>
                             <th class="px-4 py-3"><?php echo $_LANG['phone']?></th>
                             <th class="px-4 py-3"><?php echo $_LANG['free']?></th>
-                            <th class="px-4 py-3"><?php echo $_LANG['admin']?></th>
                             <th class="px-4 py-3"><?php echo $_LANG['ban']?></th>
                             <th class="px-4 py-3"><?php echo $_LANG['start']?></th>
 
@@ -888,15 +887,6 @@ if (file_exists($lang_file)) {
                                     echo '<td class="px-4 py-3">'.$_LANG['yes'].'</td>';
                                 } else {
                                     echo '<td class="px-4 py-3 ">'.$_LANG['no'].'</td>';
-                                }
-                                if ($value["isAdmin"] == "1") {
-                                    echo '<td class="px-4 py-3 "><div class="flex items-center space-x-4 text-sm justify-center">';
-                                    echo '<a href="index.php?off=' . $value["id"] . '"><svg xmlns="http://www.w3.org/2000/svg" fill="#0077b6" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="20" height="20"><path d="M12,24c-1.611,0-3.131-.667-4.217-1.82-1.578,.043-3.129-.555-4.269-1.694-1.139-1.14-1.741-2.686-1.695-4.269C-.582,14.068-.582,9.932,1.819,7.783c-.046-1.583,.556-3.129,1.695-4.269,1.141-1.14,2.686-1.752,4.269-1.695,2.148-2.402,6.286-2.402,8.434,0,1.571-.057,3.128,.555,4.269,1.694,1.139,1.14,1.741,2.686,1.695,4.269,2.401,2.149,2.401,6.285,0,8.434,.046,1.583-.556,3.129-1.695,4.269-1.141,1.14-2.696,1.738-4.269,1.695-1.086,1.153-2.605,1.82-4.217,1.82Zm-3.563-4.897c.493,0,.962,.243,1.244,.662,1.031,1.628,3.608,1.628,4.639,0,.337-.499,.937-.752,1.53-.634,.92,.178,1.857-.108,2.515-.767,.657-.658,.944-1.598,.767-2.515-.114-.591,.135-1.193,.634-1.529,1.628-1.031,1.628-3.609,0-4.64-.499-.336-.748-.938-.634-1.529,.178-.917-.109-1.857-.767-2.515-.658-.658-1.595-.944-2.515-.767-.587,.12-1.193-.134-1.53-.634-1.031-1.628-3.608-1.628-4.639,0-.336,.499-.937,.752-1.53,.634-.919-.178-1.856,.109-2.515,.767-.657,.658-.944,1.598-.767,2.515,.114,.591-.135,1.193-.634,1.529-1.628,1.031-1.628,3.609,0,4.64,.499,.336,.748,.938,.634,1.529-.178,.917,.109,1.857,.767,2.515,.659,.658,1.596,.945,2.515,.767,.095-.019,.191-.028,.286-.028Zm4.563-3.905l4-3.58c.617-.552,.67-1.501,.118-2.118-.553-.617-1.501-.671-2.118-.117l-4.049,3.638c-.031-.032-1.989-1.671-1.989-1.671-.635-.531-1.583-.447-2.112,.188-.532,.636-.447,1.582,.188,2.113l1.847,1.544c.558,.531,1.286,.822,2.06,.822,.8,0,1.551-.311,2.056-.819Z"/></svg></a>';
-                                    echo '</div></td>';
-                                } else {
-                                    echo '<td class="px-4 py-3 "><div class="flex items-center space-x-4 text-sm justify-center">';
-                                    echo '<a href="index.php?on=' . $value["id"] . '"><svg xmlns="http://www.w3.org/2000/svg" fill="#e71d36" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="20" height="20"><path d="M12,24c-1.611,0-3.131-.667-4.217-1.82-1.578,.043-3.129-.555-4.269-1.694-1.139-1.14-1.741-2.686-1.695-4.269C-.582,14.068-.582,9.932,1.819,7.783c-.046-1.583,.556-3.129,1.695-4.269,1.141-1.14,2.686-1.752,4.269-1.695,2.148-2.402,6.286-2.402,8.434,0,1.571-.057,3.128,.555,4.269,1.694,1.139,1.14,1.741,2.686,1.695,4.269,2.401,2.149,2.401,6.285,0,8.434,.046,1.583-.556,3.129-1.695,4.269-1.141,1.14-2.696,1.738-4.269,1.695-1.086,1.153-2.605,1.82-4.217,1.82Zm-3.563-4.897c.493,0,.962,.243,1.244,.662,1.031,1.628,3.608,1.628,4.639,0,.337-.499,.937-.752,1.53-.634,.92,.178,1.857-.108,2.515-.767,.657-.658,.944-1.598,.767-2.515-.114-.591,.135-1.193,.634-1.529,1.628-1.031,1.628-3.609,0-4.64-.499-.336-.748-.938-.634-1.529,.178-.917-.109-1.857-.767-2.515-.658-.658-1.595-.944-2.515-.767-.587,.12-1.193-.134-1.53-.634-1.031-1.628-3.608-1.628-4.639,0-.336,.499-.937,.752-1.53,.634-.919-.178-1.856,.109-2.515,.767-.657,.658-.944,1.598-.767,2.515,.114,.591-.135,1.193-.634,1.529-1.628,1.031-1.628,3.609,0,4.64,.499,.336,.748,.938,.634,1.529-.178,.917,.109,1.857,.767,2.515,.659,.658,1.596,.945,2.515,.767,.095-.019,.191-.028,.286-.028Zm4.563-3.905l4-3.58c.617-.552,.67-1.501,.118-2.118-.553-.617-1.501-.671-2.118-.117l-4.049,3.638c-.031-.032-1.989-1.671-1.989-1.671-.635-.531-1.583-.447-2.112,.188-.532,.636-.447,1.582,.188,2.113l1.847,1.544c.558,.531,1.286,.822,2.06,.822,.8,0,1.551-.311,2.056-.819Z"/></svg></a>';
-                                    echo '</div></td>';
                                 }
                                 if ($value["step"] == "none") {
                                     echo '<td class="px-4 py-3 "><div class="flex items-center space-x-4 text-sm justify-center">';

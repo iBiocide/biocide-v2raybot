@@ -28,7 +28,7 @@ session_login_biocide();
     <style>
         @font-face {
             font-family: IRANSans;
-            src: url('../assets/fonts/IRANSans.ttf'); format('truetype');
+            src: url('./assets/fonts/IRANSans.ttf'); format('truetype');
             font-weight: normal;
         }
         ::-webkit-scrollbar {
@@ -55,5 +55,5 @@ session_login_biocide();
         <div class="py-3 text-gray-500 dark:text-gray-400">
             <div class="ml-2 flex justify-start items-center">
             <img width="40px" src="./icons/biocide.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 9.1.1</span></a>
             </div>

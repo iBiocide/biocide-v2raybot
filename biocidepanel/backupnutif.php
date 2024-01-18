@@ -1,7 +1,7 @@
 <?php
 include 'includ/db.php';
 include 'includ/jdf.php';
-include '../biocide-v2raybot/baseInfo.php';
+include '../biocide/baseInfo.php';
 
 $sql_servers = "SELECT * FROM servers where status=1";
 $result_servers = $conn->query($sql_servers);
@@ -18,7 +18,6 @@ while ($row_servers = $result_servers->fetch_assoc()) {
     ssh2_auth_password($connection, $username_db, $password_db);
 
     if($connection){
-// $remote_file = '/etc/x-ui-english/x-ui-english.db';
         $sftp = ssh2_sftp($connection);
         $stream = fopen("ssh2.sftp://{$sftp}{$remote_file}", 'r');
         $file_contents = '';
@@ -29,7 +28,6 @@ while ($row_servers = $result_servers->fetch_assoc()) {
 
         $current_time = jdate('Y-m-d H:i:s');
         $message = "{$name_db} -  {$current_time}";
-        // $chat_id = '-1001770683676';
         $sql_servers1 = "SELECT * FROM admins";
         $result_servers1 = $conn->query($sql_servers1);
         $row_servers1 = $result_servers1->fetch_assoc();

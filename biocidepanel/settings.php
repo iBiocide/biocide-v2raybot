@@ -254,7 +254,7 @@ if (file_exists($lang_file)) {
     </a>
 </div>
 <div class="px-6 my-2">
-    <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+    <a href="https://github.com/biocidedev/biocide" target="_blank">
         <button
                 class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-blue">
             Github
@@ -313,7 +313,7 @@ if (file_exists($lang_file)) {
     <div class="py-4 text-gray-500 dark:text-gray-400">
             <div class="ml-2 flex justify-start items-center ">
             <img width="40px" src="./icons/biocide.png">
-            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 7.5.3</span></a>
+            <a class=" text-lg font-bold text-gray-800 dark:text-gray-200" href="index.php" > biocide <span class="px-1 ml-1 rounded" style="font-size: 10px;background-color: #e7cef1;color:#45013c !important;"> v 9.1.1</span></a>
             </div>
         <ul class="mt-6">
             <li class="relative px-6 py-3">
@@ -554,7 +554,7 @@ if (file_exists($lang_file)) {
             </a>
         </div>
         <div class="px-6 my-2">
-            <a href="https://github.com/iBiocide/biocide-v2raybot" target="_blank">
+            <a href="https://github.com/biocidedev/biocide" target="_blank">
                 <button class="flex items-center shadow-xl justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-500 border border-transparent rounded-lg active:bg-gray-600 hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray">
                     Github
                     <span class="ml-2" aria-hidden="true">
@@ -617,15 +617,15 @@ if (file_exists($lang_file)) {
                 }
 
 
-                $sqltwo = "SELECT value FROM setting WHERE id = 5";
-                $resulttwo = $conn->query($sqltwo);
-                if ($resulttwo->num_rows > 0) {
-                    while ($rowtwo = $resulttwo->fetch_assoc()) {
-                        $datatwo = json_decode($rowtwo["value"], true);
-                    }
-                } else {
-                    echo "No results found";
-                }
+//                $sqltwo = "SELECT value FROM setting WHERE id = 5";
+//                $resulttwo = $conn->query($sqltwo);
+//                if ($resulttwo->num_rows > 0) {
+//                    while ($rowtwo = $resulttwo->fetch_assoc()) {
+//                        $datatwo = json_decode($rowtwo["value"], true);
+//                    }
+//                } else {
+//                    echo "No results found";
+//                }
                 ?>
 
 
@@ -637,6 +637,7 @@ if (file_exists($lang_file)) {
                         $bankAccount_names = $_POST["bankAccount_name"];
                         $holderName_names = $_POST["holderName_name"];
                         $holderName_names = $_POST["holderName_name"];
+                        $tronwallets = $_POST["tronwallet_name"];
                         $unicodeText = json_encode($holderName_names);
                         $unicodeText = substr($unicodeText, 1, -1); // Remove first and last characters
                         $PAYMENT_KEYS_1 = 'PAYMENT_KEYS';
@@ -645,7 +646,8 @@ if (file_exists($lang_file)) {
                             "zarinpal" => $zarin_names,
                             "nextpay" => $nextpay_names,
                             "bankAccount" => $bankAccount_names,
-                            "holderName" => $unicodeText
+                            "holderName" => $unicodeText,
+                            "tronwallet" => $tronwallets
                         ));
                         $sqlserver_setting = "UPDATE setting SET value='$data',type='$PAYMENT_KEYS_1' WHERE id='4'";
                         $resultsetting = mysqli_query($conn, $sqlserver_setting);
@@ -662,155 +664,6 @@ if (file_exists($lang_file)) {
                     settingsave_state($conn);
 
                     ?>
-            <section style='margin-top:40px' class="w-full p-6 mx-auto bg-white rounded-md shadow-sm dark:bg-gray-800">
-            <form id="save_state">
-                    <div class="grid grid-cols-1 gap-6 mt-4 xl:grid-cols-8 lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-6 text-left" style="font-size: 14px">
-                        <div class="mt-2" >
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['requirePhone']?></label>
-                            <input required name="requirePhone" value="<?php echo $datatwo["requirePhone"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['requireIranPhone']?></label>
-                            <input required name="requireIranPhone" value="<?php echo $datatwo["requireIranPhone"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['sell']?></label>
-                            <input required name="sellState" value="<?php echo $datatwo["sellState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['bot']?></label>
-                            <input required name="botState" value="<?php echo $datatwo["botState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['search']?></label>
-                            <input required name="searchState" value="<?php echo $datatwo["searchState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['cartToCart']?></label>
-                            <input required name="cartToCartState" value="<?php echo $datatwo["cartToCartState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['nextpay']?></label>
-                            <input required name="nextpay" value="<?php echo $datatwo["nextpay"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['zarinpal']?></label>
-                            <input required name="zarinpal" value="<?php echo $datatwo["zarinpal"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['nowPaymentWallet']?></label>
-                            <input required name="nowPaymentWallet" value="<?php echo $datatwo["nowPaymentWallet"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['nowPaymentOther']?></label>
-                            <input required name="nowPaymentOther" value="<?php echo $datatwo["nowPaymentOther"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['wallet']?></label>
-                            <input required name="walletState" value="<?php echo $datatwo["walletState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['Location']?></label>
-                            <input required name="switchLocationState" value="<?php echo $datatwo["switchLocationState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['increaseTime']?></label>
-                            <input required name="increaseTimeState" value="<?php echo $datatwo["increaseTimeState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['increaseVolume']?></label>
-                            <input required name="increaseVolumeState" value="<?php echo $datatwo["increaseVolumeState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['subLink']?></label>
-                            <input required name="subLinkState" value="<?php echo $datatwo["subLinkState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['weswap']?></label>
-                            <input required name="weSwapState" value="<?php echo $datatwo["weSwapState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['Desiredplan']?></label>
-                            <input required name="plandelkhahState" value="<?php echo $datatwo["plandelkhahState"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="username"><?php echo $_LANG['lockChannel']?></label>
-                            <input required name="lockChannel" value="<?php echo $datatwo["lockChannel"]; ?>" id="username"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="username"><?php echo $_LANG['rewardChannel']?></label>
-                            <input required name="rewardChannel" value="<?php echo $datatwo["rewardChannel"]; ?>" id="username"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="username"><?php echo $_LANG['rewaredTime']?></label>
-                            <input required name="rewaredTime" value="<?php echo $datatwo["rewaredTime"]; ?>" id="username"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['GBprice']?></label>
-                            <input required name="gbPrice" value="<?php echo $datatwo["gbPrice"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                        <div class="mt-2">
-                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="requirePhone"><?php echo $_LANG['Dayprice']?></label>
-                            <input required name="dayPrice" value="<?php echo $datatwo["dayPrice"]; ?>" id="requirePhone"
-                                   type="text"
-                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-                        </div>
-                    </div>
-                <div class="flex justify-end mt-6">
-                    <button name="save_state" type="submit"
-                            class="px-8 py-2.5 leading-5 transition-colors duration-300 transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="#b298dc" viewBox="0 0 24 24" width="25"
-                             height="25">
-                            <g id="_01_align_center" data-name="01 align center">
-                                <path d="M7.8,20.53a2.99,2.99,0,0,1-2.121-.877L.086,14.061,1.5,12.646l5.593,5.593a1,1,0,0,0,1.414,0L22.5,4.246,23.914,5.66,9.921,19.653A2.99,2.99,0,0,1,7.8,20.53Z"/>
-                            </g>
-                        </svg>
-                    </button>
-                </div>
-                </form>
-            </section>
 
             <section style='margin-top:40px' class="w-full p-6 mx-auto bg-white rounded-md shadow-sm dark:bg-gray-800">
 
@@ -843,6 +696,12 @@ if (file_exists($lang_file)) {
                         <div class="mt-2">
                             <label class="text-gray-700 dark:text-gray-200 mt-2" for="username"><?php echo $_LANG['bankAccount']?></label>
                             <input required name="bankAccount_name" value="<?php echo $data["bankAccount"]; ?>" id="username"
+                                   type="text"
+                                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
+                        </div>
+                        <div class="mt-2">
+                            <label class="text-gray-700 dark:text-gray-200 mt-2" for="username"><?php echo $_LANG['tronwallet']?></label>
+                            <input required name="tronwallet_name" value="<?php echo $data["tronwallet"]; ?>" id="username"
                                    type="text"
                                    class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
                         </div>
